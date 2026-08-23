@@ -60,18 +60,17 @@ class Logger:
         print(f"{Fore.CYAN}+{'-' * 78}+")
         print(
             f"{Fore.CYAN}| "
-            f"{Fore.WHITE}{Style.BRIGHT}Name: ThunderGod BY Skyline"
-            f"{' ' * 3}"
+            f"{Fore.WHITE}{Style.BRIGHT}Name: ThunderGod # 1540935414213517383"
+            f"{' ' * 4}"
             f"{Fore.LIGHTBLACK_EX}Credits"
             f"{Fore.WHITE}: Skyline Development"
-            f"{' ' * 10}{Fore.CYAN}|"
+            f"{' ' * 4}{Fore.CYAN}|"
         )
         print(f"{Fore.CYAN}+{'-' * 78}+{Style.RESET_ALL}\n")
 
     def startup_summary(self, bot):
         print(f"{Fore.LIGHTBLACK_EX}Session Snapshot")
-        print(f"{Fore.BLUE}|- User   {Fore.WHITE}{bot.user}")
-        print(f"{Fore.BLUE}|- ID     {Fore.WHITE}{bot.user.id}")
+        print(f"{Fore.BLUE}|- User   {Fore.WHITE}{bot.user} (ID: {bot.user.id})")
         print(f"{Fore.BLUE}|- Guilds {Fore.WHITE}{len(bot.guilds)}")
         print(f"{Fore.BLUE}|- Users  {Fore.WHITE}{sum(g.member_count or 0 for g in bot.guilds)}")
         print(f"{Fore.BLUE}|- Shards {Fore.WHITE}{bot.shard_count}\n")
