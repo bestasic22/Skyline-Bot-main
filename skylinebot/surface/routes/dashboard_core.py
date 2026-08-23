@@ -1250,13 +1250,22 @@ def _guild_icon(guild) -> str:
 def _preview_bot_identity() -> tuple[str, str]:
     bot = get_bot()
     bot_user = getattr(bot, "user", None)
-    bot_name = str(getattr(bot_user, "name", "") or getattr(BOT_CONFIG, "NAME", "") or "SkylineBOT")
-    bot_avatar = (
-        str(getattr(getattr(bot_user, "display_avatar", None), "url", "") or "")
-        or str(getattr(getattr(bot_user, "avatar", None), "url", "") or "")
-        or "https://cdn.discordapp.com/embed/avatars/0.png"
-    )
-    return _escape(bot_name), _escape(bot_avatar)
+    bot_name = str(getattr(bot_user, "name", "") or getattr(BOT_CONFIG, "NAME", "") or "ThunderGod")
+    
+    avatar_url = ""
+    if bot_user:
+        disp_avatar = getattr(bot_user, "display_avatar", None)
+        if disp_avatar and getattr(disp_avatar, "url", None):
+            avatar_url = str(disp_avatar.url).strip()
+        if not avatar_url or avatar_url.lower() == "none":
+            raw_avatar = getattr(bot_user, "avatar", None)
+            if raw_avatar and getattr(raw_avatar, "url", None):
+                avatar_url = str(raw_avatar.url).strip()
+
+    if not avatar_url or avatar_url.lower() == "none":
+        avatar_url = "https://cdn.discordapp.com/embed/avatars/0.png"
+
+    return _escape(bot_name), _escape(avatar_url)
 
 
 def _preview_member_identity(session: dict[str, Any] | None) -> tuple[str, str]:
