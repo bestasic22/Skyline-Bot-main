@@ -1,0 +1,170 @@
+
+    <div class="section-stack dashboard-detail-shell page-welcome-shell page-welcome-mode-leaver">
+        <section class="panel dashboard-first-panel">
+            <div class="panel-header detail-page-hero detail-page-hero-welcome">
+                <div class="panel-title">
+                    <h1 data-i18n="tab_leaver">แจ้งออกจากเซิร์ฟเวอร์ (Leaver)</h1>
+                    <p>ตั้งค่าข้อความลาออกจากเซิร์ฟ พร้อมตัวอย่าง Embed แบบเรียลไทม์</p>
+                </div>
+                <span class="plugin-premium-pill">แผนปัจจุบัน: {_escape(plan_name)}</span>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+                <a class="ghost-btn" href="/dashboard/guild/{current_guild['id']}/welcome">แท็บต้อนรับ</a>
+                <a class="primary-btn" href="/dashboard/guild/{current_guild['id']}/leaver">แท็บออกจากกิลด์</a>
+            </div>
+            <form method="post" action="/dashboard/guild/{current_guild['id']}/leaver" id="leaverSettingsForm" class="welcome-form">
+                <input type="hidden" name="form_section" value="leaver">
+                <section class="panel-sub detail-page-section welcome-message-section" style="margin-bottom:12px;">
+                    <h2 style="margin-top:0;">ข้อความออกจากซิร์ฟ (Leaver)</h2>
+                    <div class="ux-toggle-group">
+                        <label class="ux-toggle"><span class="ux-toggle-label">เปิดใช้งานระบบแจ้งออกจากเซิร์ฟ</span><input type="checkbox" name="leave" {"checked" if data.get("leave") else ""} id="leaveEnableToggle"><span class="ux-switch"></span></label>
+                        <label class="ux-toggle"><span class="ux-toggle-label">ส่งข้อความปกติ</span><input type="checkbox" name="leave_message_enabled" {"checked" if data.get("leave_message_enabled", True) else ""}><span class="ux-switch"></span></label>
+                        <label class="ux-toggle"><span class="ux-toggle-label">ส่งแบบ Embed</span><input type="checkbox" name="leave_embed" {"checked" if data.get("leave_embed") else ""}><span class="ux-switch"></span></label>
+                        <label class="ux-toggle"><span class="ux-toggle-label">ส่งเป็นรูปภาพ (พรีเมียม)</span><input type="checkbox" name="leave_image" {"checked" if data.get("leave_image") else ""} {image_locked_attr}><span class="ux-switch"></span></label>
+                    </div>
+                    <div class="field-group">
+                        <div class="field-item">
+                            <label>ห้องสำหรับแจ้งออกจากซิร์ฟ</label>
+                            {_render_channel_select("leave_channel", bot_guild, leave_channel_selected)}
+                        </div>
+                        <div class="field-item">
+                            <label>ลบข้อความอัตโนมัติ (วินาที, 0 = ไม่ลบ)</label>
+                            <input type="number" min="0" max="600" name="leave_delete_after" value="{_escape(data.get('leave_delete_after', 0))}">
+                        </div>
+                    </div>
+                    <div class="field-item">
+                        <label>ข้อความแจ้งออกจากซิร์ฟ</label>
+                        <textarea name="leave_message" id="leaveMessageInput" style="min-height:120px;">{_escape(data.get('leave_message', '{user.mention} ออกจาก {server} แล้ว'))}</textarea>
+                    </div>
+                    <div class="field-group">
+                        <div class="field-item">
+                            <label>หัวข้อ Embed</label>
+                            <input type="text" name="leave_embed_title" value="{_escape(leave_embed_title)}" maxlength="180">
+                        </div>
+                        <div class="field-item">
+                            <label>รายละเอียด Embed</label>
+                            <input type="text" name="leave_embed_description" value="{_escape(leave_embed_description)}" maxlength="500">
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel-sub detail-page-section welcome-card-section" style="margin-bottom:12px;">
+                    <h2 style="margin-top:0;">ตั้งค่าการ์ดรูปลาจากกิลด์ (Premium)</h2>
+                    {'' if can_use_image_cards else '<div class="notice" style="margin-bottom:10px;">ฟีเจอร์รูปภาพต้องใช้แพ็กเกจ Silver ขึ้นไป</div>'}
+                    <div class="field-group">
+                        <div class="field-item">
+                            <label>ธีมรูป</label>
+                            <select name="leave_image_theme" {image_locked_attr}>
+                                <option value="security" {"selected" if leave_image_theme == "security" else ""}>Security</option>
+                                <option value="music" {"selected" if leave_image_theme == "music" else ""}>Music</option>
+                                <option value="giveaway" {"selected" if leave_image_theme == "giveaway" else ""}>Giveaway</option>
+                                <option value="user" {"selected" if leave_image_theme == "user" else ""}>User Avatar</option>
+                                <option value="guild" {"selected" if leave_image_theme == "guild" else ""}>Guild Icon</option>
+                                <option value="custom" {"selected" if leave_image_theme == "custom" else ""}>Custom URL</option>
+                            </select>
+                        </div>
+                        <div class="field-item">
+                            <label>ลิงก์รูปธีมเอง (custom)</label>
+                            <input type="text" name="leave_image_theme_url" value="{_escape(leave_image_theme_url)}" placeholder="https://.../leave-theme.png" {image_locked_attr}>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <div class="field-item">
+                            <label>โหมดเลย์เอาต์</label>
+                            <select name="leave_image_layout_mode" {image_locked_attr}>
+                                <option value="center_stack" {"selected" if leave_image_layout_mode == "center_stack" else ""}>Avatar กลาง + ข้อความบน/ล่าง</option>
+                                <option value="left_avatar" {"selected" if leave_image_layout_mode == "left_avatar" else ""}>Avatar ซ้าย + ข้อความขวา</option>
+                                <option value="right_avatar" {"selected" if leave_image_layout_mode == "right_avatar" else ""}>Avatar ขวา + ข้อความซ้าย</option>
+                            </select>
+                        </div>
+                        <div class="field-item">
+                            <label>ตำแหน่ง Avatar</label>
+                            <select name="leave_image_avatar_position" {image_locked_attr}>
+                                <option value="left" {"selected" if leave_image_avatar_position == "left" else ""}>ซ้าย</option>
+                                <option value="center" {"selected" if leave_image_avatar_position == "center" else ""}>กลาง</option>
+                                <option value="right" {"selected" if leave_image_avatar_position == "right" else ""}>ขวา</option>
+                            </select>
+                        </div>
+                        <div class="field-item">
+                            <label>จัดแนวข้อความ</label>
+                            <select name="leave_image_text_align" {image_locked_attr}>
+                                <option value="left" {"selected" if leave_image_text_align == "left" else ""}>ซ้าย</option>
+                                <option value="center" {"selected" if leave_image_text_align == "center" else ""}>กลาง</option>
+                                <option value="right" {"selected" if leave_image_text_align == "right" else ""}>ขวา</option>
+                            </select>
+                        </div>
+                        <div class="field-item">
+                            <label>ฟอนต์บนการ์ด</label>
+                            <select name="leave_image_font_style" {image_locked_attr}>
+                                <option value="classic" {"selected" if leave_image_font_style == "classic" else ""}>Classic</option>
+                                <option value="clean" {"selected" if leave_image_font_style == "clean" else ""}>Clean</option>
+                                <option value="impact" {"selected" if leave_image_font_style == "impact" else ""}>Impact</option>
+                                <option value="soft" {"selected" if leave_image_font_style == "soft" else ""}>Soft</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <div class="field-item">
+                            <label>ข้อความบนรูป</label>
+                            <input type="text" name="leave_image_top_text" value="{_escape(leave_image_top_text)}" placeholder="{{user}}" maxlength="240" {image_locked_attr}>
+                        </div>
+                        <div class="field-item">
+                            <label>ข้อความล่างรูป</label>
+                            <input type="text" name="leave_image_bottom_text" value="{_escape(leave_image_bottom_text)}" placeholder="ออกจาก {{server}} แล้ว" maxlength="260" {image_locked_attr}>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel-sub detail-page-section welcome-preview-section" style="margin-bottom:14px;">
+                    <h2 style="margin-top:0;">ตัวอย่าง Embed (Leaver)</h2>
+                    <div class="mock-switch-row" style="margin-bottom:8px;">
+                        <div class="mock-switch-group">
+                            <span class="mock-switch-title">Mock User</span>
+                            <div id="leaveMockUserButtons" class="mock-switch-buttons"></div>
+                        </div>
+                        <div class="mock-switch-group">
+                            <span class="mock-switch-title">Mock Server</span>
+                            <div id="leaveMockServerButtons" class="mock-switch-buttons"></div>
+                        </div>
+                    </div>
+                    <div id="leavePreviewModes" class="muted" style="margin-bottom:8px;">โหมดที่เปิด: -</div>
+                    <div class="welcome-message-shell">
+                        <div style="display:flex; gap:10px; align-items:center; margin-bottom:8px;">
+                            <img src="{preview_bot_avatar}" alt="{preview_bot_name}" style="width:34px;height:34px;border-radius:50%;object-fit:cover;">
+                            <strong>{preview_bot_name}</strong>
+                            <span class="muted" style="font-size:12px;">{preview_bot_name} APP</span>
+                        </div>
+                        <div id="leavePreviewCard" style="border-left:4px solid #ff5b5b; background:rgba(255,255,255,.03); border-radius:8px; padding:10px;">
+                            <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-start;">
+                                <div>
+                                    <div id="leavePreviewMemberName" style="font-weight:700; margin-bottom:6px;">{preview_member_name}</div>
+                                    <div id="leavePreviewText" class="muted">{_escape(leave_preview)}</div>
+                                </div>
+                                <img id="leavePreviewMemberAvatar" src="{preview_member_avatar}" alt="avatar" style="width:70px;height:70px;border-radius:10px;object-fit:cover;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="welcome-image-card-shell">
+                        <div class="muted welcome-image-card-label">Image card preview (what will actually be sent)</div>
+                        <div id="leaveImageCardPreview" class="member-notice-preview-card">
+                            <div class="member-notice-preview-overlay"></div>
+                            <div id="leaveImageCardLayout" class="member-notice-preview-layout">
+                                <img src="{preview_member_avatar}" alt="{preview_member_name}" id="leaveImageCardAvatar" class="member-notice-preview-avatar">
+                                <div id="leaveImageCardTextWrap" class="member-notice-preview-text">
+                                    <div id="leaveImageCardTop" class="member-notice-preview-top">{_escape(leave_image_top_text)}</div>
+                                    <div id="leaveImageCardBottom" class="member-notice-preview-bottom">{_escape(leave_image_bottom_text)}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="leaveImageCardMeta" class="muted welcome-image-card-meta">Theme: {_escape(leave_image_theme)}</div>
+                    </div>
+                </section>
+
+                <div class="form-actions-fixed">
+                    <button class="primary-btn" type="submit">บันทึกการตั้งค่า Leaver</button>
+                </div>
+            </form>
+        </section>
+    </div>
+    <script>{_render_dashboard_f_template("scripts/leaver.js", __ctx)}</script>
+    

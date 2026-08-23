@@ -1,0 +1,428 @@
+﻿<!DOCTYPE html>
+<html lang="{{HTML_LANG}}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{TITLE}}</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=20260522-status">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=20260522-status">
+  <link rel="alternate icon" type="image/png" href="/favicon.png?v=20260522-status">
+  <link rel="shortcut icon" href="/favicon.ico?v=20260522-status">
+  <link rel="apple-touch-icon" href="/favicon.png?v=20260522-status">
+  <meta name="description" content="SkylineBOT official Discord bot dashboard for server setup, moderation tools, music, and community automation.">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <meta property="og:site_name" content="SkylineBOT">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{TITLE}}">
+  <meta property="og:description" content="Manage SkylineBOT in one place with Discord server controls, music features, and live community tools.">
+  <meta property="og:url" content="{{SEO_PAGE_URL}}">
+  <meta property="og:image" content="{{SEO_IMAGE_URL}}">
+  <meta property="og:image:alt" content="SkylineBOT">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{TITLE}}">
+  <meta name="twitter:description" content="SkylineBOT official Discord bot dashboard and service tools.">
+  <meta name="twitter:image" content="{{SEO_IMAGE_URL}}">
+  <link rel="canonical" href="{{SEO_PAGE_URL}}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="/dashboard/static/dashboard/layout.css?v=20260522-mobile-2">
+  <link rel="stylesheet" href="/dashboard/static/dashboard/layout-unified.css?v=20260520-12">
+  <link rel="stylesheet" href="/dashboard/static/dashboard/emoji-picker-global.css?v=20260519-3">
+  <link rel="stylesheet" href="/dashboard/static/dashboard/pages/dashboard-detail-pages.css?v=20260519-4">
+  <style>
+    *, ::before, ::after { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; overflow-x: hidden; font-family: "Outfit", sans-serif; }
+    .min-h-screen { min-height: 100vh; }
+    .overflow-x-hidden { overflow-x: hidden; }
+    .grid { display: grid; }
+    .flex { display: flex; }
+    .inline-flex { display: inline-flex; }
+    .block { display: block; }
+    .relative { position: relative; }
+    .flex-col { flex-direction: column; }
+    .flex-wrap { flex-wrap: wrap; }
+    .items-center { align-items: center; }
+    .justify-end { justify-content: flex-end; }
+    .place-items-center { place-items: center; }
+    .gap-2 { gap: .5rem; }
+    .gap-3 { gap: .75rem; }
+    .min-w-0 { min-width: 0; }
+    .min-h-0 { min-height: 0; }
+    .min-h-14 { min-height: 3.5rem; }
+    .flex-1 { flex: 1 1 0%; }
+    .ml-auto { margin-left: auto; }
+    .h-7 { height: 1.75rem; }
+    .w-7 { width: 1.75rem; }
+    .h-10 { height: 2.5rem; }
+    .w-10 { width: 2.5rem; }
+    .h-12 { height: 3rem; }
+    .w-12 { width: 3rem; }
+    .h-full { height: 100%; }
+    .w-full { width: 100%; }
+    .p-0 { padding: 0; }
+    .p-4 { padding: 1rem; }
+    .px-2 { padding-left: .5rem; padding-right: .5rem; }
+    .px-3 { padding-left: .75rem; padding-right: .75rem; }
+    .px-5 { padding-left: 1.25rem; padding-right: 1.25rem; }
+    .py-2 { padding-top: .5rem; padding-bottom: .5rem; }
+    .py-3 { padding-top: .75rem; padding-bottom: .75rem; }
+    .rounded-md { border-radius: .375rem; }
+    .rounded-xl { border-radius: .75rem; }
+    .rounded-full { border-radius: 9999px; }
+    .border { border: 1px solid currentColor; }
+    .border-b { border-bottom: 1px solid currentColor; }
+    .border-dashed { border-style: dashed; }
+    .border-\[\#3f4147\] { border-color: #3f4147; }
+    .border-\[\#4b4f59\] { border-color: #4b4f59; }
+    .bg-\[\#1e1f22\] { background: #1e1f22; }
+    .bg-\[\#1f2230\] { background: #1f2230; }
+    .bg-\[\#313338\] { background: #313338; }
+    .object-cover { object-fit: cover; }
+    .overflow-hidden { overflow: hidden; }
+    .text-sm { font-size: .875rem; line-height: 1.25rem; }
+    .font-semibold { font-weight: 600; }
+    .text-\[\#b5bac1\] { color: #b5bac1; }
+    .text-\[\#e3e5e8\] { color: #e3e5e8; }
+    .server-rail-fallback { display: none; }
+    .dashboard-dynamic-content > .notice:first-child { margin-top: 0; }
+    .dashboard-layout-grid { align-items: stretch; min-height: 100vh; }
+    @media (min-width: 981px) {
+      body.page-dashboard .dashboard-layout-grid {
+        grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+      }
+    }
+    body.page-dashboard .layout-top-rail.server-rail {
+      position: relative;
+      top: 0;
+      min-height: 72px;
+      height: 72px;
+      max-height: 72px;
+      width: 100%;
+      margin: 8px 0 0;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+    body.page-dashboard .layout-top-rail .server-rail-track {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      min-width: 0;
+      min-height: 48px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: thin;
+      padding-bottom: 0;
+    }
+    body.page-dashboard .layout-top-rail .server-rail-track::-webkit-scrollbar {
+      height: 8px;
+    }
+    body.page-dashboard .layout-top-rail .server-rail-track::-webkit-scrollbar-thumb {
+      background: rgba(140, 166, 220, 0.45);
+      border-radius: 999px;
+    }
+    body.page-dashboard .layout-top-rail .server-rail-profile,
+    body.page-dashboard .layout-top-rail .server-rail-items,
+    body.page-dashboard .layout-top-rail .server-rail-item {
+      flex: 0 0 auto;
+    }
+    body.page-dashboard .layout-top-rail .server-rail-items {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: max-content;
+    }
+    body.page-dashboard .layout-top-rail .server-rail-divider {
+      width: 1px;
+      align-self: stretch;
+      flex: 0 0 auto;
+      background: rgba(140, 166, 220, 0.35);
+      margin: 2px 4px;
+    }
+    .sidebar-server-title {
+      color: var(--text);
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .sidebar-server-meta {
+      min-width: 0;
+      flex: 1 1 auto;
+      display: grid;
+      gap: 6px;
+    }
+    .topbar-center-wrap,
+    .topbar-center-wrap * {
+      max-width: 100%;
+    }
+    body.page-dashboard .topbar-dashboard .topbar-left {
+      flex: 1 1 240px;
+      min-width: 200px;
+      max-width: 100%;
+    }
+    body.page-dashboard .topbar-dashboard .topbar-right {
+      flex: 1 1 auto;
+      min-width: 0;
+      flex-wrap: wrap;
+      row-gap: 8px;
+    }
+    body.page-dashboard .topbar-center-wrap,
+    body.page-dashboard .topbar-center-wrap * {
+      overflow-wrap: normal !important;
+      word-break: normal !important;
+    }
+    body.page-dashboard .topbar-center-wrap > .inline-flex {
+      min-width: 0;
+      max-width: 100%;
+      flex-wrap: nowrap !important;
+    }
+    body.page-dashboard .topbar-center-wrap > .inline-flex > span {
+      min-width: 0;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: inline-block;
+    }
+    body.page-dashboard .layout-sidebar .sidebar-nav {
+      align-content: start;
+      grid-auto-rows: max-content;
+    }
+    body.page-dashboard .layout-sidebar {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      align-content: flex-start;
+      gap: 10px;
+      min-height: 0;
+    }
+    body.page-dashboard .layout-sidebar .sidebar-server-head {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 12px;
+      padding: 12px 14px;
+      min-height: 72px;
+      border-bottom: 1px solid rgba(130, 155, 216, 0.22);
+      flex: 0 0 auto;
+    }
+    body.page-dashboard .layout-sidebar .sidebar-server-head img {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    body.page-dashboard .layout-sidebar .sidebar-server-head .sidebar-server-title {
+      font-size: 1.05rem;
+      line-height: 1.2;
+      font-weight: 700;
+    }
+    body.page-dashboard .layout-sidebar .sidebar-nav {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    body.page-dashboard .dashboard-main {
+      min-width: 0;
+      min-height: 0;
+      background: transparent !important;
+    }
+    body.page-dashboard .dashboard-dynamic-content {
+      min-width: 0;
+      max-width: 100%;
+    }
+    body.page-dashboard [data-overview-root] canvas {
+      display: block;
+      width: 100% !important;
+      max-height: 240px;
+    }
+    body.page-landing .dashboard-layout-grid,
+    body.page-guild-picker .dashboard-layout-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    body.page-landing .layout-left-rail,
+    body.page-landing .layout-sidebar,
+    body.page-guild-picker .layout-left-rail,
+    body.page-guild-picker .layout-sidebar {
+      display: none;
+    }
+    body.page-music-user .dashboard-layout-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    body.page-music-user .layout-left-rail,
+    body.page-music-user .layout-sidebar {
+      display: none;
+    }
+    body.page-music-user .dashboard-content {
+      padding: 1rem;
+    }
+    body.page-music-user .dashboard-dynamic-content {
+      border: 0;
+      background: transparent;
+      padding: 0;
+    }
+    .layout-global-footer {
+      flex: 0 0 auto;
+      clear: both;
+      width: auto;
+      margin: 18px 18px calc(18px + env(safe-area-inset-bottom, 0px));
+      padding: 10px 8px 8px;
+      text-align: center;
+      line-height: 1.45;
+      font-size: 0.9rem;
+      color: var(--text, #dce8ff);
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.28);
+      border-top: 1px solid rgba(130, 155, 216, 0.24);
+      position: relative;
+      z-index: 2;
+    }
+    body.light-theme .layout-global-footer {
+      color: #284974;
+      border-top-color: rgba(86, 122, 195, 0.34);
+      text-shadow: none;
+    }
+    @media (max-width: 980px) {
+      .layout-global-footer {
+        margin: 18px 12px calc(18px + env(safe-area-inset-bottom, 0px));
+      }
+    }
+    body.page-landing .layout-global-footer,
+    body.page-home .layout-global-footer {
+      display: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen overflow-x-hidden page-{{PAGE_MODE}} ui-pro dashboard-boot-loading">
+  <div class="ui-backdrop">
+    <span class="ui-orb orb-a"></span>
+    <span class="ui-orb orb-b"></span>
+    <span class="ui-orb orb-c"></span>
+  </div>
+  <div id="toast-container"></div>
+  <div id="dashboard-global-loader" class="dashboard-global-loader" aria-hidden="true" aria-busy="false">
+    <div class="dashboard-global-loader-card" role="status" aria-live="polite">
+      <span class="dashboard-global-loader-spinner" aria-hidden="true"></span>
+      <div class="dashboard-global-loader-copy">
+        <strong data-dashboard-loader-title>Loading data...</strong>
+        <span data-dashboard-loader-subtitle>Please wait a moment</span>
+      </div>
+      <div class="dashboard-global-loader-skeleton" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+  <div class="dashboard-layout-grid dashboard-shell grid min-h-screen grid-cols-[260px_minmax(0,1fr)]">
+    <aside class="layout-sidebar dashboard-sidebar">
+      <div class="sidebar-server-head">
+        <img class="h-10 w-10 rounded-full border border-[#3f4147] object-cover" src="{{SIDEBAR_SERVER_ICON_URL}}" alt="{{SIDEBAR_SERVER_NAME_HTML}}" loading="eager" decoding="async" fetchpriority="high" data-critical-img="1" onerror="this.onerror=null;this.src='https://cdn.discordapp.com/embed/avatars/0.png';">
+        <div class="sidebar-server-meta">
+          <div class="font-semibold sidebar-server-title">{{SIDEBAR_SERVER_NAME_HTML}}</div>
+          {{SIDEBAR_SERVER_ACCESS_HTML}}
+        </div>
+      </div>
+      <nav class="px-2 py-3 sidebar-nav">
+        {{SIDEBAR_MENU_HTML}}
+      </nav>
+    </aside>
+
+    <main class="flex flex-col min-w-0 dashboard-main">
+      <header class="topbar topbar-dashboard min-h-14 border-b border-[#3f4147] px-5 py-2 flex items-center gap-3">
+        <div class="topbar-left min-w-0 flex-1">
+          <div class="topbar-center-wrap">{{TOPBAR_CENTER_HTML}}</div>
+        </div>
+        <div class="topbar-right ml-auto flex flex-wrap items-center justify-end gap-2 dashboard-topbar-actions">{{TOPBAR_ACTIONS_HTML}}</div>
+      </header>
+      <section class="dashboard-content flex-1 min-h-0 p-0">
+        <aside class="layout-left-rail layout-top-rail server-rail bg-[#1e1f22]">
+          <div class="server-rail-track">
+            <div class="server-rail-profile">{{SERVER_SWITCHER_PROFILE_HTML}}</div>
+            <div class="server-rail-divider"></div>
+            <div class="server-rail-items">{{SERVER_SWITCHER_ITEMS_HTML}}</div>
+          </div>
+        </aside>
+        <div class="dashboard-dynamic-content section-stack min-h-0 rounded-xl p-4">
+          {{MAIN_CONTENT_HTML}}
+        </div>
+      </section>
+      <footer class="layout-global-footer">{{GLOBAL_COPYRIGHT_HTML}}</footer>
+    </main>
+  </div>
+
+  <script type="application/json" id="dashboard-bootstrap">{{DASHBOARD_BOOTSTRAP_JSON}}</script>
+  <script src="/dashboard/static/dashboard/layout.js?v=20260522-16" defer></script>
+  {{I18N_SCRIPT_TAGS}}
+  <script src="/dashboard/static/dashboard/layout-runtime.js?v=20260521-14" defer></script>
+  <script src="/dashboard/static/dashboard/layout-unified.js?v=20260520-3" defer></script>
+  <script>
+    (() => {
+      const loaded = new Set();
+      const loadScript = (src) => {
+        if (loaded.has(src)) return Promise.resolve();
+        loaded.add(src);
+        return new Promise((resolve, reject) => {
+          const existing = document.querySelector(`script[src="${src.replace(/"/g, '\\"')}"]`);
+          if (existing) {
+            resolve();
+            return;
+          }
+          const script = document.createElement("script");
+          script.src = src;
+          script.defer = true;
+          script.onload = () => resolve();
+          script.onerror = () => reject(new Error(`load-failed:${src}`));
+          document.head.appendChild(script);
+        });
+      };
+      const onIdle = (callback, timeout = 1600) => {
+        if (typeof window.requestIdleCallback === "function") {
+          window.requestIdleCallback(callback, { timeout });
+        } else {
+          window.setTimeout(callback, Math.min(timeout, 1000));
+        }
+      };
+      const hasImageTarget = () => Boolean(document.querySelector(
+        "form input[name*='image'], form input[id*='image'], form input[name*='thumb'], form input[id*='thumb'], form input[name*='avatar'], form input[id*='avatar'], form input[name*='banner'], form input[id*='banner'], form input[name*='icon'], form input[id*='icon']"
+      ));
+      const hasEmojiTarget = () => Boolean(document.querySelector(
+        "input[name*='emoji'], input[id*='emoji'], textarea[name*='emoji'], input[name*='symbol'], input[id*='symbol'], textarea[name*='symbol'], input[name*='reaction'], input[id*='reaction'], textarea[name*='reaction'], input[name*='badge'], input[id*='badge'], textarea[name*='badge'], .econ-emoji-picker, .sb-emoji-picker, [data-emoji-picker], [data-emoji]"
+      ));
+      const hasDiscordEmojiText = () => {
+        const text = document.body ? String(document.body.textContent || "") : "";
+        return /<a?:[A-Za-z0-9_]{2,32}:[0-9]{5,22}>/.test(text);
+      };
+      const loadEnhancements = () => {
+        if (hasImageTarget()) {
+          loadScript("/dashboard/static/dashboard/image-assist.js?v=20260522-1").catch(() => {});
+        }
+        if (hasEmojiTarget()) {
+          loadScript("/dashboard/static/dashboard/emoji-picker-global.js?v=20260522-1").catch(() => {});
+        }
+        if (hasDiscordEmojiText()) {
+          loadScript("/dashboard/static/dashboard/discord-emoji-renderer.js?v=20260522-1").catch(() => {});
+        }
+      };
+      onIdle(loadEnhancements);
+      document.addEventListener("focusin", (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        if (target.matches("input[name*='emoji'], input[id*='emoji'], textarea[name*='emoji'], input[name*='symbol'], input[id*='symbol'], textarea[name*='symbol'], input[name*='reaction'], input[id*='reaction'], textarea[name*='reaction'], input[name*='badge'], input[id*='badge'], textarea[name*='badge']")) {
+          loadScript("/dashboard/static/dashboard/emoji-picker-global.js?v=20260522-1").catch(() => {});
+        }
+        if (target.matches("input[name*='image'], input[id*='image'], input[name*='thumb'], input[id*='thumb'], input[name*='avatar'], input[id*='avatar'], input[name*='banner'], input[id*='banner'], input[name*='icon'], input[id*='icon']")) {
+          loadScript("/dashboard/static/dashboard/image-assist.js?v=20260522-1").catch(() => {});
+        }
+      }, true);
+    })();
+  </script>
+</body>
+</html>

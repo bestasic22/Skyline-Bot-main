@@ -1,0 +1,119 @@
+.page-module-hub-shell {
+  display: grid;
+  gap: 12px;
+}
+
+.page-module-hub-shell .module-hub-hero,
+.page-module-hub-shell .module-hub-links-panel {
+  min-height: auto;
+}
+
+.page-module-hub-shell .hub-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.page-module-hub-shell .hub-head h1 {
+  margin: 0;
+  font-size: clamp(1.2rem, 1.8vw, 1.52rem);
+  letter-spacing: -0.01em;
+}
+
+.page-module-hub-shell .hub-head p {
+  margin: 6px 0 0;
+  max-width: 72ch;
+}
+
+.page-module-hub-shell .hub-side {
+  display: grid;
+  justify-items: end;
+  gap: 8px;
+}
+
+.page-module-hub-shell .hub-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.page-module-hub-shell .hub-links-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--ux-brand-2) 34%, var(--ux-line));
+  background: color-mix(in srgb, var(--ux-surface-2) 88%, transparent);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.page-module-hub-shell .cmd-badge.mode.premium {
+  color: #facc15;
+  background: rgba(250, 204, 21, 0.12);
+  border-color: rgba(250, 204, 21, 0.36);
+}
+
+.page-module-hub-shell .cmd-badge.mode.new {
+  color: #7dd3fc;
+  background: rgba(125, 211, 252, 0.12);
+  border-color: rgba(125, 211, 252, 0.35);
+}
+
+.page-module-hub-shell .hub-links {
+  display: grid;
+  gap: 11px;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+}
+
+.page-module-hub-shell .hub-link-card {
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 30%, var(--ux-line));
+  border-radius: 14px;
+  padding: 13px 14px;
+  text-decoration: none;
+  color: var(--ux-text);
+  background:
+    radial-gradient(circle at 90% 12%, color-mix(in srgb, var(--ux-brand-2) 14%, transparent), transparent 40%),
+    color-mix(in srgb, var(--ux-surface-2) 90%, transparent);
+  display: grid;
+  gap: 7px;
+  min-height: 108px;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.page-module-hub-shell .hub-link-card strong {
+  color: var(--ux-text);
+  font-size: 0.98rem;
+  line-height: 1.35;
+}
+
+.page-module-hub-shell .hub-link-card span {
+  color: var(--ux-text-soft);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.page-module-hub-shell .hub-link-card:hover {
+  border-color: color-mix(in srgb, var(--ux-brand-2) 44%, var(--ux-line));
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(3, 10, 24, 0.26);
+}
+
+@media (max-width: 780px) {
+  .page-module-hub-shell .hub-side {
+    justify-items: start;
+  }
+
+  .page-module-hub-shell .hub-badges {
+    justify-content: flex-start;
+  }
+
+  .page-module-hub-shell .hub-links {
+    grid-template-columns: 1fr;
+  }
+}

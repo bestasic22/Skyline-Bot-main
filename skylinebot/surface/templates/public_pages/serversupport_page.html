@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Server Support - {{APP_NAME}}</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" type="image/png" href="/favicon.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="/dashboard/static/dashboard/public-pages.css">
+  <style>
+    :root {
+      --server-accent-a: #37e5d0;
+      --server-accent-b: #4ea8ff;
+      --server-soft-line: rgba(119, 222, 255, 0.3);
+    }
+
+    .hero-ops {
+      isolation: isolate;
+      border: 1px solid rgba(112, 214, 255, 0.34);
+      background:
+        radial-gradient(circle at 85% 12%, rgba(55, 229, 208, 0.23), transparent 44%),
+        radial-gradient(circle at 11% 0%, rgba(78, 168, 255, 0.27), transparent 42%),
+        linear-gradient(160deg, rgba(8, 20, 40, 0.96), rgba(5, 16, 33, 0.94));
+      overflow: hidden;
+    }
+
+    .hero-ops::before,
+    .hero-ops::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      z-index: -1;
+      animation: float-soft 10s ease-in-out infinite;
+    }
+
+    .hero-ops::before {
+      width: 220px;
+      height: 220px;
+      right: -75px;
+      bottom: -130px;
+      background: radial-gradient(circle, rgba(76, 183, 255, 0.3), transparent 72%);
+    }
+
+    .hero-ops::after {
+      width: 250px;
+      height: 250px;
+      left: -95px;
+      top: -115px;
+      background: radial-gradient(circle, rgba(79, 242, 211, 0.28), transparent 72%);
+      animation-delay: -5s;
+    }
+
+    .hero-tag {
+      margin-bottom: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      border: 1px solid var(--server-soft-line);
+      background: rgba(9, 31, 45, 0.7);
+      color: #d3f8ff;
+      padding: 7px 12px;
+      font-size: .82rem;
+      font-weight: 700;
+    }
+
+    .hero-text {
+      margin-top: 11px !important;
+      max-width: 800px;
+      color: #c9e6fa;
+    }
+
+    .ops-nav {
+      margin-top: 15px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+    }
+
+    .ops-btn {
+      min-height: 45px;
+      border-radius: 12px;
+      border: 1px solid rgba(123, 203, 255, 0.42);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #e0f6ff;
+      text-decoration: none;
+      font-weight: 780;
+      transition: transform .2s ease, filter .2s ease;
+      background: rgba(14, 37, 59, 0.75);
+    }
+
+    .ops-btn.primary {
+      color: #042b2b;
+      background: linear-gradient(150deg, #75ffd8, #62d8ff);
+    }
+
+    .ops-btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.05);
+      text-decoration: none;
+    }
+
+    .stream-grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 11px;
+    }
+
+    .stream-card {
+      border: 1px solid rgba(121, 196, 255, 0.3);
+      border-radius: 15px;
+      padding: 12px;
+      background: linear-gradient(170deg, rgba(12, 28, 49, 0.88), rgba(8, 20, 37, 0.93));
+      transition: transform .2s ease, border-color .2s ease;
+      animation: rise-in .55s ease both;
+    }
+
+    .stream-card:nth-child(2) { animation-delay: .07s; }
+    .stream-card:nth-child(3) { animation-delay: .14s; }
+    .stream-card:nth-child(4) { animation-delay: .21s; }
+    .stream-card:nth-child(5) { animation-delay: .28s; }
+    .stream-card:nth-child(6) { animation-delay: .35s; }
+
+    .stream-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(116, 228, 255, 0.48);
+    }
+
+    .stream-card h3 {
+      margin: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1rem;
+    }
+
+    .stream-card p {
+      margin: 8px 0 0;
+      font-size: .93rem;
+      line-height: 1.58;
+      color: #b7d1ea;
+    }
+
+    .channel-grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 10px;
+    }
+
+    .channel-card {
+      border-radius: 13px;
+      border: 1px solid rgba(121, 190, 255, 0.28);
+      padding: 11px;
+      background: rgba(10, 26, 45, 0.65);
+    }
+
+    .channel-card strong {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+      color: #dcf4ff;
+    }
+
+    .channel-card p {
+      margin: 0;
+      font-size: .9rem;
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+    }
+
+    .channel-card .small-note {
+      margin-top: 6px;
+      color: #92b9d8;
+      font-size: .8rem;
+    }
+
+    .plan-list {
+      margin-top: 10px;
+      padding-left: 0;
+      list-style: none;
+      display: grid;
+      gap: 9px;
+    }
+
+    .plan-list li {
+      border: 1px solid rgba(114, 199, 255, 0.25);
+      border-radius: 12px;
+      padding: 10px;
+      background: rgba(10, 27, 47, 0.56);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .plan-list .num {
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #032520;
+      background: linear-gradient(145deg, #7fffe0, #58dbff);
+      font-size: .82rem;
+      font-weight: 800;
+      box-shadow: 0 0 0 2px rgba(97, 231, 255, 0.18);
+    }
+
+    .help-inline {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .help-inline a {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(122, 192, 255, 0.4);
+      padding: 7px 11px;
+      background: rgba(11, 35, 58, 0.72);
+      color: #d8f2ff;
+      font-weight: 700;
+      text-decoration: none;
+      transition: filter .16s ease, transform .16s ease;
+    }
+
+    .help-inline a:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.06);
+      text-decoration: none;
+    }
+
+    @keyframes float-soft {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-11px); }
+    }
+
+    @keyframes rise-in {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-ops::before,
+      .hero-ops::after,
+      .stream-card,
+      .ops-btn,
+      .help-inline a {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .ops-nav,
+      .stream-grid,
+      .channel-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body class="public-doc">
+  <main class="public-shell">
+    <section class="public-card hero-card hero-ops">
+      <span class="hero-tag"><i class="bi bi-headset"></i>ServerSupport Portal</span>
+      <h1 class="title-row"><span class="title-icon"><i class="bi bi-shield-check"></i></span>ServerSupport ของ {{APP_NAME}}</h1>
+      <p class="hero-text">หน้ารวมแนวทางแก้ปัญหาและการตั้งค่าเซิร์ฟเวอร์แบบเป็นขั้นตอน พร้อมทางลัดไปยังรายงานปัญหาและหน้าติดต่อทีมซัพพอร์ต</p>
+
+      <div class="ops-nav">
+        <a class="ops-btn" href="/support"><i class="bi bi-signpost-2"></i>กลับ Support Center</a>
+        <a class="ops-btn" href="/report"><i class="bi bi-bug"></i>เปิด /report</a>
+        <a class="ops-btn" href="{{CONTACT_URL}}"><i class="bi bi-chat-left-dots"></i>เปิดหน้าติดต่อทีมงาน</a>
+        <a class="ops-btn primary" href="{{SUPPORT_SERVER_URL}}" target="_blank" rel="noopener noreferrer"><i class="bi bi-discord"></i>เข้า Discord Support</a>
+      </div>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-stars"></i></span>สิ่งที่ทีม ServerSupport ช่วยได้</h2>
+      <div class="stream-grid">
+        <article class="stream-card">
+          <h3><i class="bi bi-ticket-detailed"></i>Ticket & Case Flow</h3>
+          <p>ช่วยวางโครงเคสให้ครบตั้งแต่รับปัญหา, ตรวจสอบ, ติดตามผล, จนปิดเคส เพื่อไม่ให้ข้อมูลหลุดระหว่างทาง</p>
+        </article>
+        <article class="stream-card">
+          <h3><i class="bi bi-tools"></i>Troubleshoot Commands</h3>
+          <p>วิเคราะห์อาการบอทไม่ตอบคำสั่ง, ตอบผิด, หรือ permissions ไม่ครบ พร้อมระบุจุดแก้ใน Discord และ Dashboard</p>
+        </article>
+        <article class="stream-card">
+          <h3><i class="bi bi-sliders"></i>Dashboard Setup</h3>
+          <p>ช่วยปรับตั้งค่าระบบหลัก เช่น Welcome, Security, Giveaway, Moderation และโมดูลที่ทำงานร่วมกัน</p>
+        </article>
+        <article class="stream-card">
+          <h3><i class="bi bi-wallet2"></i>Billing & Premium</h3>
+          <p>ตรวจสอบปัญหาเติมเงิน, สถานะแพ็กเกจ, การสมัคร/ยกเลิกแผน และปัญหายอดเงินไม่อัปเดต</p>
+        </article>
+        <article class="stream-card">
+          <h3><i class="bi bi-shield-lock"></i>Security Intake</h3>
+          <p>รับแจ้งเหตุด้านความปลอดภัยหรือ abuse และส่งต่อทีมที่เกี่ยวข้องตามระดับความเร่งด่วน</p>
+        </article>
+        <article class="stream-card">
+          <h3><i class="bi bi-graph-up-arrow"></i>Optimization Advice</h3>
+          <p>แนะนำแนวทางลดภาระแอดมินและเพิ่มประสิทธิภาพ workflow ของเซิร์ฟเวอร์ให้ใช้งานได้ไหลลื่นขึ้น</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-compass"></i></span>ช่องทางติดต่อที่เหมาะกับแต่ละเคส</h2>
+      <div class="channel-grid">
+        <article class="channel-card">
+          <strong><i class="bi bi-bug"></i>Report Issue</strong>
+          <p><a href="/report">/report</a> สำหรับแจ้งบั๊กหรือความผิดปกติที่ต้องเก็บรายละเอียดเชิงเทคนิค</p>
+          <p class="small-note">เหมาะกับปัญหาที่ต้องให้ dev ตรวจย้อนหลัง</p>
+        </article>
+        <article class="channel-card">
+          <strong><i class="bi bi-chat-left-text"></i>Web Contact</strong>
+          <p><a href="{{CONTACT_URL}}">{{CONTACT_URL}}</a> สำหรับคุยเคสต่อเนื่องแบบส่วนตัว</p>
+          <p class="small-note">เหมาะกับการติดตามเคสหลายรอบหรือแนบข้อมูลเพิ่มเติม</p>
+        </article>
+        <article class="channel-card">
+          <strong><i class="bi bi-discord"></i>Discord Support</strong>
+          <p><a href="{{SUPPORT_SERVER_URL}}" target="_blank" rel="noopener noreferrer">{{SUPPORT_SERVER_URL}}</a></p>
+          <p class="small-note">เหมาะกับคำถามทั่วไปที่อยากได้คำตอบเร็ว</p>
+        </article>
+        <article class="channel-card">
+          <strong><i class="bi bi-activity"></i>Service Status</strong>
+          <p><a href="{{SUPPORT_STATUS_URL}}" target="_blank" rel="noopener noreferrer">{{SUPPORT_STATUS_URL}}</a></p>
+          <p class="small-note">ใช้ตรวจสถานะระบบก่อนเปิดเคสใหม่</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-check2-circle"></i></span>สูตรแจ้งปัญหาให้จบไวขึ้น</h2>
+      <ul class="plan-list">
+        <li><span class="num">1</span><span>ระบุอาการให้ชัด: เกิดอะไร, ในห้องไหน, เวลาไหน, และกับคำสั่งอะไร</span></li>
+        <li><span class="num">2</span><span>แนบหลักฐาน: error message, รูปหน้าจอ, หรือ log ที่เกี่ยวข้อง</span></li>
+        <li><span class="num">3</span><span>บอกผลลัพธ์ที่คาดหวัง เพื่อให้ทีมเทียบกับพฤติกรรมปัจจุบันได้เร็ว</span></li>
+        <li><span class="num">4</span><span>ถ้าปัญหาเกี่ยวกับสิทธิ์ ให้แนบบทบาทบอทและบทบาทผู้ใช้งานที่ทดสอบ</span></li>
+      </ul>
+
+      <div class="help-inline">
+        <a href="/support"><i class="bi bi-arrow-left-circle"></i>กลับหน้า /support</a>
+        <a href="/ServerSupport"><i class="bi bi-link-45deg"></i>ลิงก์ตรง /ServerSupport</a>
+        <a href="{{SUPPORT_SERVER_URL}}" target="_blank" rel="noopener noreferrer"><i class="bi bi-discord"></i>เข้า Support Server</a>
+      </div>
+    </section>
+
+    <section class="public-footer">© {{CURRENT_YEAR}} {{APP_NAME}} · Server Support</section>
+  </main>
+</body>
+</html>

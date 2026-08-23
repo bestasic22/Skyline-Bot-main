@@ -1,0 +1,79 @@
+    <section class="section-stack dashboard-detail-shell page-control-panel-shell">
+      <section class="panel">
+        <div class="panel-header detail-page-hero detail-page-hero-control-panel">
+          <div class="panel-title detail-page-hero-copy">
+            <h1 data-icon-key="control_panel">แผงควบคุม</h1>
+            <p>ศูนย์รวมการควบคุมฟีเจอร์หลักของบอท</p>
+          </div>
+          <div class="detail-page-metrics control-panel-hero-metrics">
+            <span class="pill"><i class="bi bi-journal-text" aria-hidden="true"></i> Audit: {total_audit_count}</span>
+            <span class="pill"><i class="bi bi-lightning-charge" aria-hidden="true"></i> ล่าสุด: {latest_audit_action}</span>
+          </div>
+        </div>
+
+        <section class="panel-sub detail-page-section control-panel-kpis">
+          <article class="control-panel-kpi-card">
+            <span class="control-panel-kpi-label">Audit Entries</span>
+            <strong>{total_audit_count}</strong>
+          </article>
+          <article class="control-panel-kpi-card">
+            <span class="control-panel-kpi-label">Guild</span>
+            <strong>{_escape(str(current_guild.get("name") or "-"))}</strong>
+          </article>
+          <article class="control-panel-kpi-card">
+            <span class="control-panel-kpi-label">Prefix</span>
+            <strong>{prefix_text}</strong>
+          </article>
+          <article class="control-panel-kpi-card">
+            <span class="control-panel-kpi-label">Language</span>
+            <strong>ไทย</strong>
+          </article>
+        </section>
+
+        <section class="panel-sub detail-page-section control-panel-history">
+          <div class="control-panel-history-head">
+            <h2 style="margin:0;" data-icon-key="audit_logs">ประวัติ</h2>
+            <span class="mini-stat">50 รายการต่อหน้า</span>
+          </div>
+          <p class="muted" style="margin-top:6px;">ประวัติการควบคุมและแก้ไขการตั้งค่าบอทในกิลด์ ว่าใครแก้อะไรและเมื่อไร</p>
+
+          <div class="control-panel-history-toolbar">
+            <label class="control-panel-history-search" for="controlPanelAuditSearchInput">
+              <i class="bi bi-search" aria-hidden="true"></i>
+              <input id="controlPanelAuditSearchInput" type="text" placeholder="ค้นหาผู้ใช้ / การกระทำ / เป้าหมาย">
+            </label>
+          </div>
+
+          <div class="control-panel-history-table-wrap">
+            <table class="data-table control-panel-history-table">
+              <thead>
+                <tr>
+                  <th>ผู้ใช้</th>
+                  <th>การกระทำ</th>
+                  <th>เป้าหมาย</th>
+                  <th>วันเวลา</th>
+                </tr>
+              </thead>
+              <tbody id="controlPanelAuditRows">
+                {''.join(control_rows_html)}
+              </tbody>
+            </table>
+          </div>
+          <div id="controlPanelAuditEmpty" class="control-panel-empty" style="display:none;">
+            <i class="bi bi-inbox" aria-hidden="true"></i>
+            <span>ไม่พบข้อมูล</span>
+          </div>
+
+          <div class="control-panel-pagination">
+            <button id="controlPanelAuditPrevPageBtn" class="ghost-btn control-panel-page-btn" type="button">
+              <i class="bi bi-chevron-left" aria-hidden="true"></i> ก่อนหน้า
+            </button>
+            <span class="mini-stat control-panel-page-pill">หน้า <b id="controlPanelAuditCurrentPage">1/1</b></span>
+            <button id="controlPanelAuditNextPageBtn" class="ghost-btn control-panel-page-btn" type="button">
+              ถัดไป <i class="bi bi-chevron-right" aria-hidden="true"></i>
+            </button>
+          </div>
+        </section>
+      </section>
+    </section>
+    <script>{_render_dashboard_f_template("scripts/control_panel_history.js", __ctx)}</script>

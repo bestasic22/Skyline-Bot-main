@@ -1,0 +1,52 @@
+
+    <div class="section-stack dashboard-detail-shell page-autoresponder-shell">
+        <section class="panel">
+            <div class="panel-header detail-page-hero detail-page-hero-autoresponder">
+                <div class="panel-title detail-page-hero-copy">
+                    <h1 data-i18n="tab_autoresponder" data-icon-key="autoresponder">Auto Responder</h1>
+                    <p>Set keyword triggers and automatic replies for your server.</p>
+                </div>
+                <span class="plugin-premium-pill">Plan: {_escape(plan_name)} | {used_items}/{max_items}</span>
+            </div>
+            {"<div class='notice'>Reached plan limit for this feature.</div>" if limit_reached else ""}
+
+            <form method="post" action="/dashboard/guild/{current_guild['id']}/autoresponder/add" class="panel-sub detail-page-section" style="margin-bottom:14px;">
+                <h2 style="margin-top:0;" data-icon-key="autoresponder_setup">Create Auto Reply</h2>
+                <div class="field-group">
+                    <div class="field-item">
+                        <label>Keyword trigger</label>
+                        <input type="text" name="keyword" placeholder="e.g. hello, rules" required {"disabled" if limit_reached else ""}>
+                    </div>
+                </div>
+                <div class="field-item" style="margin-bottom:24px;">
+                    <label>Response message</label>
+                    <textarea name="response" placeholder="Message the bot should reply with..." required style="min-height:100px;" {"disabled" if limit_reached else ""}></textarea>
+                </div>
+                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                    <button class="primary-btn" type="submit" style="width:fit-content; padding:0 24px;" {"disabled" if limit_reached else ""}>+ Add Auto Reply</button>
+                    {"<a class='ghost-btn' href='" + SUBSCRIBE_PLAN_PATH + "'>Upgrade Plan</a>" if limit_reached else ""}
+                </div>
+            </form>
+
+            <section class="panel-sub detail-page-section" style="padding:0; overflow:hidden;">
+                <div class="panel-header" style="padding:14px 16px 0;">
+                    <div class="panel-title">
+                        <h2 style="margin:0;" data-icon-key="autoresponder_list">Configured Responses</h2>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Keyword</th>
+                            <th>Response</th>
+                            <th style="width:80px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {rows if rows else '<tr><td colspan="3" class="muted" style="text-align:center; padding:40px;">No auto responses configured yet.</td></tr>'}
+                    </tbody>
+                </table>
+            </section>
+        </section>
+    </div>
+    

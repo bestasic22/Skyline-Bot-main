@@ -1,0 +1,316 @@
+    <section class="panel section-stack page-embed-messages-shell">
+      <div class="panel-header detail-page-hero detail-page-hero-embed-messages">
+        <div class="panel-title detail-page-hero-copy">
+          <h1 data-i18n="tab_embed_messages" data-icon-key="embed_messages">ข้อความแบบ Embed</h1>
+          <p>สร้าง แก้ไข จัดเก็บ และส่ง Embed ของกิลด์จากหน้าเดียว พร้อมพรีวิวแบบเรียลไทม์ก่อนใช้งานจริง</p>
+        </div>
+        <div class="embed-hero-metrics">
+          <span class="pill">
+            <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+            เทมเพลต
+            <strong id="embedTemplateCount">0</strong>
+          </span>
+          <span class="pill">
+            <i class="fa-regular fa-rectangle-list" aria-hidden="true"></i>
+            Fields
+            <strong id="embedSelectedFieldCount">0</strong>
+          </span>
+          <span class="pill">
+            <i class="fa-solid fa-reply" aria-hidden="true"></i>
+            Responses
+            <strong id="embedSelectedResponseCount">0</strong>
+          </span>
+          <span class="pill muted" id="embedSelectedLabel">ยังไม่ได้เลือกรายการ</span>
+        </div>
+      </div>
+
+      <form method="post" action="/dashboard/guild/{current_guild['id']}/embed_messages" id="embedMessagesForm" enctype="multipart/form-data">
+        <input type="hidden" name="selected_id" id="embedSelectedIdInput" value="{_escape(selected_id)}">
+        <input type="hidden" name="items_json" id="embedItemsJsonInput" value="{items_json}">
+
+        <div class="embed-layout">
+          <aside class="panel-sub embed-sidebar">
+            <div class="embed-sidebar-head">
+              <div>
+                <h2>รายการ Embed</h2>
+                <p class="muted">ค้นหา เลือก และจัดการเทมเพลต Embed ได้เร็วขึ้น</p>
+              </div>
+              <button id="createHeroEmbedBtn" class="primary-btn" type="button">
+                <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                สร้างใหม่
+              </button>
+            </div>
+
+            <div class="field-item">
+              <label>ค้นหา Embed</label>
+              <div class="embed-search-wrap">
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                <input id="embedSearchInput" type="text" placeholder="พิมพ์ชื่อ Embed ที่ต้องการ...">
+              </div>
+            </div>
+
+            <div class="field-item">
+              <label>เทมเพลตทั้งหมด</label>
+              <select id="embedPicker" size="9"></select>
+            </div>
+
+            <div id="embedSelectedSummary" class="panel-sub embed-selected-summary">
+              <div class="embed-summary-row"><span>Mode</span><strong id="embedSummaryMode">embed</strong></div>
+              <div class="embed-summary-row"><span>Fields</span><strong id="embedSummaryFields">0</strong></div>
+              <div class="embed-summary-row"><span>Responses</span><strong id="embedSummaryResponses">0</strong></div>
+              <div class="embed-summary-row"><span>Channel</span><strong id="embedSummaryChannel">-</strong></div>
+            </div>
+
+            <div id="embedEmptyState" class="panel-sub embed-empty-state">
+              <button id="createFirstEmbedBtn" class="ghost-btn" type="button">
+                <i class="fa-solid fa-circle-plus" aria-hidden="true"></i>
+                สร้าง Embed แรกของกิลด์
+              </button>
+            </div>
+
+            <div class="embed-sidebar-actions">
+              <div class="embed-action-row">
+                <button id="embedDuplicateInlineBtn" class="ghost-btn" type="button">
+                  <i class="fa-solid fa-clone" aria-hidden="true"></i>
+                  ทำสำเนา
+                </button>
+                <button id="embedDeleteInlineBtn" class="danger-btn" type="button">
+                  <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                  ลบ
+                </button>
+              </div>
+              <div class="field-item">
+                <label>ส่งไปยังห้อง</label>
+                <select id="embedSendChannelSelect"></select>
+              </div>
+              <div class="embed-action-row">
+                <button id="embedSendBtn" class="primary-btn" type="button">
+                  <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+                  ส่ง Embed
+                </button>
+                <button id="embedMoreBtn" class="ghost-btn icon-btn" type="button" aria-label="ตัวเลือกเพิ่มเติม">
+                  <i class="fa-solid fa-ellipsis" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>
+
+            <p class="muted embed-sidebar-note">
+              เคล็ดลับ: เลือกห้องส่งในส่วนนี้เพื่อทดสอบข้อความทันที โดยไม่กระทบรายการอื่น
+            </p>
+          </aside>
+
+          <div id="embedEditorWrap" class="section-stack embed-editor-wrap" style="display:none;">
+            <section class="panel-sub embed-editor-shell">
+              <div class="embed-editor-top">
+                <div class="field-item">
+                  <label>ชื่อ Embed</label>
+                  <input id="embedNameInput" type="text" maxlength="90" placeholder="เช่น Welcome Embed">
+                  <div class="embed-counter-row"><span id="embedNameCounter" class="muted">0/90</span></div>
+                </div>
+                <div class="embed-mode-switch">
+                  <button id="embedTabTextBtn" class="ghost-btn" type="button">ข้อความ</button>
+                  <button id="embedTabEmbedBtn" class="primary-btn" type="button">Embed</button>
+                </div>
+              </div>
+
+              <div id="embedTextComposer" class="field-item">
+                <label>ข้อความประกอบ (เหนือ Embed)</label>
+                <textarea id="embedContentInput" placeholder="พิมพ์ข้อความที่ต้องการแสดงก่อน Embed..."></textarea>
+                <div class="embed-counter-row"><span id="embedContentCounter" class="muted">0/2000+</span></div>
+              </div>
+
+              <div class="embed-workbench">
+                <section id="embedComposerArea" class="panel-sub embed-compose-panel">
+                  <div class="embed-card-head">
+                    <h3>ออกแบบ Embed</h3>
+                    <p class="muted">กำหนดหัวข้อ รายละเอียด ฟิลด์ และรูปภาพ</p>
+                  </div>
+
+                  <div class="embed-color-row">
+                    <span class="muted">สีหลัก</span>
+                    <button type="button" class="embed-color-dot" data-color="#ED4245" style="background:#ED4245;" title="#ED4245"></button>
+                    <button type="button" class="embed-color-dot" data-color="#FAA61A" style="background:#FAA61A;" title="#FAA61A"></button>
+                    <button type="button" class="embed-color-dot" data-color="#FEE75C" style="background:#FEE75C;" title="#FEE75C"></button>
+                    <button type="button" class="embed-color-dot" data-color="#57F287" style="background:#57F287;" title="#57F287"></button>
+                    <button type="button" class="embed-color-dot" data-color="#00A8FC" style="background:#00A8FC;" title="#00A8FC"></button>
+                    <button type="button" class="embed-color-dot" data-color="#5865F2" style="background:#5865F2;" title="#5865F2"></button>
+                    <input id="embedColorInput" type="color" title="เลือกสีเอง">
+                  </div>
+
+                  <input id="embedAuthorIconInput" type="hidden">
+                  <input id="embedThumbnailInput" type="hidden">
+                  <input id="embedImageInput" type="hidden">
+                  <input id="embedFooterIconInput" type="hidden">
+                  <input id="embedAuthorIconFileInput" name="embed_author_icon_file" type="file" accept=".png,.jpg,.jpeg,.webp,.gif" style="display:none;">
+                  <input id="embedThumbnailFileInput" name="embed_thumbnail_file" type="file" accept=".png,.jpg,.jpeg,.webp,.gif" style="display:none;">
+                  <input id="embedImageFileInput" name="embed_image_file" type="file" accept=".png,.jpg,.jpeg,.webp,.gif" style="display:none;">
+                  <input id="embedFooterIconFileInput" name="embed_footer_icon_file" type="file" accept=".png,.jpg,.jpeg,.webp,.gif" style="display:none;">
+
+                  <div class="eb-composer-grid">
+                    <button type="button" id="embedAuthorIconPicker" class="eb-icon-picker" title="อัปโหลดไอคอนผู้เขียน">
+                      <i class="fa-solid fa-user" aria-hidden="true"></i>
+                    </button>
+                    <input id="embedAuthorNameInput" type="text" maxlength="256" placeholder="ชื่อผู้เขียน (Author)">
+                    <input id="embedAuthorUrlInput" type="text" maxlength="600" placeholder="ลิงก์ผู้เขียน (ไม่บังคับ)">
+                    <button type="button" id="embedThumbPicker" class="eb-thumb-picker" title="อัปโหลดรูป Thumbnail">
+                      <i class="fa-solid fa-image" aria-hidden="true"></i>
+                    </button>
+                  </div>
+
+                  <div class="field-item">
+                    <label>หัวข้อ Embed</label>
+                    <input id="embedTitleInput" type="text" maxlength="256" placeholder="เช่น กฎเซิร์ฟเวอร์">
+                    <div class="embed-counter-row"><span id="embedTitleCounter" class="muted">0/256</span></div>
+                  </div>
+
+                  <div class="field-item">
+                    <label>คำอธิบาย</label>
+                    <textarea id="embedDescriptionInput" maxlength="4000" placeholder="ใส่รายละเอียดหรือข้อมูลที่ต้องการสื่อสาร..."></textarea>
+                    <div class="embed-counter-row"><span id="embedDescriptionCounter" class="muted">0/4000</span></div>
+                  </div>
+
+                  <div class="embed-fields-head">
+                    <h4>ฟิลด์ (Fields)</h4>
+                    <button id="embedAddFieldBtn" class="ghost-btn" type="button">
+                      <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                      เพิ่มฟิลด์
+                    </button>
+                  </div>
+                  <div id="embedFieldsWrap" class="section-stack"></div>
+
+                  <button type="button" id="embedImagePicker" class="eb-image-picker" title="อัปโหลดรูปหลักของ Embed">
+                    <span>
+                      <i class="fa-solid fa-photo-film" aria-hidden="true"></i>
+                      คลิกเพื่อเพิ่มรูปภาพหลักของ Embed
+                    </span>
+                  </button>
+
+                  <div class="eb-composer-grid eb-footer-grid">
+                    <button type="button" id="embedFooterIconPicker" class="eb-icon-picker" title="อัปโหลดไอคอนท้ายข้อความ">
+                      <i class="fa-solid fa-flag" aria-hidden="true"></i>
+                    </button>
+                    <input id="embedFooterTextInput" type="text" maxlength="2048" placeholder="ข้อความท้าย (Footer)" style="grid-column: span 3;">
+                  </div>
+                  <div class="embed-counter-row"><span id="embedFooterCounter" class="muted">0/2048</span></div>
+
+                  <div class="field-item">
+                    <label>ห้องเริ่มต้นสำหรับรายการนี้</label>
+                    <select id="embedChannelSelect"></select>
+                  </div>
+                </section>
+
+                <section class="panel-sub embed-preview-panel">
+                  <div class="embed-card-head">
+                    <h3>ตัวอย่างทันที</h3>
+                    <p class="muted">พรีวิวรูปแบบก่อนบันทึกหรือส่งจริง</p>
+                  </div>
+                  <article id="embedPreviewCard" class="panel-sub embed-preview-card">
+                    <div id="embedPreviewContent" class="muted embed-preview-content"></div>
+                    <div class="embed-preview-headline">
+                      <div class="embed-preview-author-wrap">
+                        <img id="embedPreviewAuthorIcon" class="embed-preview-author-icon" alt="author icon">
+                        <div id="embedPreviewAuthor" class="muted embed-preview-author"></div>
+                      </div>
+                      <img id="embedPreviewThumbnail" class="embed-preview-thumbnail" alt="thumbnail">
+                    </div>
+                    <h3 id="embedPreviewTitle">หัวข้อ</h3>
+                    <div id="embedPreviewDesc" class="muted">คำอธิบาย</div>
+                    <div id="embedPreviewFields" class="field-group embed-preview-fields"></div>
+                    <img id="embedPreviewImage" class="embed-preview-image" alt="embed image">
+                    <div id="embedPreviewFooterWrap" class="muted embed-preview-footer">
+                      <img id="embedPreviewFooterIcon" class="embed-preview-footer-icon" alt="footer icon">
+                      <span id="embedPreviewFooter"></span>
+                    </div>
+                  </article>
+                </section>
+              </div>
+
+              <section class="panel-sub embed-response-panel">
+                <div class="embed-card-head">
+                  <h3>การตอบกลับ (Buttons / Select Menu)</h3>
+                  <button id="embedAddResponseBtn" class="ghost-btn" type="button">
+                    <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                    เพิ่มการตอบกลับ
+                  </button>
+                </div>
+                <div id="embedResponsesList" class="section-stack"></div>
+                <div id="embedResponsesEmpty" class="muted embed-empty-response">
+                  ยังไม่มีการตอบกลับ กดปุ่ม "เพิ่มการตอบกลับ" เพื่อเริ่มต้น
+                </div>
+              </section>
+            </section>
+          </div>
+        </div>
+
+        <div class="form-actions-fixed embed-actions-fixed">
+          <div id="embedSaveState" class="muted embed-save-state">ยังไม่มีการเปลี่ยนแปลง</div>
+          <div class="embed-actions-right">
+            <a class="ghost-btn" href="/dashboard/guild/{current_guild['id']}/embed_messages">
+              <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+              รีเซ็ต
+            </a>
+            <button id="embedSaveBtn" class="primary-btn" type="submit">
+              <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+              บันทึก Embed Messages
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <div id="embedSendStatus" class="embed-send-status" aria-live="polite"></div>
+
+      <div id="embedMoreMenu" class="panel-sub dashboard-pop-menu">
+        <button id="embedDuplicateBtn" class="ghost-btn" type="button">
+          <i class="fa-solid fa-clone" aria-hidden="true"></i>
+          ทำสำเนา Embed
+        </button>
+        <button id="embedDeleteBtn" class="danger-btn" type="button">
+          <i class="fa-solid fa-trash" aria-hidden="true"></i>
+          ลบ Embed
+        </button>
+      </div>
+
+      <div id="embedResponseModal" class="dashboard-modal-overlay" aria-hidden="true">
+        <div class="panel dashboard-modal" role="dialog" aria-modal="true" aria-label="เพิ่มการตอบกลับ">
+          <h3>เพิ่มการตอบกลับ</h3>
+          <div class="field-group">
+            <div class="field-item">
+              <label>ประเภทการตอบกลับ</label>
+              <select id="responseTypeInput">
+                <option value="button">ปุ่ม (Button)</option>
+                <option value="select">เมนูเลือก (Select Menu)</option>
+              </select>
+            </div>
+            <div class="field-item">
+              <label>ชื่อปุ่ม / ตัวเลือก</label>
+              <input id="responseLabelInput" type="text" maxlength="80" placeholder="เช่น ยืนยัน">
+            </div>
+            <div class="field-item">
+              <label>สไตล์</label>
+              <select id="responseStyleInput">
+                <option value="primary">Primary</option>
+                <option value="secondary">Secondary</option>
+                <option value="success">Success</option>
+                <option value="danger">Danger</option>
+              </select>
+            </div>
+            <div class="field-item">
+              <label>Emoji (ไม่บังคับ)</label>
+              <input id="responseEmojiInput" type="text" maxlength="64" placeholder="เช่น ✅ หรือ <:emoji:123456789012345678>">
+            </div>
+          </div>
+          <div class="field-item">
+            <label>ตัวเลือก (แยกบรรทัดละ 1 รายการ)</label>
+            <textarea id="responseOptionsInput" placeholder="ตัวเลือก 1&#10;ตัวเลือก 2&#10;ตัวเลือก 3"></textarea>
+          </div>
+          <div class="embed-modal-actions">
+            <button id="responseCancelBtn" class="ghost-btn" type="button">ยกเลิก</button>
+            <button id="responseSaveBtn" class="primary-btn" type="button">เพิ่มการตอบกลับ</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="embedChannelTemplateHolder" style="display:none;">{channel_select_template}</div>
+    </section>
+    <link rel="stylesheet" href="/dashboard/static/dashboard/pages/embed_messages.css">
+    <script>{_render_dashboard_f_template("scripts/embed_messages.js", __ctx)}</script>

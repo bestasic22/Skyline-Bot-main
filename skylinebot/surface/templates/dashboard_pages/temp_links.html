@@ -1,0 +1,107 @@
+
+    <section class="panel section-stack">
+      <div class="panel-header">
+        <div class="panel-title">
+          <h1>ลิงก์ชั่วคราว</h1>
+          <p>สร้างลิงก์ใช้งานครั้งเดียวหรือชั่วคราวตามเงื่อนไข โดยแยกการทำงานจากหน้าโปรโมต</p>
+        </div>
+      </div>
+
+      <section class="panel-sub">
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+          <span class="pill">สถานะ: {"เปิดใช้งาน" if enabled else "ปิดใช้งาน"}</span>
+          <span class="pill">ห้องเริ่มต้น: {_escape(f'#{getattr(selected_channel, "name", "-")}' if selected_channel else "-")}</span>
+          <span class="pill">หมดอายุเริ่มต้น: {max_age_minutes} นาที</span>
+          <span class="pill">จำนวนใช้งานเริ่มต้น: {max_uses} ครั้ง</span>
+        </div>
+      </section>
+
+      <section class="panel-sub">
+        <h3 style="margin-top:0;">1) ตั้งค่าลิงก์</h3>
+        <form method="post" action="/dashboard/guild/{current_guild['id']}/temp_links/settings">
+          <div class="field-group">
+            <label class="ux-toggle">
+              <span class="ux-toggle-label">เปิด/ปิดลิงก์</span>
+              <input type="checkbox" name="enabled" {"checked" if enabled else ""}>
+              <span class="ux-switch"></span>
+            </label>
+            <div class="field-item">
+              <label>ห้องเริ่มต้นสำหรับลิงก์</label>
+              {_render_channel_select("channel_id", bot_guild, channel_id, placeholder="เลือกห้อง...", filter_types=["text", "news", "forum", "voice", "stage_voice"])}
+            </div>
+            <div class="field-item">
+              <label>จำนวนใช้งานสูงสุดดเริ่มต้น</label>
+              <input type="number" min="1" max="100" name="max_uses" value="{max_uses}">
+            </div>
+            <div class="field-item">
+              <label>อายุลิงก์เริ่มต้น (นาที)</label>
+              <input type="number" min="1" max="10080" name="max_age_minutes" value="{max_age_minutes}">
+            </div>
+            <label class="ux-toggle">
+              <span class="ux-toggle-label">ให้สิทธิ์สมาชิกชั่วคราวเมื่อเข้าผ่านลิงก์</span>
+              <input type="checkbox" name="temporary_membership" {"checked" if temporary_membership else ""}>
+              <span class="ux-switch"></span>
+            </label>
+            <label class="ux-toggle">
+              <span class="ux-toggle-label">ไม่ให้ผู้ใช้คนเดิมสร้างซ้ำ (Unique per member)</span>
+              <input type="checkbox" name="unique_per_member" {"checked" if unique_per_member else ""}>
+              <span class="ux-switch"></span>
+            </label>
+          </div>
+          <div class="form-actions-inline">
+            <button class="primary-btn" type="submit">บันทึกการตั้งค่าลิงก์</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel-sub">
+        <h3 style="margin-top:0;">2) สร้างลิงก์ชั่วคราวทันที</h3>
+        <form method="post" action="/dashboard/guild/{current_guild['id']}/temp_links/create">
+          <div class="field-group">
+            <div class="field-item">
+              <label>เลือกห้อง (ว่าง = ใช้ค่าห้องเริ่มต้น)</label>
+              {_render_channel_select("channel_id", bot_guild, channel_id, placeholder="เลือกห้อง", filter_types=["text", "news", "forum", "voice", "stage_voice"])}
+            </div>
+            <div class="field-item">
+              <label>จำนวนใช้งานสูงสุด</label>
+              <input type="number" min="1" max="100" name="max_uses" value="{max_uses}">
+            </div>
+            <div class="field-item">
+              <label>อายุลิงก์ (นาที)</label>
+              <input type="number" min="1" max="10080" name="max_age_minutes" value="{max_age_minutes}">
+            </div>
+            <label class="ux-toggle">
+              <span class="ux-toggle-label">Temporary Membership</span>
+              <input type="checkbox" name="temporary_membership" {"checked" if temporary_membership else ""}>
+              <span class="ux-switch"></span>
+            </label>
+          </div>
+          <div class="form-actions-inline">
+            <button class="primary-btn" type="submit" {"disabled" if not enabled else ""}>สร้างลิงก์</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel-sub">
+        <h3 style="margin-top:0;">3) ลิงก์ชั่วคราวล่าสุ</h3>
+        <div style="overflow:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>ลิงก์</th>
+                <th>ห้อง</th>
+                <th>ผู้ใช้</th>
+                <th>หมดอายุ</th>
+                <th>โค้ด</th>
+                <th>สถานะ</th>
+                <th>เวลา</th>
+              </tr>
+            </thead>
+            <tbody>
+              {"".join(rows) if rows else '<tr><td colspan="7" style="text-align:center;">ยังไม่มีลิงก์จากหน้าเว็บ</td></tr>'}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+    

@@ -1,0 +1,230 @@
+
+    <div class="section-stack dashboard-detail-shell page-welcome-shell page-welcome-mode-{_escape(active_tab_slug)}">
+        <section class="panel dashboard-first-panel">
+            <div class="panel-header detail-page-hero detail-page-hero-welcome">
+                <div class="panel-title detail-page-hero-copy">
+                    <h1 data-i18n="tab_welcomer" data-icon-key="welcome_center">{_escape(title_text)}</h1>
+                    <p>{_escape(desc_text)}</p>
+                </div>
+                <div class="detail-page-metrics welcome-hero-metrics">
+                    <span class="pill"><i class="bi bi-toggles" aria-hidden="true"></i> Enabled features {welcome_enabled_features}/8</span>
+                    <span class="pill"><i class="bi bi-people" aria-hidden="true"></i> Auto Role {len(current_autoroles)}/{max_autoroles}</span>
+                    <span class="plugin-premium-pill">Plan: {_escape(plan_name)}</span>
+                </div>
+            </div>
+
+            <div class="welcome-tab-switch">
+                <a class="primary-btn" href="/dashboard/guild/{current_guild['id']}/welcome">Welcome tab</a>
+                <a class="ghost-btn" href="/dashboard/guild/{current_guild['id']}/leaver">Leaver tab</a>
+            </div>
+
+            <div class="notice welcome-plan-notice">Your current plan supports up to {max_autoroles} auto roles.</div>
+
+            <form method="post" action="/dashboard/guild/{current_guild['id']}/welcome" id="welcomeSettingsForm" enctype="multipart/form-data" class="welcome-form">
+                <input type="hidden" name="form_section" value="welcome">
+                <input type="hidden" name="redirect_tab" value="{_escape(active_tab_slug)}">
+
+                <section class="panel-sub detail-page-section welcome-message-section">
+                    <h2 style="margin-top:0;" data-icon-key="welcome_message">Welcome Message</h2>
+                    <div class="ux-toggle-group detail-page-toggle-grid">
+                        <label class="ux-toggle"><span class="ux-toggle-label">Enable welcome system</span><input type="checkbox" name="welcome" {"checked" if data.get("welcome") else ""}><span class="ux-switch"></span></label>
+                        <label class="ux-toggle"><span class="ux-toggle-label">Send welcome message</span><input type="checkbox" name="welcome_message" {"checked" if data.get("welcome_message") else ""}><span class="ux-switch"></span></label>
+                        <label class="ux-toggle"><span class="ux-toggle-label">Use embed format</span><input type="checkbox" name="welcome_embed" {"checked" if data.get("welcome_embed") else ""} id="welcomeEmbedToggle"><span class="ux-switch"></span></label>
+                        <label class="ux-toggle"><span class="ux-toggle-label">Send image card (premium)</span><input type="checkbox" name="welcome_image" {"checked" if data.get("welcome_image") else ""} {image_locked_attr}><span class="ux-switch"></span></label>
+                    </div>
+                    <div class="field-group detail-page-grid">
+                        <div class="field-item">
+                            <label>Welcome channel</label>
+                            {_render_channel_select("welcome_channel", bot_guild, data.get('welcome_channel'))}
+                        </div>
+                        <div class="field-item">
+                            <label>Welcome text</label>
+                            <textarea name="welcome_message_content" id="welcomeMessageInput" style="min-height:120px;">{_escape(data.get('welcome_message_content', ''))}</textarea>
+                            <p class="muted welcome-token-hints">
+                                Tokens: <code>{{user}}</code> <code>{{user.mention}}</code> <code>{{user.id}}</code> <code>{{server}}</code> <code>{{server.id}}</code> <code>{{member.count}}</code> <code>{{time}}</code> <code>{{channel.id}}</code> <code>{{channel}}</code> <code>{{inviter.mention}}</code> <code>{{inviter.count}}</code> <code>{{invite.code}}</code> <code>{{invite.link}}</code>
+                            </p>
+                            <p class="muted welcome-token-hints-sub">รองรับ alias เพิ่มเติม: <code>{{channel.mention}}</code> <code>{{channel.name}}</code> <code>{{welcome.channel.id}}</code> <code>{{room.id}}</code></p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel-sub detail-page-section welcome-invite-section">
+                    <h2 style="margin-top:0;" data-icon-key="invite">Invite Tracking & Notice</h2>
+                    <div class="ux-toggle-group detail-page-toggle-grid">
+                        <label class="ux-toggle"><span class="ux-toggle-label">Enable invite tracking</span><input type="checkbox" name="invite_tracking_enabled" {"checked" if invite_tracking_enabled else ""}><span class="ux-switch"></span></label>
+                        <label class="ux-toggle"><span class="ux-toggle-label">Add invite notice in welcome</span><input type="checkbox" name="invite_welcome_enabled" {"checked" if invite_welcome_enabled else ""}><span class="ux-switch"></span></label>
+                    </div>
+                    <div class="field-group detail-page-grid">
+                        <div class="field-item">
+                            <label>Invite notice template (when known)</label>
+                            <textarea name="invite_welcome_template" style="min-height:80px;">{_escape(invite_welcome_template)}</textarea>
+                            <p class="muted" style="margin-top:6px;">Use: <code>{{inviter}}</code> <code>{{inviter.mention}}</code> <code>{{inviter.id}}</code> <code>{{inviter.count}}</code> <code>{{invite.code}}</code> <code>{{invite.link}}</code></p>
+                        </div>
+                        <div class="field-item">
+                            <label>Fallback template (when unknown)</label>
+                            <textarea name="invite_welcome_unknown_template" style="min-height:80px;">{_escape(invite_welcome_unknown_template)}</textarea>
+                            <p class="muted" style="margin-top:6px;">Shown when bot cannot detect which invite was used.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel-sub detail-page-section welcome-roles-section">
+                    <h2 style="margin-top:0;" data-icon-key="welcome_roles">Auto Role & Auto Nick</h2>
+                    <div class="ux-toggle-group detail-page-toggle-grid">
+                        <label class="ux-toggle"><span class="ux-toggle-label">Enable auto role</span><input type="checkbox" name="autorole" {"checked" if data.get("autorole") else ""}><span class="ux-switch"></span></label>
+                        <label class="ux-toggle"><span class="ux-toggle-label">Enable auto nickname</span><input type="checkbox" name="autonick" {"checked" if data.get("autonick") else ""}><span class="ux-switch"></span></label>
+                    </div>
+                    <div class="field-group detail-page-grid">
+                        <div class="field-item">
+                            <label>Auto roles (multi-select)</label>
+                            {_render_multi_role_select("autoroles", bot_guild, data.get('autoroles'))}
+                            <p class="muted" style="margin-top:6px;">Current limit: {max_autoroles} roles</p>
+                        </div>
+                        <div class="field-item">
+                            <label>Auto nickname format</label>
+                            <input type="text" name="autonick_format" value="{_escape(data.get('autonick_format', ''))}" placeholder="{{user}} | member">
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel-sub detail-page-section welcome-media-section">
+                    <h2 style="margin-top:0;" data-icon-key="welcome_media">Media for Welcome Embed</h2>
+                    <div class="field-item">
+                        <label>Image / GIF URL</label>
+                        <input type="text" id="welcomeEmbedImageInput" name="welcome_embed_image" value="{_escape(welcome_embed_image)}" placeholder="https://.../welcome.gif">
+                    </div>
+                    <div class="field-item" style="margin-top:10px;">
+                        <label>Upload image / GIF</label>
+                        <input type="file" id="welcomeEmbedImageFileInput" name="welcome_embed_image_file" accept=".png,.jpg,.jpeg,.webp,.gif" style="display:none;">
+                        <div id="welcomeEmbedImageDropzone" class="upload-dropzone welcome-upload-dropzone">
+                            <div class="muted">Drag file here or click to upload</div>
+                            <div id="welcomeEmbedImageFileName" class="welcome-upload-file-name">Supports png/jpg/jpeg/webp/gif</div>
+                        </div>
+                        <div id="welcomeEmbedImagePreviewWrap" class="welcome-upload-preview" style="{'' if welcome_embed_image else 'display:none;'}">
+                            <img id="welcomeEmbedImagePreview" src="{_escape(welcome_embed_image)}" alt="welcome-embed-preview" class="welcome-upload-preview-image">
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel-sub detail-page-section welcome-card-section">
+                    <h2 style="margin-top:0;" data-icon-key="welcome_card">Image Card Layout (Premium)</h2>
+                    {'' if can_use_image_cards else '<div class="notice" style="margin-bottom:10px;">Image cards require Silver plan or higher.</div>'}
+                    <div class="field-group detail-page-grid">
+                        <div class="field-item">
+                            <label>Theme</label>
+                            <select name="welcome_image_theme" {image_locked_attr}>
+                                <option value="music" {"selected" if welcome_image_theme == "music" else ""}>Music</option>
+                                <option value="security" {"selected" if welcome_image_theme == "security" else ""}>Security</option>
+                                <option value="giveaway" {"selected" if welcome_image_theme == "giveaway" else ""}>Giveaway</option>
+                                <option value="user" {"selected" if welcome_image_theme == "user" else ""}>User Avatar</option>
+                                <option value="guild" {"selected" if welcome_image_theme == "guild" else ""}>Guild Icon</option>
+                                <option value="custom" {"selected" if welcome_image_theme == "custom" else ""}>Custom URL</option>
+                            </select>
+                        </div>
+                        <div class="field-item">
+                            <label>Custom theme URL</label>
+                            <input type="text" name="welcome_image_theme_url" value="{_escape(welcome_image_theme_url)}" placeholder="https://.../welcome-theme.png" {image_locked_attr}>
+                        </div>
+                    </div>
+                    <div class="field-group detail-page-grid">
+                        <div class="field-item">
+                            <label>Layout mode</label>
+                            <select name="welcome_image_layout_mode" {image_locked_attr}>
+                                <option value="center_stack" {"selected" if welcome_image_layout_mode == "center_stack" else ""}>Center avatar + stacked text</option>
+                                <option value="left_avatar" {"selected" if welcome_image_layout_mode == "left_avatar" else ""}>Left avatar</option>
+                                <option value="right_avatar" {"selected" if welcome_image_layout_mode == "right_avatar" else ""}>Right avatar</option>
+                            </select>
+                        </div>
+                        <div class="field-item">
+                            <label>Avatar position</label>
+                            <select name="welcome_image_avatar_position" {image_locked_attr}>
+                                <option value="left" {"selected" if welcome_image_avatar_position == "left" else ""}>Left</option>
+                                <option value="center" {"selected" if welcome_image_avatar_position == "center" else ""}>Center</option>
+                                <option value="right" {"selected" if welcome_image_avatar_position == "right" else ""}>Right</option>
+                            </select>
+                        </div>
+                        <div class="field-item">
+                            <label>Text align</label>
+                            <select name="welcome_image_text_align" {image_locked_attr}>
+                                <option value="left" {"selected" if welcome_image_text_align == "left" else ""}>Left</option>
+                                <option value="center" {"selected" if welcome_image_text_align == "center" else ""}>Center</option>
+                                <option value="right" {"selected" if welcome_image_text_align == "right" else ""}>Right</option>
+                            </select>
+                        </div>
+                        <div class="field-item">
+                            <label>Font style</label>
+                            <select name="welcome_image_font_style" {image_locked_attr}>
+                                <option value="classic" {"selected" if welcome_image_font_style == "classic" else ""}>Classic</option>
+                                <option value="clean" {"selected" if welcome_image_font_style == "clean" else ""}>Clean</option>
+                                <option value="impact" {"selected" if welcome_image_font_style == "impact" else ""}>Impact</option>
+                                <option value="soft" {"selected" if welcome_image_font_style == "soft" else ""}>Soft</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field-group detail-page-grid">
+                        <div class="field-item">
+                            <label>Top text</label>
+                            <input type="text" name="welcome_image_top_text" value="{_escape(welcome_image_top_text)}" placeholder="{{user}}" maxlength="240" {image_locked_attr}>
+                        </div>
+                        <div class="field-item">
+                            <label>Bottom text</label>
+                            <input type="text" name="welcome_image_bottom_text" value="{_escape(welcome_image_bottom_text)}" placeholder="Welcome to {{server}}" maxlength="260" {image_locked_attr}>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel-sub detail-page-section welcome-preview-section">
+                    <h2 style="margin-top:0;" data-icon-key="welcome_preview">Embed Preview</h2>
+                    <div class="mock-switch-row" style="margin-bottom:8px;">
+                        <div class="mock-switch-group">
+                            <span class="mock-switch-title">Mock User</span>
+                            <div id="welcomeMockUserButtons" class="mock-switch-buttons"></div>
+                        </div>
+                        <div class="mock-switch-group">
+                            <span class="mock-switch-title">Mock Server</span>
+                            <div id="welcomeMockServerButtons" class="mock-switch-buttons"></div>
+                        </div>
+                    </div>
+                    <div id="welcomePreviewModes" class="muted welcome-preview-mode">Enabled modes: -</div>
+                    <div id="welcomePreviewWrap" class="welcome-preview-wrap">
+                        <div class="welcome-message-shell">
+                            <div class="welcome-message-head">
+                                <img src="{preview_bot_avatar}" alt="{preview_bot_name}" class="welcome-message-avatar">
+                                <strong>{preview_bot_name}</strong>
+                                <span class="muted welcome-message-app">{preview_bot_name} APP</span>
+                            </div>
+                            <div id="welcomePreviewCard" class="welcome-preview-card">
+                                <div class="welcome-preview-main">
+                                    <div>
+                                        <div id="welcomePreviewMemberName" class="welcome-preview-member">{preview_member_name}</div>
+                                        <div id="welcomePreviewText" class="muted">{_escape(welcome_preview)}</div>
+                                        <img id="welcomePreviewEmbedImage" src="{_escape(welcome_embed_image)}" alt="welcome-embed-image" class="welcome-preview-image" style="{'' if welcome_embed_image else 'display:none;'}">
+                                    </div>
+                                    <img id="welcomePreviewMemberAvatar" src="{preview_member_avatar}" alt="avatar" class="welcome-preview-member-avatar">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="welcome-image-card-shell">
+                        <div class="muted welcome-image-card-label">Image card preview (what will actually be sent)</div>
+                        <div id="welcomeImageCardPreview" class="member-notice-preview-card">
+                            <div class="member-notice-preview-overlay"></div>
+                            <div id="welcomeImageCardLayout" class="member-notice-preview-layout">
+                                <img src="{preview_member_avatar}" alt="{preview_member_name}" id="welcomeImageCardAvatar" class="member-notice-preview-avatar">
+                                <div id="welcomeImageCardTextWrap" class="member-notice-preview-text">
+                                    <div id="welcomeImageCardTop" class="member-notice-preview-top">{_escape(welcome_image_top_text)}</div>
+                                    <div id="welcomeImageCardBottom" class="member-notice-preview-bottom">{_escape(welcome_image_bottom_text)}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="welcomeImageCardMeta" class="muted welcome-image-card-meta">Theme: {_escape(welcome_image_theme)}</div>
+                    </div>
+                </section>
+
+                <div class="form-actions-fixed welcome-submit-row">
+                    <button class="primary-btn" type="submit">Save welcome settings</button>
+                </div>
+            </form>
+        </section>
+    </div>
+    <script>{_render_dashboard_f_template("scripts/welcome.js", __ctx)}</script>

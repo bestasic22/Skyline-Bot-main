@@ -1,0 +1,591 @@
+.page-donatebot-hub-shell {
+  --donatebot-cyan: #20d3ee;
+  --donatebot-green: #22c55e;
+  --donatebot-amber: #f59e0b;
+  --donatebot-rose: #f43f5e;
+  --donatebot-gold: #f7b731;
+  --donatebot-glow: rgba(32, 211, 238, 0.25);
+}
+
+.page-donatebot-hub-shell > .panel {
+  opacity: 0;
+  transform: translateY(12px) scale(0.996);
+  animation: donatebotReveal 0.4s ease-out forwards;
+}
+
+.page-donatebot-hub-shell > .panel:nth-child(1) {
+  animation-delay: 0.02s;
+}
+
+.page-donatebot-hub-shell > .panel:nth-child(2) {
+  animation-delay: 0.08s;
+}
+
+.page-donatebot-hub-shell > .panel:nth-child(3) {
+  animation-delay: 0.14s;
+}
+
+.page-donatebot-hub-shell > .panel:nth-child(4) {
+  animation-delay: 0.2s;
+}
+
+@keyframes donatebotReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.page-donatebot-hub-shell .detail-page-hero-donatebot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 94% 2%, color-mix(in srgb, var(--donatebot-cyan) 28%, transparent), transparent 42%),
+    radial-gradient(circle at 3% 5%, color-mix(in srgb, var(--donatebot-green) 22%, transparent), transparent 40%),
+    linear-gradient(
+      150deg,
+      color-mix(in srgb, var(--ux-surface) 84%, #0d1d2e),
+      color-mix(in srgb, var(--ux-surface-2) 89%, #152944)
+    );
+}
+
+.page-donatebot-hub-shell .donatebot-hero-kicker {
+  margin: 0 0 7px;
+  display: inline-block;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--donatebot-cyan) 75%, #ffffff);
+}
+
+.page-donatebot-hub-shell .detail-page-hero-copy h1 {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  line-height: 1.2;
+}
+
+.page-donatebot-hub-shell .detail-page-hero-copy p {
+  margin: 10px 0 0;
+  max-width: 72ch;
+}
+
+.page-donatebot-hub-shell .donatebot-hero-metrics {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.page-donatebot-hub-shell .donatebot-hero-metrics .pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border-color: color-mix(in srgb, var(--ux-brand) 36%, var(--ux-line));
+  background: color-mix(in srgb, var(--ux-surface-2) 86%, transparent);
+}
+
+.page-donatebot-hub-shell .donatebot-top-actions {
+  justify-content: flex-start;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.page-donatebot-hub-shell .donatebot-verify-alert {
+  margin-top: 10px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 35%, var(--ux-line));
+  background: color-mix(in srgb, var(--ux-surface-2) 88%, transparent);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.page-donatebot-hub-shell .donatebot-verify-alert.is-approved {
+  border-color: color-mix(in srgb, var(--donatebot-green) 50%, var(--ux-line));
+  background: color-mix(in srgb, var(--donatebot-green) 11%, transparent);
+}
+
+.page-donatebot-hub-shell .donatebot-verify-alert.is-pending {
+  border-color: color-mix(in srgb, var(--donatebot-amber) 50%, var(--ux-line));
+  background: color-mix(in srgb, var(--donatebot-amber) 11%, transparent);
+}
+
+.page-donatebot-hub-shell .donatebot-verify-alert.is-rejected {
+  border-color: color-mix(in srgb, var(--donatebot-rose) 56%, var(--ux-line));
+  background: color-mix(in srgb, var(--donatebot-rose) 11%, transparent);
+}
+
+.page-donatebot-hub-shell .donatebot-verify-alert-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  border: 1px solid color-mix(in srgb, var(--ux-brand-2) 36%, var(--ux-line));
+  background: color-mix(in srgb, var(--ux-surface-2) 86%, transparent);
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+}
+
+.page-donatebot-hub-shell .donatebot-verify-alert-copy {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+  flex: 1 1 auto;
+}
+
+.page-donatebot-hub-shell .donatebot-verify-alert-copy strong {
+  font-size: 0.93rem;
+  line-height: 1.3;
+}
+
+.page-donatebot-hub-shell .slip-status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--ux-brand-2) 34%, var(--ux-line));
+  background: color-mix(in srgb, var(--ux-surface-2) 86%, transparent);
+  font-size: 0.76rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.page-donatebot-hub-shell .slip-status-approved {
+  color: #4ade80;
+  border-color: color-mix(in srgb, #22c55e 52%, var(--ux-line));
+  background: color-mix(in srgb, #22c55e 14%, transparent);
+}
+
+.page-donatebot-hub-shell .slip-status-pending {
+  color: #facc15;
+  border-color: color-mix(in srgb, #f59e0b 52%, var(--ux-line));
+  background: color-mix(in srgb, #f59e0b 14%, transparent);
+}
+
+.page-donatebot-hub-shell .slip-status-rejected {
+  color: #fb7185;
+  border-color: color-mix(in srgb, #f43f5e 52%, var(--ux-line));
+  background: color-mix(in srgb, #f43f5e 14%, transparent);
+}
+
+.page-donatebot-hub-shell #donatebot-accounts,
+.page-donatebot-hub-shell #donatebot-verify,
+.page-donatebot-hub-shell #donatebot-top-donate {
+  border-color: color-mix(in srgb, var(--ux-brand) 31%, var(--ux-line));
+  background: color-mix(in srgb, var(--ux-surface) 92%, transparent);
+}
+
+.page-donatebot-hub-shell .donatebot-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.page-donatebot-hub-shell .donatebot-section-head h2 {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 1.1rem;
+}
+
+.page-donatebot-hub-shell .donatebot-account-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.page-donatebot-hub-shell .donatebot-account-card {
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 30%, var(--ux-line));
+  background: linear-gradient(
+    150deg,
+    color-mix(in srgb, var(--ux-surface-2) 92%, transparent),
+    color-mix(in srgb, var(--ux-surface) 92%, transparent)
+  );
+  padding: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.page-donatebot-hub-shell .donatebot-account-card.tone-truemoney {
+  border-color: color-mix(in srgb, var(--donatebot-rose) 44%, var(--ux-line));
+}
+
+.page-donatebot-hub-shell .donatebot-account-card.tone-promptpay {
+  border-color: color-mix(in srgb, var(--donatebot-cyan) 44%, var(--ux-line));
+}
+
+.page-donatebot-hub-shell .donatebot-account-card.tone-bank {
+  border-color: color-mix(in srgb, var(--donatebot-amber) 46%, var(--ux-line));
+}
+
+.page-donatebot-hub-shell .donatebot-account-card h3 {
+  margin: 0;
+  font-size: 0.98rem;
+}
+
+.page-donatebot-hub-shell .donatebot-account-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 34%, var(--ux-line));
+  background: color-mix(in srgb, var(--ux-brand) 12%, transparent);
+  display: inline-grid;
+  place-items: center;
+}
+
+.page-donatebot-hub-shell .donatebot-account-value {
+  border: 1px dashed color-mix(in srgb, var(--ux-brand-2) 40%, var(--ux-line));
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-family: "Sora", "Outfit", sans-serif;
+  letter-spacing: 0.01em;
+  overflow-wrap: anywhere;
+  background: color-mix(in srgb, var(--ux-surface-2) 86%, transparent);
+}
+
+.page-donatebot-hub-shell .donatebot-copy-actions {
+  justify-content: flex-start;
+}
+
+.page-donatebot-hub-shell .donatebot-profile-context {
+  margin: 0 0 12px;
+  padding: 11px;
+  border: 1px solid color-mix(in srgb, var(--ux-brand-2) 32%, var(--ux-line));
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--ux-surface-2) 90%, transparent);
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+}
+
+.page-donatebot-hub-shell .donatebot-profile-context[data-mode="manual"] {
+  border-color: color-mix(in srgb, var(--donatebot-amber) 38%, var(--ux-line));
+}
+
+.page-donatebot-hub-shell .donatebot-profile-context img {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 30%, var(--ux-line));
+  object-fit: cover;
+  display: block;
+}
+
+.page-donatebot-hub-shell .donatebot-profile-copy {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.page-donatebot-hub-shell .donatebot-profile-copy strong {
+  font-size: 0.95rem;
+}
+
+.page-donatebot-hub-shell .donatebot-profile-copy p {
+  margin: 0;
+}
+
+.page-donatebot-hub-shell .donatebot-profile-copy code {
+  display: inline-block;
+  width: fit-content;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  border-radius: 8px;
+  padding: 2px 7px;
+  background: color-mix(in srgb, var(--ux-surface) 92%, #0f1a2a);
+  border: 1px solid color-mix(in srgb, var(--ux-brand-2) 32%, var(--ux-line));
+  font-size: 0.78rem;
+}
+
+.page-donatebot-hub-shell .donatebot-verify-form {
+  display: grid;
+  gap: 10px;
+}
+
+.page-donatebot-hub-shell .donatebot-verify-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 0;
+}
+
+.page-donatebot-hub-shell .donatebot-upload-note {
+  margin: 2px 0 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.page-donatebot-hub-shell .donatebot-verify-actions {
+  justify-content: flex-start;
+}
+
+.page-donatebot-hub-shell .donatebot-verify-actions .primary-btn {
+  min-width: 228px;
+}
+
+.page-donatebot-hub-shell .top-donate-podium {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  align-items: end;
+}
+
+.page-donatebot-hub-shell .top-donate-podium-card {
+  border-radius: 16px;
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 30%, var(--ux-line));
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--ux-brand) 20%, transparent), transparent 42%),
+    linear-gradient(
+      170deg,
+      color-mix(in srgb, var(--ux-surface-2) 92%, transparent),
+      color-mix(in srgb, var(--ux-surface) 92%, transparent)
+    );
+  padding: 12px 10px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 10px 24px rgba(4, 9, 20, 0.24);
+}
+
+.page-donatebot-hub-shell .top-donate-podium-card.is-empty {
+  opacity: 0.82;
+}
+
+.page-donatebot-hub-shell .top-donate-podium-card.is-rank1 {
+  transform: translateY(-10px);
+  border-color: color-mix(in srgb, var(--donatebot-gold) 62%, var(--ux-line));
+  box-shadow: 0 12px 28px rgba(247, 183, 49, 0.2);
+}
+
+.page-donatebot-hub-shell .top-donate-podium-card.is-rank2 {
+  border-color: color-mix(in srgb, #dbe8f5 44%, var(--ux-line));
+}
+
+.page-donatebot-hub-shell .top-donate-podium-card.is-rank3 {
+  border-color: color-mix(in srgb, #d5904f 48%, var(--ux-line));
+}
+
+.page-donatebot-hub-shell .top-donate-rank-badge {
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 32%, var(--ux-line));
+  background: color-mix(in srgb, var(--ux-surface) 90%, transparent);
+}
+
+.page-donatebot-hub-shell .top-donate-podium-card.is-rank1 .top-donate-rank-badge {
+  color: #16120a;
+  border-color: color-mix(in srgb, var(--donatebot-gold) 72%, var(--ux-line));
+  background: linear-gradient(120deg, #f9d976, #f7b731);
+}
+
+.page-donatebot-hub-shell .top-donate-avatar-wrap {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  margin: 10px auto 8px;
+  border: 3px solid color-mix(in srgb, var(--ux-brand-2) 35%, var(--ux-line));
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--ux-surface-2) 86%, transparent);
+  overflow: hidden;
+}
+
+.page-donatebot-hub-shell .top-donate-podium-card.is-rank1 .top-donate-avatar-wrap {
+  width: 88px;
+  height: 88px;
+  border-color: color-mix(in srgb, var(--donatebot-gold) 76%, var(--ux-line));
+  box-shadow: 0 0 0 8px rgba(247, 183, 49, 0.13);
+}
+
+.page-donatebot-hub-shell .top-donate-avatar-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.page-donatebot-hub-shell .top-donate-podium-card h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.page-donatebot-hub-shell .top-donate-amount {
+  margin: 6px 0 3px;
+  font-size: 1rem;
+  font-weight: 800;
+  color: color-mix(in srgb, #ffffff 92%, var(--donatebot-cyan));
+}
+
+.page-donatebot-hub-shell .top-donate-podium-card.is-rank1 .top-donate-amount {
+  color: color-mix(in srgb, var(--donatebot-gold) 82%, #fff);
+  font-size: 1.1rem;
+}
+
+.page-donatebot-hub-shell .top-donate-meta {
+  margin: 0;
+  font-size: 0.76rem;
+  opacity: 0.88;
+  overflow-wrap: anywhere;
+}
+
+.page-donatebot-hub-shell .top-donate-list {
+  margin-top: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.page-donatebot-hub-shell .top-donate-list-card {
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 30%, var(--ux-line));
+  background: color-mix(in srgb, var(--ux-surface-2) 88%, transparent);
+  padding: 9px 11px;
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+}
+
+.page-donatebot-hub-shell .top-donate-list-rank {
+  min-width: 38px;
+  text-align: center;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--ux-brand-2) 34%, var(--ux-line));
+  background: color-mix(in srgb, var(--ux-surface) 86%, transparent);
+  padding: 4px 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.page-donatebot-hub-shell .top-donate-list-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 34%, var(--ux-line));
+}
+
+.page-donatebot-hub-shell .top-donate-list-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.page-donatebot-hub-shell .top-donate-list-copy {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.page-donatebot-hub-shell .top-donate-list-copy strong {
+  font-size: 0.89rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.page-donatebot-hub-shell .top-donate-list-copy small {
+  font-size: 0.75rem;
+  opacity: 0.82;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.page-donatebot-hub-shell .top-donate-list-amount {
+  font-size: 0.86rem;
+  font-weight: 700;
+  text-align: right;
+}
+
+.page-donatebot-hub-shell .top-donate-empty {
+  border-radius: 12px;
+  border: 1px dashed color-mix(in srgb, var(--ux-brand) 34%, var(--ux-line));
+  padding: 10px;
+  text-align: center;
+}
+
+.page-donatebot-hub-shell #donatebot-guilds {
+  margin-top: 0;
+}
+
+.page-donatebot-hub-shell #donatebot-guilds .guild-grid {
+  margin-top: 12px !important;
+}
+
+@media (max-width: 1180px) {
+  .page-donatebot-hub-shell .donatebot-account-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .page-donatebot-hub-shell .top-donate-podium {
+    grid-template-columns: 1fr;
+  }
+
+  .page-donatebot-hub-shell .top-donate-podium-card.is-rank1 {
+    transform: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .page-donatebot-hub-shell .donatebot-account-grid,
+  .page-donatebot-hub-shell .donatebot-verify-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-donatebot-hub-shell .donatebot-verify-alert {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .page-donatebot-hub-shell .slip-status-badge {
+    margin-left: 44px;
+  }
+
+  .page-donatebot-hub-shell .donatebot-verify-actions .primary-btn {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .page-donatebot-hub-shell .top-donate-list-card {
+    grid-template-columns: auto auto minmax(0, 1fr);
+  }
+
+  .page-donatebot-hub-shell .top-donate-list-amount {
+    grid-column: 1 / -1;
+    text-align: left;
+    margin-left: 49px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-donatebot-hub-shell > .panel {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}

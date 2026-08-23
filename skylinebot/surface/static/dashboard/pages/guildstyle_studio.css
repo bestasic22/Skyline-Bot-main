@@ -1,0 +1,602 @@
+.page-guildstyle-studio .detail-page-hero {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.page-guildstyle-studio .rp-hero-metrics {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.page-guildstyle-studio .rp-hero-metrics .pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.page-guildstyle-studio .detail-page-section h2 {
+  margin: 0 0 8px;
+  font-size: 1.08rem;
+}
+
+.page-guildstyle-studio .detail-page-section .gs-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.page-guildstyle-studio .gs-section-toggle {
+  margin-left: auto;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.page-guildstyle-studio .detail-page-section .gs-section-body {
+  margin-top: 8px;
+}
+
+.page-guildstyle-studio .detail-page-section.is-collapsed .gs-section-title {
+  margin-bottom: 0;
+}
+
+.page-guildstyle-studio .rp-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.page-guildstyle-studio .rp-inline-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.page-guildstyle-studio .rp-fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.page-guildstyle-studio .rp-inline-form {
+  display: inline-flex;
+  margin-right: 6px;
+}
+
+.page-guildstyle-studio a[aria-disabled="true"] {
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.page-guildstyle-studio .rp-subtitle {
+  margin-bottom: 10px;
+  color: var(--ux-text-soft);
+  font-size: 0.86rem;
+}
+
+.page-guildstyle-studio .rp-two-col {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.page-guildstyle-studio .rp-two-col > form {
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 30%, var(--ux-line));
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--ux-surface-2) 88%, transparent);
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.page-guildstyle-studio .gs-category-theme-panel {
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 30%, var(--ux-line));
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--ux-surface-2) 88%, transparent);
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.page-guildstyle-studio .rp-two-col h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.page-guildstyle-studio .rp-event-status {
+  border-radius: 13px;
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 26%, var(--ux-line));
+  padding: 11px 12px;
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.page-guildstyle-studio .rp-event-status.is-active {
+  border-color: color-mix(in srgb, #22c55e 42%, var(--ux-line));
+  background: color-mix(in srgb, #166534 18%, var(--ux-surface));
+}
+
+.page-guildstyle-studio .rp-event-status.is-idle {
+  border-color: color-mix(in srgb, #64748b 30%, var(--ux-line));
+  background: color-mix(in srgb, #334155 16%, var(--ux-surface));
+}
+
+.page-guildstyle-studio .rp-event-status-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.page-guildstyle-studio .rp-event-pill {
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--ux-brand-2) 40%, var(--ux-line));
+  padding: 3px 10px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.page-guildstyle-studio .rp-event-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px 12px;
+  flex-wrap: wrap;
+  color: var(--ux-text-soft);
+  font-size: 0.82rem;
+}
+
+.page-guildstyle-studio .rp-savebar {
+  position: sticky;
+  bottom: 14px;
+  margin-top: 12px;
+  z-index: 30;
+  border: 1px solid color-mix(in srgb, var(--ux-brand-2) 45%, var(--ux-line));
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--ux-surface) 96%, transparent);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 10px 12px;
+}
+
+.page-guildstyle-studio .rp-analytics-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 12px;
+}
+
+.page-guildstyle-studio .gs-preview-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.page-guildstyle-studio .gs-preview-card {
+  border: 1px solid color-mix(in srgb, var(--ux-brand-2) 32%, var(--ux-line));
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--ux-surface-2) 90%, transparent);
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.page-guildstyle-studio .gs-preview-card[hidden] {
+  display: none;
+}
+
+.page-guildstyle-studio .gs-category-theme-map-wrap {
+  min-height: 560px;
+  max-height: 560px;
+  overflow: auto;
+  border-radius: 12px;
+}
+
+.page-guildstyle-studio .gs-category-theme-map-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.page-guildstyle-studio .gs-category-theme-map-table th:first-child,
+.page-guildstyle-studio .gs-category-theme-map-table td:first-child {
+  width: 58%;
+}
+
+.page-guildstyle-studio .gs-category-theme-map-table td:first-child {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.page-guildstyle-studio .gs-category-map-row {
+  cursor: default;
+}
+
+.page-guildstyle-studio .gs-category-map-row.is-active td {
+  background: color-mix(in srgb, #38bdf8 18%, transparent);
+}
+
+.page-guildstyle-studio #gsRenameExclusionForm select[multiple] {
+  width: 100%;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.page-guildstyle-studio .gs-preview-card h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.page-guildstyle-studio .gs-preview-roles {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.page-guildstyle-studio .gs-preview-role {
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--gs-color, #64748b) 48%, var(--ux-line));
+  padding: 3px 9px;
+  font-size: 0.74rem;
+  background: color-mix(in srgb, var(--gs-color, #334155) 18%, var(--ux-surface));
+}
+
+.page-guildstyle-studio .gs-preview-categories {
+  display: grid;
+  gap: 8px;
+}
+
+.page-guildstyle-studio .gs-preview-category {
+  border: 1px dashed color-mix(in srgb, var(--ux-brand) 30%, var(--ux-line));
+  border-radius: 10px;
+  padding: 8px;
+}
+
+.page-guildstyle-studio .gs-color-dot {
+  --gs-color: #99aab5;
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+  display: inline-block;
+  margin-right: 7px;
+  vertical-align: middle;
+  background: var(--gs-color);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--gs-color) 55%, #0b1020);
+}
+
+.page-guildstyle-studio .gs-acl-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.page-guildstyle-studio .gs-role-link {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.page-guildstyle-studio .gs-role-filter-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.page-guildstyle-studio .gs-role-filter-pill {
+  cursor: pointer;
+}
+
+.page-guildstyle-studio .gs-role-filter-pill input {
+  margin-right: 4px;
+}
+
+.page-guildstyle-studio .gs-acl-row[hidden] {
+  display: none;
+}
+
+@media (max-width: 980px) {
+  .page-guildstyle-studio .rp-two-col {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .page-guildstyle-studio .gs-category-theme-map-wrap {
+    min-height: 380px;
+    max-height: 380px;
+  }
+
+  .page-guildstyle-studio .rp-analytics-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .page-guildstyle-studio .rp-savebar {
+    position: static;
+  }
+
+  .page-guildstyle-studio .gs-preview-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .page-guildstyle-studio .gs-acl-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.page-guildstyle-studio {
+  --gs-studio-bg: radial-gradient(120% 120% at 0% 0%, rgba(13, 86, 167, 0.25) 0%, rgba(15, 23, 42, 0) 55%),
+    radial-gradient(130% 140% at 100% 0%, rgba(15, 118, 110, 0.2) 0%, rgba(15, 23, 42, 0) 52%);
+}
+
+.page-guildstyle-studio .detail-page-hero {
+  background: var(--gs-studio-bg), color-mix(in srgb, var(--ux-surface) 95%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ux-brand-2) 35%, var(--ux-line));
+  border-radius: 16px;
+  padding: 14px 16px;
+}
+
+.page-guildstyle-studio .detail-page-hero h1 {
+  font-family: "Space Grotesk", "Segoe UI", sans-serif;
+  letter-spacing: 0.01em;
+}
+
+.page-guildstyle-studio .gs-studio-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 30%, var(--ux-line));
+  background: color-mix(in srgb, var(--ux-surface-2) 86%, transparent);
+}
+
+.page-guildstyle-studio .gs-studio-toolbar .ghost-btn {
+  border-radius: 999px;
+}
+
+.page-guildstyle-studio .detail-page-section {
+  border: 1px solid color-mix(in srgb, var(--ux-brand-2) 20%, var(--ux-line));
+  background: color-mix(in srgb, var(--ux-surface-2) 92%, transparent);
+}
+
+.page-guildstyle-studio .gs-create-layout-form {
+  border: 1px solid color-mix(in srgb, #2dd4bf 32%, var(--ux-line));
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, #0f766e 12%, var(--ux-surface-2)) 0%,
+    color-mix(in srgb, var(--ux-surface-2) 94%, transparent) 100%
+  );
+}
+
+.page-guildstyle-studio .gs-live-selection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.page-guildstyle-studio .gs-preview-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  margin: 10px 0 12px;
+}
+
+.page-guildstyle-studio .gs-preview-theme-switches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.page-guildstyle-studio .gsThemeQuickButton.is-active {
+  border-color: color-mix(in srgb, #22d3ee 65%, var(--ux-line));
+  box-shadow: 0 0 0 1px color-mix(in srgb, #22d3ee 35%, transparent) inset;
+}
+
+.page-guildstyle-studio .gs-preview-font-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.page-guildstyle-studio .gsPreviewFontPill {
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid color-mix(in srgb, var(--ux-line) 84%, transparent);
+  background: color-mix(in srgb, var(--ux-surface) 92%, transparent);
+  color: inherit;
+}
+
+.page-guildstyle-studio .gsPreviewFontPill.is-active {
+  border-color: color-mix(in srgb, #f59e0b 60%, var(--ux-line));
+  background: color-mix(in srgb, #f59e0b 14%, var(--ux-surface));
+}
+
+.page-guildstyle-studio .gs-preview-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.page-guildstyle-studio .gs-preview-card {
+  border-radius: 16px;
+  border-color: color-mix(in srgb, #38bdf8 24%, var(--ux-line));
+  padding: 14px;
+}
+
+.page-guildstyle-studio .gs-preview-card[hidden] {
+  display: none;
+}
+
+.page-guildstyle-studio .gs-preview-card h3 {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.page-guildstyle-studio .gs-preview-card h3 small {
+  font-size: 0.8rem;
+}
+
+.page-guildstyle-studio .gs-preview-categories {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.page-guildstyle-studio .gs-role-color-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px dashed color-mix(in srgb, var(--ux-brand) 35%, var(--ux-line));
+  border-radius: 12px;
+  padding: 8px 10px;
+  width: fit-content;
+}
+
+.page-guildstyle-studio .gs-role-manager-forms {
+  display: grid;
+  gap: 12px;
+}
+
+.page-guildstyle-studio .gs-role-manager-forms > form {
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 30%, var(--ux-line));
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--ux-surface-2) 88%, transparent);
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.page-guildstyle-studio #gsCategoryDeleteForm,
+.page-guildstyle-studio #gsChannelDeleteForm,
+.page-guildstyle-studio #gsRenameExclusionForm,
+.page-guildstyle-studio #gsCategoryReorderForm,
+.page-guildstyle-studio #gsChannelReorderForm,
+.page-guildstyle-studio #gsRoleReorderForm {
+  margin-top: 12px;
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 30%, var(--ux-line));
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--ux-surface-2) 88%, transparent);
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.page-guildstyle-studio .gs-matrix-controls {
+  display: grid;
+  grid-template-columns: minmax(210px, 1fr) minmax(180px, 220px) auto;
+  gap: 8px;
+  margin: 10px 0 12px;
+}
+
+.page-guildstyle-studio .gs-matrix-controls input,
+.page-guildstyle-studio .gs-matrix-controls select {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 20%, var(--ux-line));
+  background: color-mix(in srgb, var(--ux-surface) 90%, transparent);
+  color: inherit;
+  padding: 9px 10px;
+}
+
+.page-guildstyle-studio #gsPermissionTable td,
+.page-guildstyle-studio #gsPermissionTable th {
+  vertical-align: top;
+}
+
+.page-guildstyle-studio .gs-role-filter-pill {
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 25%, var(--ux-line));
+  background: color-mix(in srgb, var(--ux-surface) 88%, transparent);
+}
+
+.page-guildstyle-studio .gs-dnd-list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+  max-height: 300px;
+  overflow: auto;
+}
+
+.page-guildstyle-studio .gs-dnd-item {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 24%, var(--ux-line));
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: color-mix(in srgb, var(--ux-surface) 92%, transparent);
+  cursor: move;
+}
+
+.page-guildstyle-studio .gs-dnd-item.is-dragging {
+  opacity: 0.65;
+  border-style: dashed;
+}
+
+.page-guildstyle-studio .gs-dnd-item.is-active {
+  border-color: color-mix(in srgb, #38bdf8 62%, var(--ux-line));
+  box-shadow: 0 0 0 1px color-mix(in srgb, #38bdf8 26%, transparent) inset;
+}
+
+.page-guildstyle-studio .gs-dnd-handle {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: color-mix(in srgb, var(--ux-brand) 72%, var(--ux-text));
+  user-select: none;
+}
+
+.page-guildstyle-studio .gs-dnd-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.page-guildstyle-studio .gs-dnd-empty {
+  border: 1px dashed color-mix(in srgb, var(--ux-brand) 20%, var(--ux-line));
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.page-guildstyle-studio .gs-role-palette-row {
+  cursor: pointer;
+}
+
+.page-guildstyle-studio .gs-role-palette-row:hover td {
+  background: color-mix(in srgb, var(--ux-brand) 14%, transparent);
+}
+
+.page-guildstyle-studio .gs-role-palette-row.is-active td {
+  background: color-mix(in srgb, #38bdf8 18%, transparent);
+}
+
+@media (max-width: 980px) {
+  .page-guildstyle-studio .gs-preview-categories {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .page-guildstyle-studio .gs-matrix-controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

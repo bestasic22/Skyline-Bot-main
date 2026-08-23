@@ -1,0 +1,186 @@
+
+    <section class="panel section-stack">
+      <div class="panel-header">
+        <div class="panel-title">
+          <h1>{_escape(title_text)}</h1>
+          <p class="muted">{_escape(desc_text)}</p>
+        </div>
+      </div>
+
+      <div class="guild-meta promote-status-meta">
+        <span class="pill">{text['status']}: {text['enabled'] if enabled else text['disabled']}</span>
+        <span class="pill">คูลดาวน์: {cooldown_hours} {text['hours']}</span>
+        <span class="pill">{'พร้อมส่ง' if can_send else 'รอคูลดาวน์'}</span>
+        <span class="pill">Plan: {_escape(plan_name)}</span>
+        <span class="pill">บันทึกโปรโมต: {len(saved_messages)}/{saved_limit}</span>
+      </div>
+      <p class="muted promote-status-note">{_escape(rich_media_note)}</p>
+      {promote_suspension_markup}
+
+      <details class="panel-sub panel-collapsible" open>
+        <summary>
+          <strong>1) ตั้งค่าห้องโปรโมต</strong>
+          <span class="muted">ห้องส่ง + ห้องสาธารณะ</span>
+        </summary>
+        <div class="panel-sub-body">
+          <form method="post" action="/dashboard/guild/{current_guild['id']}/promote/settings">
+            <div class="field-group">
+              <div class="field-item">
+                <label>{text['submit']}</label>
+                {_render_channel_select("submit_channel_id", bot_guild, promote.get('submit_channel_id'), filter_types=["text", "news"])}
+              </div>
+              <div class="field-item">
+                <label>{text['public']}</label>
+                {_render_channel_select("public_channel_id", bot_guild, promote.get('public_channel_id'), filter_types=["text", "news"])}
+              </div>
+              <div class="field-item">
+                <label>{text['cooldown']}</label>
+                <input type="text" value="{cooldown_hours} {text['hours']}" disabled>
+              </div>
+            </div>
+            <div class="form-actions-inline">
+              <button class="primary-btn" type="submit">บันทึกห้องโปรโมต</button>
+            </div>
+            <div class="muted" style="margin-top:8px;font-size:12px;">นโยบายลิงก์และคำต้องห้ามถูกตั้งค่าจาก OwnerBOT (Global ทุกกิลด์)</div>
+            <div class="muted" style="margin-top:4px;font-size:12px;">Always allowed by default: {_escape(default_allowed_domains_text)}</div>
+            
+          </form>
+        </div>
+      </details>
+
+      <details class="panel-sub panel-collapsible" open>
+        <summary>
+          <strong>2) สร้างข้อความโปรโม</strong>
+          <span class="muted">กรอกข้อความและลิงก์ที่ต้องการ</span>
+        </summary>
+        <div class="panel-sub-body">
+          <form method="post" action="/dashboard/guild/{current_guild['id']}/promote/send" data-promote-preview="true" data-preview-auto-invite="{"1" if preview_auto_invite_possible else "0"}" data-preview-auto-invite-text="Auto invite will be generated when sent" enctype="multipart/form-data">
+            <input type="hidden" name="redirect_tab" value="{_escape(active_tab_slug)}">
+            <input type="hidden" name="cooldown_seconds" value="{cooldown_seconds}">
+            <div class="field-group">
+              <div class="field-item">
+                <label>ชื่อบันทึก (ถ้าจะกดบันทึก)</label>
+                <input type="text" name="template_name" placeholder="เช่น โปรโมตรอบค่ำ" maxlength="80" {'disabled' if not enabled else ''}>
+              </div>
+              <div class="field-item" style="grid-column:1/-1;">
+                <label>{text['content']}</label>
+                <textarea name="content" placeholder="พิมพ์ข้อความ, อีโมจิ, หรือคำเชิญชวน" {'disabled' if not enabled else ''} data-preview-content></textarea>
+              </div>
+              <div class="field-item">
+                <label>{text['attachments']}</label>
+                <input type="text" name="attachments" placeholder="https://... , https://..." {'disabled' if (not enabled) or (not can_use_rich_media) else ''} data-preview-attachments>
+              </div>
+              <div class="field-item">
+                <label>{text['upload_image']}</label>
+                <input type="file" name="image_file" accept="image/*" {'disabled' if (not enabled) or (not can_use_rich_media) else ''} data-preview-image-file>
+              </div>
+              <div class="field-item">
+                <label>{text['invite']}</label>
+                <input type="text" name="custom_invite_url" placeholder="https://discord.gg/... or https://skylinebot.xyz/..." {'disabled' if (not enabled) or (not can_use_rich_media) else ''} data-preview-invite>
+              </div>
+            </div>
+            <div class="muted" style="margin-top:6px;font-size:12px;">{_escape(allowed_url_help)}</div>
+            <div class="card" style="margin-top:8px;">
+              <strong>ตัวอย่าง Embed</strong>
+              <div style="display:flex;align-items:center;gap:10px;margin-top:10px;">
+                <img src="{_escape(preview_bot_avatar)}" alt="{_escape(preview_bot_name)}" style="width:34px;height:34px;border-radius:50%;object-fit:cover;border:1px solid var(--line);">
+                <div>
+                  <strong>{_escape(preview_bot_name)}</strong>
+                  <div class="muted" style="font-size:12px;">{_escape(current_guild.get('name') or '')}</div>
+                </div>
+              </div>
+              <div id="promoteEmbedPreviewCard" style="margin-top:10px;border-left:4px solid #4e7bff;background:rgba(255,255,255,.04);border-radius:10px;padding:12px;">
+                <div data-preview-title style="font-weight:700;margin-bottom:8px;">{_escape(preview_embed_title)}</div>
+                <div class="muted" data-preview-content-view style="white-space:pre-wrap;word-break:break-word;">-</div>
+                <div style="margin-top:10px;display:grid;gap:6px;">
+                  <div><strong style="font-size:13px;">{_escape(preview_embed_from_label)}</strong><br><span data-preview-source-name>{_escape(preview_source_name)}</span></div>
+                  <div><strong style="font-size:13px;">{_escape(preview_embed_author_label)}</strong><br><span data-preview-author-name>{_escape(preview_sender_label)}</span></div>
+                </div>
+                <div data-preview-attachments-wrap style="margin-top:10px;display:none;">
+                  <strong style="font-size:13px;">{_escape(preview_embed_attachments_label)}</strong>
+                  <div data-preview-attachments-view class="muted" style="margin-top:4px;display:grid;gap:4px;"></div>
+                </div>
+                <div class="muted" style="margin-top:10px;" data-preview-invite-view>Invite: -</div>
+                <img data-preview-image-view src="" alt="promote-image-preview" style="margin-top:10px;max-width:420px;width:100%;max-height:320px;height:auto;border-radius:10px;border:1px solid var(--line);object-fit:cover;display:none;">
+                <div data-preview-image-caption class="muted" style="margin-top:6px;font-size:12px;display:none;"></div>
+                <div class="muted" style="margin-top:10px;font-size:12px;" data-preview-footer>{_escape(preview_embed_footer)}</div>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;">
+                <a data-preview-open-server-btn class="ghost-btn" href="#" target="_blank" rel="noopener noreferrer" style="display:none;">{_escape(preview_btn_open_server)}</a>
+                <button type="button" data-preview-copy-invite-btn class="ghost-btn" style="display:none;">{_escape(preview_btn_copy_invite)}</button>
+                <a class="ghost-btn" href="{_escape(preview_bot_invite_url)}" target="_blank" rel="noopener noreferrer">{_escape(preview_btn_invite_bot)}</a>
+                <a class="ghost-btn" href="{_escape(preview_support_url)}" target="_blank" rel="noopener noreferrer">{_escape(preview_btn_support)}</a>
+                <a class="ghost-btn" href="{_escape(preview_vote_url)}" target="_blank" rel="noopener noreferrer">{_escape(preview_btn_vote)}</a>
+              </div>
+            </div>
+            <div class="form-actions-fixed">
+              <button class="primary-btn" id="promoteSaveBtn" type="submit" name="action" value="save" {'disabled' if save_disabled else ''}>บันทึกข้อความนี้</button>
+              <button class="ghost-btn" id="promoteSendBtn" type="submit" name="action" value="send" {'disabled' if not can_send else ''}>{_escape(submit_btn_label)}</button>
+            </div>
+            <div class="muted" style="margin-top:8px;font-size:12px;">ระบบจะส่งจริงเฉพาะตอนกดปุ่มส่งเท่านั้น (กดบันทึกจะไม่ส่ง)</div>
+          </form>
+        </div>
+      </details>
+
+      <details class="panel-sub panel-collapsible" open>
+        <summary>
+          <strong>3) รายการที่บันทึกไว้</strong>
+          <span class="muted">แก้ไข / ลบ / ส่งซ้ำ ได้จากหน้าเว็บ</span>
+        </summary>
+        <div class="panel-sub-body">
+          {saved_rows_markup}
+        </div>
+      </details>
+
+      <details class="panel-sub panel-collapsible">
+        <summary>
+          <strong>4) กฎความปลอดภัยก่อนส่ง</strong>
+          <span class="muted">ระบบจะตรวจสอบก่อนส่ง</span>
+        </summary>
+        <div class="panel-sub-body">
+          <ul style="margin:0;padding-left:18px;display:grid;gap:8px;">
+            <li>ลิงก์ไฟล์แนบต้องเป็น <code>http/https</code> และผ่านโดเมนที่ระบบอนุญาต</li>
+            <li>Message links must be <code>discord.gg</code>/<code>discord.com/invite</code> or match OwnerBOT global allowlist (domains / URL prefixes).</li>
+            <li>แพ็กเกจ Free: ส่งได้เฉพาะข้อความ (ถ้ามีลิงก์หรือรูป จะถูกปฏิเสธทันที)</li>
+            <li>ข้อความโปรโมตต้องไม่เจอคำต้องห้าม (AutoMod + owner blocklist)</li>
+            <li>Blocked domains / URI จะถูกบล็อกทันทีทั้งเว็บและดิสคอร์ด</li>
+            <li>รูปภาพจะถูกสแกนความปลอดภัย (โป๊/ผิดกฎหมาย/การพนัน/ความรุนแรง) ก่อนส่ง</li>
+            <li>เมื่อผ่านตรวจ ข้อความจะถูกส่งเข้าคิวและกระจายไปกิลด์ที่เปิด Promote อัตโนมัติ</li>
+            <li>Allowed domains: {_escape(safety_allowed_domains_display)}</li>
+            <li>Allowed URL prefixes: {_escape(safety_allowed_urls_display)}</li>
+            <li>Blocked words (owner): {_escape(safety_blocked_words_display)}</li>
+            <li>Blocked hard phrases: {_escape(safety_hard_block_words_display)}</li>
+            <li>Blocked domains: {_escape(safety_blocked_domains_display)}</li>
+            <li>Blocked URL prefixes: {_escape(safety_blocked_urls_display)}</li>
+            <li>Image moderation categories: {_escape(safety_image_thresholds_display)}</li>
+          </ul>
+          <div class="muted" style="margin-top:8px;">- ระบบกันคิวซ้ำ: ลิงก์เชิญซ้ำกันในคิวจะถูกส่งครั้งเดียว</div>
+          <div class="muted" style="margin-top:4px;">- ระบบหน่วงคิวอัตโนมัติ: คิวเยอะจะทยอยส่งเป็นช่วงเวลาเพื่อลดโหลด</div>
+        </div>
+      </details>
+      <details class="panel-sub panel-collapsible" open>
+        <summary>
+          <strong>5) คิวทั้งหมด</strong>
+          <span class="muted">มีกิลด์ไหนบ้าง กี่คิว กี่กิลด์</span>
+        </summary>
+        <div class="panel-sub-body">
+          <div class="guild-meta" style="margin-top:0;">
+            <span class="pill">คิวทั้งหมด: {int(promote_queue_total or 0)}</span>
+            <span class="pill">จำนวนกิลด์ในคิว: {int(promote_queue_guild_total or 0)}</span>
+            <span class="pill">คีย์คิว: {int(promote_queue_pending or 0)}</span>
+          </div>
+          <div class="panel-sub" style="margin-top:10px;">
+            <strong>สรุปคิวต่อกิลด์</strong>
+            <div style="margin-top:8px;">{promote_queue_guild_rows_markup}</div>
+          </div>
+          <div class="panel-sub" style="margin-top:10px;">
+            <strong>ลำดับคิวล่าสุด (1, 2, 3, 4, ...)</strong>
+            <div style="margin-top:8px;">{promote_queue_rows_markup}</div>
+          </div>
+        </div>
+      </details>
+    </section>
+    {_promote_preview_script()}
+    <script>{_render_dashboard_f_template("scripts/promote.js", __ctx)}</script>
+    
+

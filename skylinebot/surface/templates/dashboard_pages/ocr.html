@@ -1,0 +1,92 @@
+
+    <div class="section-stack dashboard-detail-shell page-ocr-shell">
+        <section class="panel">
+            <div class="panel-header detail-page-hero detail-page-hero-ocr">
+                <div class="panel-title detail-page-hero-copy">
+                    <h1 data-i18n="tab_ocr" data-icon-key="ocr">Image OCR Verification</h1>
+                    <p>Scan text in user-submitted images and grant rewards automatically when rules are matched.</p>
+                </div>
+            </div>
+
+            <form method="post" action="/dashboard/guild/{current_guild['id']}/ocr" id="ocrSettingsForm">
+                <section class="panel-sub detail-page-section" style="margin-bottom:12px;">
+                    <h2 style="margin-top:0;" data-icon-key="ocr_status">Module Status</h2>
+                    <div class="ux-toggle-group" style="grid-template-columns: 1fr;">
+                        <label class="ux-toggle">
+                            <span class="ux-toggle-label">Enable OCR workflow</span>
+                            <input type="checkbox" name="enabled" {"checked" if data.get("enabled") else ""}>
+                            <span class="ux-switch"></span>
+                        </label>
+                    </div>
+                </section>
+
+                <section class="panel-sub detail-page-section" style="margin-bottom:12px;">
+                    <h2 style="margin-top:0;" data-icon-key="ocr_rules">Requirements</h2>
+                    <div class="field-group">
+                        <div class="field-item">
+                            <label>Required image count</label>
+                            <input type="number" name="image_count" value="{_escape(data.get('image_count', 1))}" min="1" max="10">
+                        </div>
+                        <div class="field-item">
+                            <label>Reward role</label>
+                            {_render_role_select("reward_role_id", bot_guild, data.get('reward_role_id'))}
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel-sub detail-page-section" style="margin-bottom:12px;">
+                    <h2 style="margin-top:0;" data-icon-key="ocr_channels">Channels</h2>
+                    <div class="field-item" style="margin-bottom:14px;">
+                        <label>Submission channel</label>
+                        {_render_channel_select("target_channel_id", bot_guild, data.get('target_channel_id'))}
+                    </div>
+                    <div class="field-group">
+                        <div class="field-item">
+                            <label>Notification channel</label>
+                            {_render_channel_select("notification_channel_id", bot_guild, data.get('notification_channel_id'))}
+                        </div>
+                        <div class="field-item">
+                            <label>Admin review channel</label>
+                            {_render_channel_select("admin_channel_id", bot_guild, data.get('admin_channel_id'))}
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel-sub detail-page-section" style="margin-bottom:12px;">
+                    <h2 style="margin-top:0;" data-icon-key="ocr_embed">Embed Message</h2>
+                    <div class="field-group">
+                        <div class="field-item">
+                            <label>Embed title</label>
+                            <input type="text" name="notify_embed_title" value="{_escape(data.get('notify_embed_title', 'OCR Result'))}" maxlength="120">
+                        </div>
+                        <div class="field-item">
+                            <label>Embed image URL</label>
+                            <input type="text" name="notify_embed_image_url" value="{_escape(data.get('notify_embed_image_url', ''))}" placeholder="https://.../image.png">
+                        </div>
+                    </div>
+                    <div class="field-item" style="margin-bottom:14px;">
+                        <label>Embed description</label>
+                        <textarea name="notify_embed_description" style="min-height:110px;">{_escape(data.get('notify_embed_description', 'Keywords: {keywords}\nUser: {user_mention}\nProgress: {current_count}/{required_count}'))}</textarea>
+                        <p class="muted" style="margin-top:6px;">Tokens: <code>{'{keywords}'}</code>, <code>{'{user_mention}'}</code>, <code>{'{current_count}'}</code>, <code>{'{required_count}'}</code>, <code>{'{reward_role}'}</code></p>
+                    </div>
+                </section>
+
+                <section class="panel-sub detail-page-section" style="margin-bottom:12px;">
+                    <h2 style="margin-top:0;" data-icon-key="ocr_keywords">Match Rules</h2>
+                    <div class="field-item" style="margin-bottom:14px;">
+                        <label>Keywords (comma separated)</label>
+                        <textarea name="keywords" placeholder="Following, Shared, Subscribed" style="min-height:80px;">{_escape(', '.join(data.get('keywords', [])))}</textarea>
+                    </div>
+                    <div class="field-item" style="margin-bottom:14px;">
+                        <label>Webhook URL (optional)</label>
+                        <input type="text" name="webhook_url" value="{_escape(data.get('webhook_url', ''))}" placeholder="https://discord.com/api/webhooks/...">
+                    </div>
+                </section>
+
+                <div class="form-actions-fixed">
+                    <button class="primary-btn" type="submit">Save OCR Settings</button>
+                </div>
+            </form>
+        </section>
+    </div>
+    

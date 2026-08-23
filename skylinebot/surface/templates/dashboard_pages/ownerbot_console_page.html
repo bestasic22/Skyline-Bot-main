@@ -1,0 +1,145 @@
+<link rel="stylesheet" href="/dashboard/static/dashboard/pages/ownerbot_console_overview.css?v=20260519-5">
+
+<section class="ownerbot-overview-wrap" data-ownerbot-overview-root>
+  <section class="panel">
+    <div class="panel-header" style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+      <div>
+        <h2>OwnerBOT Overview</h2>
+        <p class="muted">หน้าใหม่แบบเบา เน้นสถานะ กราฟ และข้อมูลสำคัญ</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <div class="muted">Mode: <strong id="ownerbotModeLabel">{_escape(guild_mode_label)}</strong></div>
+        <a class="ghost-btn" href="/dashboard/admin/ownerbot/settings/runtime">เปิดหน้า Settings</a>
+        <a class="ghost-btn" href="/dashboard/admin/ownerbot/assets">Image DB</a>
+      </div>
+    </div>
+    {notice_markup}
+
+    <div class="ownerbot-overview-grid">
+      <article class="panel-sub">
+        <h3 style="margin-top:0;">Bot Runtime</h3>
+        <div
+          class="ownerbot-runtime-status ownerbot-runtime-status-{_escape(runtime_tone)}"
+          id="ownerbotRuntimeStatusShell"
+          data-runtime-level="{_escape(runtime_level)}"
+          data-runtime-message="{_escape(runtime_message)}"
+          data-runtime-updated-at="{_escape(runtime_updated_at)}"
+          data-ownerbot-guild-mode="{_escape(guild_mode_value)}"
+          data-ownerbot-tester-enabled="{'1' if tester_enabled_value else '0'}"
+          data-ownerbot-status-override-level="{_escape(status_override_level)}"
+          data-ownerbot-status-override-activity="{_escape(status_override_activity)}"
+          data-ownerbot-status-override-display="{_escape(status_override_display)}"
+          data-ownerbot-status-override-message="{_escape(status_override_message)}"
+        >
+          <div class="ownerbot-runtime-status-head">
+            <strong id="ownerbotRuntimeStatusLabel">{_escape(runtime_label)}</strong>
+            <span class="ownerbot-runtime-status-chip" id="ownerbotRuntimeStatusLevel">{_escape(runtime_level)}</span>
+          </div>
+          <p id="ownerbotRuntimeStatusMessage" style="margin:0 0 6px 0;">{_escape(runtime_message)}</p>
+          <small class="muted" id="ownerbotRuntimeStatusMeta">{_escape(runtime_meta)}</small>
+          <div class="ownerbot-runtime-controls" id="ownerbotRuntimeControlChips">{runtime_control_chips_markup}</div>
+        </div>
+
+        <form method="post" action="/dashboard/admin/ownerbot/status" class="ownerbot-status-form" id="ownerbotStatusForm">
+          <label>สถานะที่ต้องการแสดง
+            <select name="dashboard_status_override_level" id="ownerbotStatusOverrideLevel">
+              <option value="auto" {'selected' if status_override_level == 'auto' else ''}>Auto (ตามสถานะระบบ)</option>
+              <option value="online" {'selected' if status_override_level == 'online' else ''}>online (เขียว)</option>
+              <option value="idle" {'selected' if status_override_level == 'idle' else ''}>idle (เหลือง)</option>
+              <option value="dnd" {'selected' if status_override_level == 'dnd' else ''}>dnd (แดง)</option>
+              <option value="offline" {'selected' if status_override_level == 'offline' else ''}>offline (เทา)</option>
+            </select>
+          </label>
+          <label>กิจกรรมที่ต้องการแสดง
+            <select name="dashboard_status_override_activity" id="ownerbotStatusOverrideActivity">
+              <option value="auto" {'selected' if status_override_activity == 'auto' else ''}>Auto (ใช้กิจกรรมระบบ)</option>
+              <option value="playing" {'selected' if status_override_activity == 'playing' else ''}>Playing(กำลังเล่น)</option>
+              <option value="streaming" {'selected' if status_override_activity == 'streaming' else ''}>Streaming(กำลังไลฟ์/สตรีม)</option>
+              <option value="listening" {'selected' if status_override_activity == 'listening' else ''}>Listening(กำลังฟัง)</option>
+              <option value="watching" {'selected' if status_override_activity == 'watching' else ''}>Watching(กำลังดู)</option>
+              <option value="competing" {'selected' if status_override_activity == 'competing' else ''}>Competing(กำลังแข่งขัน)</option>
+            </select>
+          </label>
+          <label>ข้อความสถานะ
+            <textarea name="dashboard_status_override_message" id="ownerbotStatusOverrideMessage" rows="4" maxlength="2000" placeholder="1 บรรทัด = 1 ข้อความ เช่น&#10;กำลังอัปเดตระบบ&#10;LIVE support พร้อมให้บริการ">{_escape(status_override_message)}</textarea>
+            <small class="muted">ใส่ได้หลายข้อความ โดยแยกคนละบรรทัด ระบบจะหมุนข้อความให้</small>
+          </label>
+          <div class="auth-actions" style="justify-content:flex-start;">
+            <button class="primary-btn" type="submit">บันทึกสถานะบอท</button>
+            <button class="ghost-btn" type="submit" name="dashboard_status_force_auto" value="1" id="ownerbotStatusAutoResetButton">รีเซ็ตเป็น Auto</button>
+          </div>
+        </form>
+      </article>
+
+      <article class="panel-sub">
+        <h3 style="margin-top:0;">KPI</h3>
+        <div class="ownerbot-overview-kpi" id="ownerbotKpiWrap">
+          <div class="kpi"><strong data-ownerbot-kpi="total_guilds">{total_guilds}</strong><span class="muted">Managed Guilds</span></div>
+          <div class="kpi"><strong data-ownerbot-kpi="total_codes">{total_codes}</strong><span class="muted">Redeem Codes</span></div>
+          <div class="kpi"><strong data-ownerbot-kpi="total_unclaimed">{total_unclaimed}</strong><span class="muted">Unused Codes</span></div>
+          <div class="kpi"><strong data-ownerbot-kpi="total_claimed">{total_claimed}</strong><span class="muted">Claimed Codes</span></div>
+          <div class="kpi"><strong data-ownerbot-kpi="total_wallet_users">{total_wallet_users}</strong><span class="muted">Wallet Users</span></div>
+          <div class="kpi"><strong data-ownerbot-kpi="wallet_positive_users">{wallet_positive_users}</strong><span class="muted">Wallet +Balance</span></div>
+          <div class="kpi"><strong data-ownerbot-kpi="wallet_balance_total_text">{wallet_balance_total_text}</strong><span class="muted">Wallet Total (THB)</span></div>
+          <div class="kpi"><strong data-ownerbot-kpi="disabled_commands_count">{disabled_commands_count}</strong><span class="muted">Disabled Commands</span></div>
+          <div class="kpi"><strong data-ownerbot-kpi="hidden_tabs_count">{hidden_tabs_count}</strong><span class="muted">Hidden Tabs</span></div>
+          <div class="kpi"><strong data-ownerbot-kpi="whitelist_count">{whitelist_count}</strong><span class="muted">Whitelist Guilds</span></div>
+          <div class="kpi"><strong data-ownerbot-kpi="blacklist_count">{blacklist_count}</strong><span class="muted">Blacklist Guilds</span></div>
+          <div class="kpi"><strong data-ownerbot-kpi="tester_guild_count">{tester_guild_count}</strong><span class="muted">Tester Guilds</span></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-header"><h3>Graphs</h3></div>
+    <div class="ownerbot-chart-grid">
+      <article class="ownerbot-chart-card">
+        <h4>Plan Distribution</h4>
+        <div class="ownerbot-chart-canvas-wrap" style="position:relative;height:220px;min-height:220px;max-height:220px;overflow:hidden;">
+          <canvas id="ownerbotPlanChart" height="210"></canvas>
+        </div>
+      </article>
+      <article class="ownerbot-chart-card">
+        <h4>Mongo Storage / Data (MB)</h4>
+        <div class="ownerbot-chart-canvas-wrap" style="position:relative;height:220px;min-height:220px;max-height:220px;overflow:hidden;">
+          <canvas id="ownerbotMongoSizeChart" height="210"></canvas>
+        </div>
+      </article>
+      <article class="ownerbot-chart-card">
+        <h4>Mongo Read/Write Success (%)</h4>
+        <div class="ownerbot-chart-canvas-wrap" style="position:relative;height:220px;min-height:220px;max-height:220px;overflow:hidden;">
+          <canvas id="ownerbotMongoHealthChart" height="210"></canvas>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="ownerbot-overview-grid">
+      <article class="panel-sub">
+        <h3 style="margin-top:0;">Mongo Clusters</h3>
+        <p class="muted">Online <strong id="ownerbotMongoHealthyCount">{mongo_online_clusters}</strong> / <strong id="ownerbotMongoTotalCount">{mongo_total_clusters}</strong> | Quota Warning: <strong id="ownerbotMongoQuotaCount">{mongo_quota_hits}</strong></p>
+        <div class="ownerbot-table-wrap">
+          <table>
+            <thead><tr><th>Cluster</th><th>Status</th><th>Latency ms</th><th>Collections</th><th>Storage MB</th><th>Data MB</th></tr></thead>
+            <tbody id="ownerbotMongoRows">{mongo_cluster_rows_markup}</tbody>
+          </table>
+        </div>
+      </article>
+      <article class="panel-sub">
+        <h3 style="margin-top:0;">Recent Redeem</h3>
+        <div class="ownerbot-table-wrap">
+          <table>
+            <thead><tr><th>Code</th><th>Type</th><th>Status</th><th>Created</th><th>Claimed By</th></tr></thead>
+            <tbody id="ownerbotRecentRedeemRows">{recent_redeem_rows_markup}</tbody>
+          </table>
+        </div>
+        <p class="muted" id="ownerbotOverviewLiveStatus">Live update: กำลังเชื่อมต่อ...</p>
+      </article>
+    </div>
+  </section>
+</section>
+
+<script type="application/json" id="ownerbotOverviewSeed">{overview_seed_json}</script>
+<script src="/dashboard/static/dashboard/pages/ownerbot_console_overview.js?v=20260519-7" defer></script>

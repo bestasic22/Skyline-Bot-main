@@ -1,0 +1,44 @@
+
+    <div class="section-stack">
+        <section class="panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <h1 data-i18n="tab_aichat">AI Chat</h1>
+                    <p>Configure AI responses for this server and tune style/personality.</p>
+                </div>
+            </div>
+            <form method="post" action="/dashboard/guild/{current_guild['id']}/aichat">
+                <div class="ux-toggle-group" style="grid-template-columns: 1fr;">
+                    <label class="ux-toggle">
+                        <span class="ux-toggle-label">Enable AI Chat</span>
+                        <input type="checkbox" name="enabled" {"checked" if ai_chat.get("enabled") else ""}>
+                        <span class="ux-switch"></span>
+                    </label>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-item">
+                        <label>AI chat channel</label>
+                        {_render_channel_select("channel_id", bot_guild, ai_chat.get('channel_id'))}
+                    </div>
+                </div>
+
+                <div class="field-item" style="margin-bottom:24px;">
+                    <label>Reply chance without mention (1-100%)</label>
+                    <input type="number" name="reply_chance" min="1" max="100" value="{_escape(ai_chat.get('reply_chance', 100))}">
+                </div>
+
+                <div class="field-item" style="margin-bottom:24px;">
+                    <label>AI memories / personality</label>
+                    <textarea name="memory" placeholder="Describe the personality you want the bot to remember..." style="min-height:160px;">{_escape(ai_memories.get('memory', ''))}</textarea>
+                </div>
+
+                <div class="form-actions-fixed">
+                    <button class="primary-btn" type="submit">Save AI Settings</button>
+                    <button class="ghost-btn" type="submit" form="clearAiMemoriesForm" style="color:#ff4d4d; border-color:#ff4d4d44;">Clear AI Memories</button>
+                </div>
+            </form>
+        </section>
+        <form id="clearAiMemoriesForm" method="post" action="/dashboard/guild/{current_guild['id']}/aichat/clear"></form>
+    </div>
+    

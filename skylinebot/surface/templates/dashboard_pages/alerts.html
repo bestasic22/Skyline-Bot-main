@@ -1,0 +1,68 @@
+<section class="section-stack dashboard-detail-shell page-alerts-shell page-alerts-mode-{_escape(active_platform_key or 'all')}">
+  <section class="panel dashboard-first-panel">
+    <div class="panel-header detail-page-hero">
+      <div class="panel-title detail-page-hero-copy">
+        <h1 data-icon-key="alerts">{_escape(hero_title)}</h1>
+        <p>{_escape(hero_desc)}</p>
+      </div>
+      <div class="detail-page-metrics logs-hero-metrics">{hero_badges_html}</div>
+    </div>
+
+    <form method="post" action="/dashboard/guild/{current_guild['id']}/alerts" id="alertsSettingsForm" class="alerts-form">
+      <input type="hidden" name="active_tab_slug" value="{_escape(active_tab_slug)}">
+
+      <section class="panel-sub detail-page-section alerts-core-settings" style="margin-bottom:12px;">
+        <h2 style="margin-top:0;" data-icon-key="alerts">Global Alerts Settings</h2>
+        <div class="field-grid">
+          <label class="ux-toggle" style="margin-bottom:0;">
+            <span class="ux-toggle-label">Enable alerts system</span>
+            <input type="checkbox" name="enabled" {"checked" if data.get("enabled") else ""}>
+            <span class="ux-switch"></span>
+          </label>
+          <label class="alerts-field-box">
+            <span>Primary notification channel</span>
+            {_render_channel_select("notify_channel_id", bot_guild, data.get("notify_channel_id"), placeholder="Select channel...")}
+          </label>
+          <label class="alerts-field-box">
+            <span>Roles to mention</span>
+            {_render_multi_role_select("mention_role_ids", bot_guild, mention_role_ids)}
+          </label>
+          <label class="alerts-field-box">
+            <span>Alert cooldown (seconds)</span>
+            <input type="number" min="10" max="3600" name="cooldown_seconds" value="{_escape(data.get('cooldown_seconds', 60))}">
+          </label>
+        </div>
+      </section>
+
+      <section class="panel-sub detail-page-section alerts-platform-settings" style="margin-bottom:12px;">
+        <h2 style="margin-top:0;" data-icon-key="alerts">Per-Platform Management</h2>
+        <p class="muted" style="margin-top:4px;">Each platform can use its own target channel, button text, and message template.</p>
+        {platform_sections_html}
+      </section>
+
+      <section class="panel-sub detail-page-section alerts-command-help" style="margin-bottom:14px;">
+        <h2 style="margin-top:0;" data-icon-key="commands">Related Commands</h2>
+        <div class="log-box" style="font-size:0.9rem;">
+          <div>- <code>/alerts status</code> View status of all platforms</div>
+          <div>- <code>/alerts toggle &lt;platform&gt; &lt;on/off&gt;</code> Enable/disable a platform</div>
+          <div>- <code>/alerts add &lt;platform&gt; &lt;source&gt;</code> Add alert source</div>
+          <div>- <code>/alerts remove &lt;platform&gt; &lt;source&gt;</code> Remove alert source</div>
+          <div>- <code>/alerts list &lt;platform&gt;</code> List configured sources</div>
+        </div>
+      </section>
+
+      <div class="form-actions-inline alerts-submit-row">
+        <button class="primary-btn" type="submit">{_escape(save_notice)}</button>
+      </div>
+    </form>
+
+    <section class="panel-sub detail-page-section alerts-live-test" style="margin-top:12px;">
+      <h2 style="margin-top:0;" data-icon-key="status">Run Alerts Test Now</h2>
+      <p class="muted" style="margin-top:4px;">Send a test message for the current platform without waiting for live polling.</p>
+      <div class="auth-actions alerts-test-grid" style="justify-content:flex-start;gap:8px;flex-wrap:wrap;">
+        {platform_test_buttons_html}
+      </div>
+    </section>
+  </section>
+</section>
+<script>{_render_dashboard_f_template("scripts/alerts.js", __ctx)}</script>

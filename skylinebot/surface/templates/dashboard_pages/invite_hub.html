@@ -1,0 +1,17 @@
+
+    <section class="panel">
+      <h1>Invite SkylineBOT</h1>
+      <p class="muted">รวมเซิร์ฟเวอร์ที่คุณมีสิทธิ์แอดมินและยังไม่ได้เชิญบอท</p>
+      <div class="auth-actions" style="justify-content:flex-start; margin-top:10px;">
+        <a class="ghost-btn" href="/dashboard">กลับ Dashboard</a>
+        <a class="primary-btn" href="{_escape(_bot_invite_url())}" target="_blank" rel="noopener">Invite แบบเลือกเซิร์ฟเวอร์</a>
+      </div>
+    </section>
+    <section class="panel">
+      <h2>เซิร์ฟเวอร์ที่ยังไม่ได้เชิญ</h2>
+      <p class="muted">จำนวนทั้งหมด: {_escape(len(invite_candidates))} เซิร์ฟเวอร์</p>
+      <div class="guild-grid" style="margin-top:14px;">
+        {''.join(invite_cards) if invite_cards else '<div class="notice">ไม่มีเซิร์ฟที่ต้องเชิญ</div>'}
+      </div>
+    </section>
+    

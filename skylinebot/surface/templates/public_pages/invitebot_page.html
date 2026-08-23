@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Invite {{APP_NAME}}</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" type="image/png" href="/favicon.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="/dashboard/static/dashboard/public-pages.css">
+  <style>
+    .hero-invite::after {
+      inset: auto -28% -80% auto;
+      width: 360px;
+      background: radial-gradient(circle, rgba(114, 196, 255, 0.34), transparent 70%);
+    }
+
+    .hero-actions {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+    }
+
+    .action-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 46px;
+      border-radius: 12px;
+      border: 1px solid rgba(119, 173, 255, 0.5);
+      font-weight: 800;
+      text-decoration: none;
+      transition: transform 0.16s ease, filter 0.16s ease;
+    }
+
+    .action-link:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.06);
+      text-decoration: none;
+    }
+
+    .action-link.primary {
+      color: #071628;
+      background: linear-gradient(140deg, #49a7ff, #36d4e8);
+    }
+
+    .action-link.secondary {
+      color: #e6f3ff;
+      background: rgba(12, 24, 45, 0.82);
+    }
+
+    .muted-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(122, 170, 255, 0.34);
+      background: rgba(15, 27, 49, 0.62);
+      color: #b9cff3;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .install-grid {
+      margin-top: 8px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 10px;
+    }
+
+    .install-card {
+      border: 1px solid var(--public-line);
+      border-radius: 14px;
+      padding: 12px;
+      background: rgba(11, 18, 34, 0.52);
+    }
+
+    .install-card h3 {
+      margin: 0;
+      font-size: 1rem;
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .install-card p {
+      margin: 7px 0 0;
+      font-size: 0.94rem;
+    }
+
+    .copy-row-3 {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 8px;
+    }
+
+    .copy-btn.ghost {
+      background: rgba(12, 24, 45, 0.82);
+      color: #d7ecff;
+      border-color: rgba(119, 173, 255, 0.42);
+      text-decoration: none;
+      justify-content: center;
+    }
+
+    .hint {
+      margin-top: 8px;
+      color: #b7c8eb;
+      font-size: 0.93rem;
+    }
+
+    .botlist-widget-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 12px;
+    }
+
+    .botlist-widget-wrap a {
+      width: min(100%, 720px);
+      display: block;
+    }
+
+    .botlist-widget-wrap img {
+      width: 100%;
+      max-width: 100%;
+      max-height: 360px;
+      height: auto;
+      display: block;
+      border-radius: 14px;
+      border: 1px solid rgba(119, 173, 255, 0.35);
+      background: rgba(8, 16, 30, 0.5);
+    }
+
+    @media (max-width: 760px) {
+      .copy-row-3 {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .action-link,
+      .copy-btn.ghost {
+        min-height: 42px;
+      }
+
+      .botlist-widget-wrap img {
+        max-height: 300px;
+      }
+    }
+  </style>
+</head>
+<body class="public-doc">
+  <main class="public-shell">
+    <section class="public-card hero-card hero-invite">
+      <h1 class="title-row"><span class="title-icon"><i class="bi bi-discord"></i></span>เพิ่ม {{APP_NAME}} เข้าเซิร์ฟเวอร์ได้ทันที</h1>
+      <p class="hero-sub">หน้าเดียวจบสำหรับ Custom Install URL: ผู้ใช้กดปุ่มแล้วไปหน้า Add App ของ Discord ได้เลย ไม่ต้องคัดลอกลิงก์เอง</p>
+      <div class="hero-actions">
+        <a class="action-link primary" href="{{DISCORD_CUSTOM_INSTALL_URL}}" target="_blank" rel="noopener noreferrer"><i class="bi bi-plus-circle-fill"></i>เพิ่มบอททันที (แนะนำ)</a>
+        <a class="action-link secondary" href="{{DISCORD_PROVIDED_INSTALL_URL}}" target="_blank" rel="noopener noreferrer"><i class="bi bi-box-arrow-up-right"></i>เปิด Discord Install Link</a>
+      </div>
+      <span class="muted-chip"><i class="bi bi-shield-check"></i>รองรับทั้ง bot + slash commands</span>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-lightning-charge"></i></span>ติดตั้งแบบกดครั้งเดียว</h2>
+      <div class="install-grid">
+        <div class="install-card">
+          <h3><i class="bi bi-stars"></i>Custom OAuth2 Install</h3>
+          <p>เหมาะกับการติดตั้งจริง ใช้สิทธิ์ครบสำหรับคำสั่ง slash command และระบบบอท</p>
+          <div class="field">
+            <a class="action-link primary" href="{{DISCORD_CUSTOM_INSTALL_URL}}" target="_blank" rel="noopener noreferrer"><i class="bi bi-discord"></i>เพิ่มด้วยลิงก์นี้</a>
+          </div>
+        </div>
+        <div class="install-card">
+          <h3><i class="bi bi-link-45deg"></i>Discord Provided Install</h3>
+          <p>ลิงก์พื้นฐานจาก Discord โดยตรง ใช้เป็นสำรองได้ทันที</p>
+          <div class="field">
+            <a class="action-link secondary" href="{{DISCORD_PROVIDED_INSTALL_URL}}" target="_blank" rel="noopener noreferrer"><i class="bi bi-box-arrow-up-right"></i>เปิดลิงก์สำรอง</a>
+          </div>
+        </div>
+      </div>
+      <p class="hint">ถ้าต้องการกำหนดให้ผู้ใช้เข้ามาหน้านี้ก่อน ให้ใส่ลิงก์ <code>{{INVITE_PAGE_URL}}</code> ในช่อง Custom Install URL ของ Discord Developer Portal</p>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-window"></i></span>Custom Install URL สำหรับวางใน Developer Portal</h2>
+      <div class="field">
+        <span class="label"><i class="bi bi-link-45deg"></i>URL หน้านี้</span>
+        <div class="copy-row-3">
+          <input class="public-input" id="invitePage" value="{{INVITE_PAGE_URL}}" readonly>
+          <button class="copy-btn" type="button" onclick="copyText('invitePage')"><i class="bi bi-clipboard"></i>คัดลอก</button>
+          <a class="copy-btn ghost" href="{{INVITE_PAGE_URL}}" target="_blank" rel="noopener noreferrer"><i class="bi bi-box-arrow-up-right"></i>เปิดหน้า</a>
+        </div>
+      </div>
+      <div class="field">
+        <span class="label"><i class="bi bi-sliders"></i>OAuth2 URL (bot + commands)</span>
+        <div class="copy-row">
+          <input class="public-input" id="customOauthUrl" value="{{DISCORD_CUSTOM_INSTALL_URL}}" readonly>
+          <button class="copy-btn" type="button" onclick="copyText('customOauthUrl')"><i class="bi bi-clipboard"></i>คัดลอก</button>
+        </div>
+      </div>
+      <p class="hint">แนะนำตั้งค่าใน Discord Portal: Install Link Type = Custom URL และใช้ URL ข้างบน</p>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-journal-text"></i></span>ลิงก์ประกอบที่ใช้บ่อย</h2>
+      <div class="public-grid">
+        <div class="public-link-box"><strong><i class="bi bi-grid-1x2"></i>Dashboard</strong><br><a href="{{DASHBOARD_URL}}">{{DASHBOARD_URL}}</a></div>
+        <div class="public-link-box"><strong><i class="bi bi-braces-asterisk"></i>Tags Variables</strong><br><a href="{{TAGS_URL}}">{{TAGS_URL}}</a></div>
+        <div class="public-link-box"><strong><i class="bi bi-patch-check"></i>Linked Role Verify</strong><br><a href="{{LINKED_ROLE_VERIFY_URL}}">{{LINKED_ROLE_VERIFY_URL}}</a></div>
+        <div class="public-link-box"><strong><i class="bi bi-file-text"></i>Terms of Service</strong><br><a href="{{TERMS_URL}}">{{TERMS_URL}}</a></div>
+        <div class="public-link-box"><strong><i class="bi bi-shield-lock"></i>Privacy Policy</strong><br><a href="{{PRIVACY_URL}}">{{PRIVACY_URL}}</a></div>
+      </div>
+      <div class="botlist-widget-wrap">
+        <a href="https://discordbotlist.com/bots/skylinebot-0194" target="_blank" rel="noopener noreferrer">
+          <img src="https://discordbotlist.com/api/v1/bots/1484505852449787944/widget" alt="SkylineBOT DiscordBotList Widget">
+        </a>
+      </div>
+    </section>
+
+    <section class="public-footer">© {{CURRENT_YEAR}} {{APP_NAME}} • Dashboard: <a href="{{DASHBOARD_URL}}">{{DASHBOARD_URL}}</a></section>
+  </main>
+  <script>
+    async function copyText(id) {
+      const input = document.getElementById(id);
+      if (!input) return;
+      input.select();
+      input.setSelectionRange(0, 99999);
+      try {
+        await navigator.clipboard.writeText(input.value);
+      } catch (_) {
+        document.execCommand("copy");
+      }
+      input.blur();
+    }
+  </script>
+</body>
+</html>

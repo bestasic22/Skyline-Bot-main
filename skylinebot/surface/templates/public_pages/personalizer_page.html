@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>แปลงข้อความเป็นอักษรพิเศษ - {{APP_NAME}}</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" type="image/png" href="/favicon.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="/dashboard/static/dashboard/public-pages.css">
+  <style>
+    .personalizer-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .personalizer-block {
+      border: 1px solid var(--public-line);
+      border-radius: 12px;
+      padding: 10px;
+      background: rgba(10, 16, 30, 0.58);
+    }
+
+    .personalizer-select,
+    .personalizer-textarea {
+      width: 100%;
+      border: 1px solid var(--public-line);
+      border-radius: 11px;
+      padding: 10px 12px;
+      background: rgba(11, 18, 34, 0.8);
+      color: var(--public-text);
+      outline: none;
+      font-family: "Outfit", "Segoe UI", sans-serif;
+    }
+
+    .personalizer-select:focus,
+    .personalizer-textarea:focus {
+      border-color: rgba(107, 154, 255, 0.72);
+      box-shadow: 0 0 0 3px rgba(62, 128, 255, 0.22);
+    }
+
+    .personalizer-textarea {
+      resize: vertical;
+      min-height: 98px;
+      line-height: 1.55;
+    }
+
+    .personalizer-output {
+      min-height: 120px;
+      font-size: 1.02rem;
+    }
+
+    .live-hint {
+      margin-top: 8px;
+      color: #b7cdf5;
+      font-size: 0.88rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .examples-toolbar {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: minmax(0, 280px);
+      gap: 8px;
+    }
+
+    .examples-list,
+    .all-styles-list {
+      margin-top: 10px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .example-item,
+    .all-style-item {
+      border: 1px solid var(--public-line);
+      border-radius: 11px;
+      padding: 10px;
+      background: rgba(10, 16, 30, 0.52);
+    }
+
+    .all-style-item {
+      border-style: dashed;
+      border-color: rgba(125, 170, 245, 0.5);
+      background: rgba(9, 15, 30, 0.44);
+    }
+
+    .example-head,
+    .all-style-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .example-id {
+      font-size: 0.8rem;
+      color: #b5ccf2;
+      border: 1px solid rgba(122, 166, 237, 0.45);
+      border-radius: 999px;
+      padding: 3px 9px;
+      background: rgba(15, 25, 45, 0.68);
+    }
+
+    .example-name {
+      font-weight: 750;
+      color: #e6f0ff;
+    }
+
+    .example-preview,
+    .all-style-text {
+      margin: 0;
+      color: #d7e7ff;
+      line-height: 1.58;
+      word-break: break-word;
+      white-space: pre-wrap;
+    }
+
+    .example-desc {
+      margin: 4px 0 0;
+      color: #9fb6de;
+      font-size: 0.88rem;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 860px) {
+      .personalizer-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body class="public-doc">
+  <main class="public-shell">
+    <section class="public-card hero-card">
+      <h1 class="title-row"><span class="title-icon"><i class="bi bi-type"></i></span>ตัวแปลงข้อความเป็นอักษรพิเศษ</h1>
+      <p class="hero-sub">
+        รองรับทั้งภาษาไทยและภาษาอังกฤษ ใช้ได้ทั้งหน้าเว็บและคำสั่งบอท
+        <br>พิมพ์ข้อความหรือเปลี่ยนรูปแบบแล้วผลลัพธ์จะแสดงทันทีแบบ Live Preview
+      </p>
+      <div class="public-inline-links" style="margin-top:10px;">
+        <a href="/commands"><i class="bi bi-terminal"></i>Commands</a>
+        <a href="/docs"><i class="bi bi-journal-text"></i>Docs</a>
+        <a href="/premium"><i class="bi bi-gem"></i>Premium</a>
+      </div>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-magic"></i></span>Live Converter</h2>
+      <div class="personalizer-grid">
+        <article class="personalizer-block">
+          <label class="label" for="styleSelect"><i class="bi bi-sliders2"></i>เลือกรูปแบบ</label>
+          <select id="styleSelect" class="personalizer-select"></select>
+          <label class="label" for="sourceText" style="margin-top:10px;"><i class="bi bi-pencil-square"></i>ข้อความต้นฉบับ</label>
+          <textarea id="sourceText" class="personalizer-textarea" placeholder="พิมพ์ข้อความที่ต้องการแปลง">{{PERSONALIZER_DEFAULT_TEXT}}</textarea>
+        </article>
+
+        <article class="personalizer-block">
+          <label class="label" for="resultText"><i class="bi bi-stars"></i>ผลลัพธ์</label>
+          <textarea id="resultText" class="personalizer-textarea personalizer-output" readonly>{{PERSONALIZER_DEFAULT_OUTPUT}}</textarea>
+          <div class="copy-row" style="margin-top:10px;">
+            <input id="selectedStyleInfo" class="public-input" readonly value="style: {{PERSONALIZER_DEFAULT_STYLE}}">
+            <button id="copyResultBtn" type="button" class="copy-btn"><i class="bi bi-clipboard"></i>คัดลอก</button>
+          </div>
+          <p class="live-hint" id="liveHint"><i class="bi bi-lightning-charge-fill"></i>พร้อมแปลงแบบเรียลไทม์</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-collection"></i></span>ตัวอย่างแต่ละสไตล์</h2>
+      <p>ดูชื่อสไตล์และหน้าตาผลลัพธ์ได้ทันที เพื่อเลือกแบบที่ต้องการ</p>
+      <div class="examples-toolbar">
+        <label class="label" for="exampleCategorySelect"><i class="bi bi-funnel"></i>หมวดหมู่</label>
+        <select id="exampleCategorySelect" class="personalizer-select"></select>
+      </div>
+      <div id="examplesList" class="examples-list"></div>
+
+      <h3 class="title-row" style="margin-top:14px;"><span class="title-icon"><i class="bi bi-lightning-charge"></i></span>ผลลัพธ์ทุกสไตล์ (Live)</h3>
+      <div id="allStylesList" class="all-styles-list"></div>
+    </section>
+  </main>
+
+  <script id="personalizerStylesData" type="application/json">{{{PERSONALIZER_STYLES_JSON}}}</script>
+  <script id="personalizerCategoriesData" type="application/json">{{{PERSONALIZER_CATEGORIES_JSON}}}</script>
+  <script>
+    (() => {
+      const styleSelect = document.getElementById("styleSelect");
+      const sourceText = document.getElementById("sourceText");
+      const resultText = document.getElementById("resultText");
+      const styleInfo = document.getElementById("selectedStyleInfo");
+      const liveHint = document.getElementById("liveHint");
+      const copyResultBtn = document.getElementById("copyResultBtn");
+      const examplesList = document.getElementById("examplesList");
+      const exampleCategorySelect = document.getElementById("exampleCategorySelect");
+      const allStylesList = document.getElementById("allStylesList");
+
+      const defaultStyle = "{{PERSONALIZER_DEFAULT_STYLE}}";
+      const defaultCategory = "{{PERSONALIZER_DEFAULT_CATEGORY}}";
+      const stylesNode = document.getElementById("personalizerStylesData");
+      const categoriesNode = document.getElementById("personalizerCategoriesData");
+
+      let styles = [];
+      let categories = [];
+      let latestAllStyles = [];
+
+      try {
+        styles = JSON.parse(stylesNode?.textContent || "[]");
+      } catch (_error) {
+        styles = [];
+      }
+
+      try {
+        categories = JSON.parse(categoriesNode?.textContent || "[]");
+      } catch (_error) {
+        categories = [];
+      }
+
+      if (!Array.isArray(categories) || !categories.length) {
+        categories = [{ id: "all", name: "All" }];
+      }
+      if (!categories.some((row) => String(row?.id || "").trim().toLowerCase() === "all")) {
+        categories.unshift({ id: "all", name: "All" });
+      }
+
+      const escapeHtml = (value) =>
+        String(value || "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;");
+
+      const normalizeStyle = (value) =>
+        String(value || "").trim().toLowerCase().replaceAll("-", "_").replaceAll(" ", "_");
+
+      const normalizeCategory = (value) => {
+        const safe = String(value || "").trim().toLowerCase().replaceAll("-", "_").replaceAll(" ", "_");
+        return safe || "all";
+      };
+
+      const styleExists = (styleKey) => styles.some((row) => normalizeStyle(row.id) === normalizeStyle(styleKey));
+
+      const activeCategory = () => normalizeCategory(exampleCategorySelect?.value || defaultCategory || "all");
+
+      const inActiveCategory = (row) => {
+        const selected = activeCategory();
+        if (selected === "all") return true;
+        return normalizeCategory(row?.category || row?.category_name || "") === selected;
+      };
+
+      const setHint = (text) => {
+        if (!liveHint) return;
+        liveHint.innerHTML = `<i class="bi bi-lightning-charge-fill"></i>${escapeHtml(text)}`;
+      };
+
+      const renderStyleOptions = () => {
+        if (!styleSelect) return;
+        styleSelect.innerHTML = styles
+          .map((row) => {
+            const id = String(row.id || "");
+            const name = String(row.name || id);
+            const desc = String(row.description || "");
+            const categoryName = String(row.category_name || "");
+            const selected = normalizeStyle(id) === normalizeStyle(defaultStyle) ? " selected" : "";
+            const label = desc ? `${name} - ${desc}` : name;
+            const fullLabel = categoryName ? `[${categoryName}] ${label}` : label;
+            return `<option value="${escapeHtml(id)}"${selected}>${escapeHtml(fullLabel)}</option>`;
+          })
+          .join("");
+        if (!styleExists(styleSelect.value) && styleExists(defaultStyle)) {
+          styleSelect.value = defaultStyle;
+        }
+      };
+
+      const renderCategoryOptions = () => {
+        if (!exampleCategorySelect) return;
+        exampleCategorySelect.innerHTML = categories
+          .map((row) => {
+            const id = normalizeCategory(row?.id);
+            const name = String(row?.name || id || "All");
+            const selected = normalizeCategory(defaultCategory) === id ? " selected" : "";
+            return `<option value="${escapeHtml(id)}"${selected}>${escapeHtml(name)}</option>`;
+          })
+          .join("");
+      };
+
+      const renderExamples = () => {
+        if (!examplesList) return;
+        const rows = styles.filter((row) => inActiveCategory(row));
+        if (!rows.length) {
+          examplesList.innerHTML = '<article class="example-item"><p class="example-preview">ไม่พบสไตล์ในหมวดนี้</p></article>';
+          return;
+        }
+        examplesList.innerHTML = rows
+          .map((row) => {
+            const styleId = String(row.id || "");
+            const styleName = String(row.name || styleId);
+            const categoryName = String(row.category_name || "");
+            const desc = String(row.description || "");
+            const preview = String(row.preview || "");
+            return `
+              <article class="example-item">
+                <div class="example-head">
+                  <span class="example-id">${escapeHtml(styleId)}</span>
+                  <span class="example-name">${escapeHtml(styleName)}</span>
+                  ${categoryName ? `<span class="example-id">${escapeHtml(categoryName)}</span>` : ""}
+                </div>
+                <p class="example-preview">${escapeHtml(preview)}</p>
+                ${desc ? `<p class="example-desc">${escapeHtml(desc)}</p>` : ""}
+              </article>
+            `;
+          })
+          .join("");
+      };
+
+      const renderAllStyles = (rows) => {
+        if (!allStylesList) return;
+        const safeRows = Array.isArray(rows) ? rows : [];
+        const visibleRows = safeRows.filter((row) => inActiveCategory(row));
+        if (!visibleRows.length) {
+          allStylesList.innerHTML = '<article class="all-style-item"><p class="all-style-text">ยังไม่มีผลลัพธ์</p></article>';
+          return;
+        }
+        allStylesList.innerHTML = visibleRows
+          .map((row) => {
+            const styleId = String(row?.id || "");
+            const styleName = String(row?.name || styleId);
+            const categoryName = String(row?.category_name || "");
+            const text = String(row?.text || "");
+            return `
+              <article class="all-style-item">
+                <div class="all-style-head">
+                  <span class="example-id">${escapeHtml(styleId)}</span>
+                  <span class="example-name">${escapeHtml(styleName)}</span>
+                  ${categoryName ? `<span class="example-id">${escapeHtml(categoryName)}</span>` : ""}
+                </div>
+                <p class="all-style-text">${escapeHtml(text || "-")}</p>
+              </article>
+            `;
+          })
+          .join("");
+      };
+
+      let activeController = null;
+      let debounceTimer = null;
+
+      const updatePreview = async () => {
+        if (!styleSelect || !sourceText || !resultText) return;
+        const style = String(styleSelect.value || defaultStyle);
+        const text = String(sourceText.value || "");
+        if (styleInfo) {
+          styleInfo.value = `style: ${style}`;
+        }
+
+        if (activeController) {
+          activeController.abort();
+        }
+        activeController = new AbortController();
+        const params = new URLSearchParams({ style, text, all: "1" });
+        setHint("กำลังอัปเดตแบบเรียลไทม์...");
+
+        try {
+          const response = await fetch(`/api/personalizer/preview?${params.toString()}`, {
+            method: "GET",
+            headers: { Accept: "application/json" },
+            signal: activeController.signal,
+          });
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+          }
+
+          const payload = await response.json();
+          resultText.value = String(payload?.result || "");
+          latestAllStyles = Array.isArray(payload?.styles) ? payload.styles : [];
+          renderAllStyles(latestAllStyles);
+
+          if (styleInfo) {
+            const picked = String(payload?.style || style);
+            const styleName = String(payload?.style_name || picked);
+            styleInfo.value = `style: ${picked} (${styleName})`;
+          }
+
+          setHint("อัปเดตแล้ว");
+        } catch (error) {
+          if (error && error.name === "AbortError") {
+            return;
+          }
+          renderAllStyles([]);
+          setHint("อัปเดตไม่สำเร็จ ลองใหม่อีกครั้ง");
+        }
+      };
+
+      const updatePreviewDebounced = () => {
+        if (debounceTimer) {
+          clearTimeout(debounceTimer);
+        }
+        debounceTimer = setTimeout(updatePreview, 100);
+      };
+
+      if (sourceText) {
+        sourceText.addEventListener("input", updatePreviewDebounced);
+        sourceText.addEventListener("change", updatePreviewDebounced);
+      }
+
+      if (styleSelect) {
+        styleSelect.addEventListener("change", updatePreviewDebounced);
+      }
+
+      if (exampleCategorySelect) {
+        exampleCategorySelect.addEventListener("change", () => {
+          renderExamples();
+          renderAllStyles(latestAllStyles);
+        });
+      }
+
+      if (copyResultBtn && resultText) {
+        copyResultBtn.addEventListener("click", async () => {
+          const text = String(resultText.value || "").trim();
+          if (!text) return;
+          try {
+            await navigator.clipboard.writeText(text);
+            setHint("คัดลอกเรียบร้อย");
+          } catch (_error) {
+            setHint("คัดลอกไม่สำเร็จ");
+          }
+        });
+      }
+
+      renderStyleOptions();
+      renderCategoryOptions();
+      renderExamples();
+      renderAllStyles([]);
+      updatePreview();
+    })();
+  </script>
+</body>
+</html>

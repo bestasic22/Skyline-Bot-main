@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rule Center - {{APP_NAME}}</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" type="image/png" href="/favicon.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="/dashboard/static/dashboard/public-pages.css">
+  <style>
+    .hero-rule::after {
+      inset: auto -28% -84% auto;
+      width: 360px;
+      background: radial-gradient(circle, rgba(114, 196, 255, 0.34), transparent 70%);
+    }
+
+    .rule-actions {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+    }
+
+    .rule-btn {
+      min-height: 46px;
+      border-radius: 12px;
+      border: 1px solid rgba(120, 173, 255, 0.5);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 800;
+      text-decoration: none;
+      transition: transform 0.16s ease, filter 0.16s ease;
+    }
+
+    .rule-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+      text-decoration: none;
+    }
+
+    .rule-btn.primary {
+      color: #07182b;
+      background: linear-gradient(140deg, #48a8ff, #35d3ea);
+    }
+
+    .rule-btn.secondary {
+      color: #d8edff;
+      background: rgba(12, 24, 45, 0.82);
+      border-color: rgba(120, 173, 255, 0.36);
+    }
+
+    .rule-grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+    }
+
+    .rule-card {
+      border: 1px solid var(--public-line);
+      border-radius: 14px;
+      padding: 12px;
+      background: rgba(11, 18, 34, 0.52);
+    }
+
+    .rule-card h3 {
+      margin: 0;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .rule-card p {
+      margin: 8px 0 0;
+      font-size: 0.93rem;
+      line-height: 1.58;
+    }
+  </style>
+</head>
+<body class="public-doc">
+  <main class="public-shell">
+    <section class="public-card hero-card hero-rule">
+      <h1 class="title-row"><span class="title-icon"><i class="bi bi-shield-check"></i></span>Rule Center</h1>
+      <p class="hero-sub">รวมกฎการใช้งานหลักของ {{APP_NAME}} </p>
+      <div class="rule-actions">
+        <a class="rule-btn primary" href="{{RULE_BOT_URL}}"><i class="bi bi-robot"></i>Rule Bot</a>
+        <a class="rule-btn secondary" href="{{RULE_SERVER_SUPPORT_URL}}"><i class="bi bi-headset"></i>Rule Server Support</a>
+      </div>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-compass"></i></span>Quick Links</h2>
+      <div class="rule-grid">
+        <article class="rule-card">
+          <h3><i class="bi bi-file-text"></i>Bot Terms</h3>
+          <p>ข้อกำหนดการใช้งานบอทและนโยบายบริการ<br><a href="{{RULE_BOT_URL}}">{{RULE_BOT_URL}}</a></p>
+        </article>
+        <article class="rule-card">
+          <h3><i class="bi bi-people"></i>Support Server Rules</h3>
+          <p>แนวทางการใช้งานห้องแชทและการขอความช่วยเหลือ<br><a href="{{RULE_SERVER_SUPPORT_URL}}">{{RULE_SERVER_SUPPORT_URL}}</a></p>
+        </article>
+        <article class="rule-card">
+          <h3><i class="bi bi-discord"></i>Support Server</h3>
+          <p>เข้าร่วมเซิร์ฟเวอร์ซัพพอร์ตอย่างเป็นทางการ<br><a href="{{SUPPORT_SERVER_URL}}" target="_blank" rel="noopener noreferrer">{{SUPPORT_SERVER_URL}}</a></p>
+        </article>
+        <article class="rule-card">
+          <h3><i class="bi bi-chat-dots"></i>Contact</h3>
+          <p>ต้องการคุยเคสส่วนตัวกับทีมงาน<br><a href="{{CONTACT_URL}}">{{CONTACT_URL}}</a></p>
+        </article>
+      </div>
+    </section>
+
+    <section class="public-footer">© {{CURRENT_YEAR}} {{APP_NAME}} • Rule Center</section>
+  </main>
+</body>
+</html>

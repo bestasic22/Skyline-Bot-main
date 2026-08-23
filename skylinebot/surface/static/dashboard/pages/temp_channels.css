@@ -1,0 +1,78 @@
+.tv-stepper {{
+        display:grid;
+        grid-template-columns:42px 1fr 42px;
+        gap:8px;
+        align-items:center;
+      }}
+      .tv-stepper input[type="number"] {{
+        text-align:center;
+        font-weight:700;
+      }}
+      .tv-buttons-grid {{
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(106px,1fr));
+        gap:8px;
+      }}
+      .tv-composer-grid {{
+        display:grid;
+        grid-template-columns:40px 1fr 1fr 72px;
+        gap:8px;
+        align-items:center;
+      }}
+      .tv-icon-picker, .tv-thumb-picker {{
+        border:1px dashed var(--line);
+        background:rgba(255,255,255,.03);
+        border-radius:10px;
+        min-height:40px;
+        color:var(--muted);
+      }}
+      .tv-thumb-picker {{
+        min-height:72px;
+      }}
+      .tv-image-picker {{
+        width:100%;
+        min-height:96px;
+        border:1px dashed var(--line);
+        background:rgba(255,255,255,.02);
+        border-radius:12px;
+        color:var(--muted);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        margin-top:10px;
+      }}
+      .tv-btn-toggle {{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        border:1px solid var(--line);
+        border-radius:10px;
+        background:rgba(255,255,255,.04);
+        min-height:36px;
+        cursor:pointer;
+        position:relative;
+      }}
+      .tv-btn-toggle input {{
+        position:absolute;
+        opacity:0;
+        pointer-events:none;
+      }}
+      .tv-btn-toggle span {{
+        font-size:12px;
+        font-weight:800;
+        letter-spacing:.02em;
+      }}
+      .tv-btn-toggle input:checked + span {{
+        color:#fff;
+      }}
+      .tv-btn-toggle input:not(:checked) + span {{
+        color:var(--muted);
+      }}
+      @media (max-width: 800px) {{
+        .tv-composer-grid {{
+          grid-template-columns:40px 1fr 1fr;
+        }}
+        .tv-thumb-picker {{
+          grid-column: span 3;
+        }}
+      }}

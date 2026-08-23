@@ -1,0 +1,168 @@
+
+    <link rel="stylesheet" href="/dashboard/static/dashboard/pages/overview.css">
+    <section class="section-stack dashboard-detail-shell page-overview-shell" data-overview-root>
+      <section class="panel">
+        <div class="panel-header detail-page-hero detail-page-hero-overview">
+          <div class="panel-title detail-page-hero-copy">
+            <h1 data-icon-key="overview">Guild Overview</h1>
+            <p>Real-time guild snapshot for members, channels, and key activity.</p>
+          </div>
+        </div>
+
+        <section class="panel-sub detail-page-section overview-guild-profile-section" style="margin-bottom:12px;">
+          <div class="overview-guild-profile">
+            <img class="overview-guild-avatar" src="{guild_icon_url}" alt="Guild icon" loading="lazy" width="62" height="62" style="width:62px !important;height:62px !important;max-width:62px !important;min-width:62px !important;flex:0 0 62px !important;display:block;object-fit:cover !important;border-radius:16px !important;">
+            <div class="overview-guild-info">
+              <h2>{_escape(current_guild.get("name") or "Guild")}</h2>
+              <p>Guild ID: <code>{_escape(current_guild.get("id") or "-")}</code></p>
+            </div>
+          </div>
+          <div class="stats-grid overview-stat-grid overview-meta-grid" style="margin-bottom:0;">
+            <article class="stat-card bot-status-card overview-mini-card">
+              <div class="bot-status-icon" style="background:rgba(16,185,129,.2);"><i class="fa-solid fa-crown" aria-hidden="true"></i></div>
+              <div class="bot-status-label">Guild Owner</div>
+              <div class="bot-status-value">{guild_owner_text}</div>
+              <div class="muted" style="font-size:12px;">ID: {guild_owner_id_text}</div>
+            </article>
+            <article class="stat-card bot-status-card overview-mini-card">
+              <div class="bot-status-icon" style="background:rgba(59,130,246,.22);"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i></div>
+              <div class="bot-status-label">Created Date</div>
+              <div class="bot-status-value">{guild_created_text}</div>
+              <div class="muted" style="font-size:12px;">Local timezone (UTC+7)</div>
+            </article>
+            <article class="stat-card bot-status-card overview-mini-card">
+              <div class="bot-status-icon" style="background:rgba(251,191,36,.22);"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i></div>
+              <div class="bot-status-label">Guild Age</div>
+              <div class="bot-status-value">{guild_age_text}</div>
+              <div class="muted" style="font-size:12px;">Calculated from creation date</div>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel-sub detail-page-section overview-insight-section" style="margin-bottom:12px;">
+          <h2 style="margin-top:0;" data-icon-key="overview_channels">Channel Structure</h2>
+          <div class="stats-grid overview-stat-grid overview-stat-grid-5" style="margin-bottom:0;">
+            <article class="stat-card bot-status-card">
+              <div class="bot-status-icon" style="background:rgba(14,165,233,.22);"><i class="fa-solid fa-layer-group" aria-hidden="true"></i></div>
+              <div class="bot-status-label">Total Channels</div>
+              <div class="bot-status-value">{channel_counts['total']:,}</div>
+            </article>
+            <article class="stat-card bot-status-card">
+              <div class="bot-status-icon" style="background:rgba(99,102,241,.22);"><i class="fa-solid fa-folder-tree" aria-hidden="true"></i></div>
+              <div class="bot-status-label">Categories</div>
+              <div class="bot-status-value">{channel_counts['category']:,}</div>
+            </article>
+            <article class="stat-card bot-status-card">
+              <div class="bot-status-icon" style="background:rgba(20,184,166,.22);"><i class="fa-solid fa-comments" aria-hidden="true"></i></div>
+              <div class="bot-status-label">Text Channels</div>
+              <div class="bot-status-value">{channel_counts['chat']:,}</div>
+            </article>
+            <article class="stat-card bot-status-card">
+              <div class="bot-status-icon" style="background:rgba(245,158,11,.22);"><i class="fa-solid fa-microphone-lines" aria-hidden="true"></i></div>
+              <div class="bot-status-label">Voice Channels</div>
+              <div class="bot-status-value">{channel_counts['voice']:,}</div>
+            </article>
+            <article class="stat-card bot-status-card">
+              <div class="bot-status-icon" style="background:rgba(148,163,184,.24);"><i class="fa-solid fa-ellipsis" aria-hidden="true"></i></div>
+              <div class="bot-status-label">Other</div>
+              <div class="bot-status-value">{channel_counts['other']:,}</div>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel-sub detail-page-section overview-insight-section" style="margin-bottom:12px;">
+          <h2 style="margin-top:0;" data-icon-key="overview_membership">Members and Presence</h2>
+          <div class="stats-grid overview-stat-grid overview-stat-grid-7" style="margin-bottom:0;">
+            <article class="stat-card bot-status-card">
+              <div class="bot-status-icon" style="background:rgba(56,189,248,.22);"><i class="fa-solid fa-user" aria-hidden="true"></i></div>
+              <div class="bot-status-label">User</div>
+              <div class="bot-status-value">{human_member_count:,}</div>
+            </article>
+            <article class="stat-card bot-status-card">
+              <div class="bot-status-icon" style="background:rgba(129,140,248,.24);"><i class="fa-solid fa-robot" aria-hidden="true"></i></div>
+              <div class="bot-status-label">Bot</div>
+              <div class="bot-status-value">{bot_member_count:,}</div>
+            </article>
+            <article class="stat-card bot-status-card">
+              <div class="bot-status-icon" style="background:rgba(16,185,129,.22);"><i class="fa-solid fa-signal" aria-hidden="true"></i></div>
+              <div class="bot-status-label">Online</div>
+              <div class="bot-status-value">{presence_counts['online']:,}</div>
+            </article>
+            <article class="stat-card bot-status-card">
+              <div class="bot-status-icon" style="background:rgba(250,204,21,.22);"><i class="fa-solid fa-moon" aria-hidden="true"></i></div>
+              <div class="bot-status-label">Idle</div>
+              <div class="bot-status-value">{presence_counts['idle']:,}</div>
+            </article>
+            <article class="stat-card bot-status-card">
+              <div class="bot-status-icon" style="background:rgba(239,68,68,.24);"><i class="fa-solid fa-minus-circle" aria-hidden="true"></i></div>
+              <div class="bot-status-label">Do Not Disturb</div>
+              <div class="bot-status-value">{presence_counts['dnd']:,}</div>
+            </article>
+            <article class="stat-card bot-status-card">
+              <div class="bot-status-icon" style="background:rgba(148,163,184,.24);"><i class="fa-solid fa-user-slash" aria-hidden="true"></i></div>
+              <div class="bot-status-label">Offline</div>
+              <div class="bot-status-value">{presence_counts['offline']:,}</div>
+            </article>
+            <article class="stat-card bot-status-card">
+              <div class="bot-status-icon" style="background:rgba(167,139,250,.24);"><i class="fa-solid fa-asterisk" aria-hidden="true"></i></div>
+              <div class="bot-status-label">Other</div>
+              <div class="bot-status-value">{presence_counts['other']:,}</div>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel-sub detail-page-section" style="margin-bottom:12px;">
+          <h2 style="margin-top:0;" data-icon-key="overview_activity">Activity Snapshot (24h)</h2>
+          <div class="stats-grid overview-stat-grid" style="margin-bottom:0;grid-template-columns:repeat(3,minmax(0,1fr));">
+            <article class="stat-card bot-status-card">
+              <div class="bot-status-icon" style="background:rgba(59,130,246,.22);"><i class="fa-solid fa-comment-dots" aria-hidden="true"></i></div>
+              <div class="bot-status-label">Messages</div>
+              <div class="muted" style="font-size:12px;">Last 24 hours</div>
+              <div class="bot-status-value">{messages_24h:,}</div>
+            </article>
+            <article class="stat-card bot-status-card">
+              <div class="bot-status-icon" style="background:rgba(251,191,36,.22);"><i class="fa-solid fa-right-left" aria-hidden="true"></i></div>
+              <div class="bot-status-label">Joins / Leaves</div>
+              <div class="muted" style="font-size:12px;">Last 24 hours</div>
+              <div class="bot-status-value">{joins_24h:,}/{leaves_24h:,}</div>
+            </article>
+            <article class="stat-card bot-status-card">
+              <div class="bot-status-icon" style="background:rgba(168,85,247,.22);"><i class="fa-solid fa-users" aria-hidden="true"></i></div>
+              <div class="bot-status-label">Total Members</div>
+              <div class="bot-status-value">{total_member_count:,}</div>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel-sub detail-page-section" style="margin-bottom:12px;">
+          <h2 style="margin-top:0;" data-icon-key="overview_range">Time Range</h2>
+          <div class="field-item" style="margin:6px 0 0; max-width:280px;">
+            <label>Select period</label>
+            <select id="overviewRangeSelect">
+              <option value="today">Today</option>
+              <option value="7d" selected>Last 7 days</option>
+              <option value="1m">Last 1 month</option>
+              <option value="1y">Last 1 year</option>
+              <option value="all">All time</option>
+            </select>
+          </div>
+        </section>
+
+        <div class="grid overview-chart-grid" style="grid-template-columns:repeat(12,minmax(0,1fr));gap:12px;">
+          <section class="panel-sub detail-page-section" style="grid-column:span 6;">
+            <h3 style="margin-top:0;" data-icon-key="overview_membership">Joins / Leaves</h3>
+            <canvas id="overviewJoinChart" height="180"></canvas>
+          </section>
+          <section class="panel-sub detail-page-section" style="grid-column:span 6;">
+            <h3 style="margin-top:0;" data-icon-key="overview_membership">Member Count</h3>
+            <canvas id="overviewMemberChart" height="180"></canvas>
+          </section>
+          <section class="panel-sub detail-page-section" style="grid-column:span 12;">
+            <h3 style="margin-top:0;" data-icon-key="overview_messages">Messages (non-bot)</h3>
+            <canvas id="overviewMessageChart" height="170"></canvas>
+          </section>
+        </div>
+      </section>
+    </section>
+    <script>{_render_dashboard_f_template("scripts/overview.js", __ctx)}</script>
+    

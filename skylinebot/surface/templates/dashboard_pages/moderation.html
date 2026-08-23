@@ -1,0 +1,118 @@
+
+    <div class="section-stack dashboard-detail-shell page-moderation-shell">
+        <section class="panel dashboard-first-panel">
+            <div class="panel-header detail-page-hero detail-page-hero-moderation">
+                <div class="panel-title detail-page-hero-copy">
+                    <h1 data-i18n="tab_moderation" data-icon-key="moderation">{_escape(title_text)}</h1>
+                    <p>{_escape(desc_text)}</p>
+                </div>
+                <div class="detail-page-metrics moderation-hero-metrics">
+                    <span class="pill"><i class="bi bi-toggles" aria-hidden="true"></i> Rules enabled {enabled_rule_count}/3</span>
+                    <span class="pill"><i class="bi bi-sliders2" aria-hidden="true"></i> Mode {moderation_mode_label}</span>
+                    <span class="pill"><i class="bi bi-shield-exclamation" aria-hidden="true"></i> Punishment {moderation_punishment_label}</span>
+                    <span class="plugin-premium-pill">Plan: {_escape(plan_name)}</span>
+                </div>
+            </div>
+            {premium_notice}
+            <form method="post" action="/dashboard/guild/{current_guild['id']}/moderation" id="moderationSettingsForm" data-plan="{_escape(plan_tier)}" class="moderation-form">
+                <input type="hidden" name="redirect_tab" value="{_escape(active_tab_slug)}">
+
+                <section class="panel-sub detail-page-section moderation-core-section">
+                    <h2 style="margin-top:0;" data-icon-key="moderation">Protection Mode</h2>
+                    <div class="field-group detail-page-grid">
+                        <div class="field-item">
+                            <label>Protection mode</label>
+                            <select name="mode" id="automodModeSelect">
+                                <option value="normal" {"selected" if selected_mode == "normal" else ""}>Normal</option>
+                                <option value="extreme" {"selected" if selected_mode == "extreme" else ""}>Extreme</option>
+                                {custom_option}
+                                {diamond_option}
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel-sub detail-page-section moderation-toggle-section">
+                    <h2 style="margin-top:0;" data-icon-key="automation">AutoMod Modules</h2>
+                    <div class="ux-toggle-group detail-page-toggle-grid moderation-toggle-grid">
+                        <label class="ux-toggle"><span class="ux-toggle-label">Enable Anti-Link</span><input type="checkbox" name="antilink_enabled" {"checked" if data.get("antilink_enabled") else ""}><span class="ux-switch"></span></label>
+                        <label class="ux-toggle"><span class="ux-toggle-label">Enable Anti-Spam</span><input type="checkbox" name="antispam_enabled" {"checked" if data.get("antispam_enabled") else ""}><span class="ux-switch"></span></label>
+                        <label class="ux-toggle"><span class="ux-toggle-label">Enable Anti-Badwords</span><input type="checkbox" name="antibadwords_enabled" {"checked" if data.get("antibadwords_enabled") else ""}><span class="ux-switch"></span></label>
+                    </div>
+                </section>
+
+                <section class="panel-sub detail-page-section moderation-limit-section">
+                    <h2 style="margin-top:0;" data-icon-key="status">Spam Detection Thresholds</h2>
+                    <div class="field-group detail-page-grid">
+                        <div class="field-item">
+                            <label>Max messages in window</label>
+                            <input type="number" min="1" max="50" name="antispam_max_messages" value="{_escape(data.get('antispam_max_messages', 10))}">
+                        </div>
+                        <div class="field-item">
+                            <label>Window size (seconds)</label>
+                            <input type="number" min="5" max="300" name="antispam_timeframe" value="{_escape(data.get('antispam_max_interval', data.get('antispam_timeframe', 30)))}">
+                        </div>
+                        <div class="field-item">
+                            <label>Max mentions @</label>
+                            <input type="number" min="1" max="30" name="antispam_max_mentions" value="{_escape(data.get('antispam_max_mentions', 5))}">
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel-sub detail-page-section moderation-punishment-section">
+                    <h2 style="margin-top:0;" data-icon-key="security">Punishment</h2>
+                    <div class="field-group detail-page-grid">
+                        <div class="field-item">
+                            <label>Punishment on violation</label>
+                            <select name="antispam_punishment" class="punishment-select">{"".join(punishment_options)}</select>
+                        </div>
+                        <div class="field-item">
+                            <label>Punishment duration (minutes)</label>
+                            <input type="number" min="1" max="1440" name="antispam_punishment_duration" value="{_escape(data.get('antispam_punishment_duration', 10))}">
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel-sub detail-page-section moderation-keyword-section">
+                    <h2 style="margin-top:0;" data-icon-key="embed_messages">Blocked Keywords</h2>
+                    <div class="field-item">
+                        <label>Keyword list (comma separated)</label>
+                        <textarea name="antibadwords_words" placeholder="word1, word2, ..." style="min-height:100px;">{_escape(', '.join(data.get('antibadwords_words', []) or []))}</textarea>
+                    </div>
+                </section>
+
+                <section class="panel-sub detail-page-section moderation-preview-section">
+                    <h2 style="margin-top:0;" data-icon-key="moderation_preview">Action Preview</h2>
+                    <div class="mock-switch-row" style="margin-bottom:8px;">
+                        <div class="mock-switch-group">
+                            <span class="mock-switch-title">Mock User</span>
+                            <div id="moderationMockUserButtons" class="mock-switch-buttons"></div>
+                        </div>
+                        <div class="mock-switch-group">
+                            <span class="mock-switch-title">Mock Server</span>
+                            <div id="moderationMockServerButtons" class="mock-switch-buttons"></div>
+                        </div>
+                    </div>
+                    <div id="moderationPreviewMeta" class="muted" style="margin-bottom:8px;">Preview mode: -</div>
+                    <div class="moderation-preview-shell">
+                        <div class="moderation-preview-head">
+                            <img src="{preview_member_avatar}" id="moderationPreviewAvatar" alt="{preview_member_name}" class="moderation-preview-avatar">
+                            <div class="moderation-preview-copy">
+                                <strong id="moderationPreviewName">{preview_member_name}</strong>
+                                <span id="moderationPreviewServer" class="muted">{current_guild['name']}</span>
+                            </div>
+                            <span id="moderationPreviewPunishment" class="pill moderation-preview-pill">{moderation_punishment_label}</span>
+                        </div>
+                        <div id="moderationPreviewText" class="moderation-preview-text muted">AutoMod triggered for {preview_member_name}.</div>
+                        <div id="moderationPreviewEnabledModules" class="moderation-preview-tags"></div>
+                    </div>
+                </section>
+
+                <p class="muted" id="moderationPlanHint" style="margin:4px 0 12px;display:none;">Current plan does not support this punishment level.</p>
+                <div class="form-actions-inline moderation-submit-row">
+                    <button class="primary-btn" type="submit" data-save-btn="moderation">Save settings</button>
+                </div>
+            </form>
+        </section>
+    </div>
+    <script>{_render_dashboard_f_template("scripts/moderation.js", __ctx)}</script>

@@ -1,0 +1,85 @@
+    <section class="section-stack dashboard-detail-shell page-logs-shell">
+      <section class="panel">
+        <div class="panel-header detail-page-hero detail-page-hero-logs">
+          <div class="panel-title detail-page-hero-copy">
+            <h1 data-i18n="tab_audit_logs" data-icon-key="audit_logs">บันทึกการตรวจสอบ</h1>
+            <p>ติดตามการลงโทษและเหตุการณ์จากทีมแอดมินล่าสุดได้ในหน้าเดียว</p>
+          </div>
+          <div class="detail-page-metrics logs-hero-metrics">
+            <span class="pill"><i class="bi bi-journal-text" aria-hidden="true"></i> รายการ: {len(rows)}</span>
+            <span class="pill"><i class="bi bi-lightning-charge" aria-hidden="true"></i> ล่าสุด: {latest_action_label}</span>
+          </div>
+        </div>
+
+        <section class="panel-sub detail-page-section logs-kpi-grid">
+          <article class="logs-kpi-card">
+            <span class="logs-kpi-label">ทั้งหมด</span>
+            <strong>{action_counts.get("all", 0)}</strong>
+          </article>
+          <article class="logs-kpi-card kpi-ban">
+            <span class="logs-kpi-label">แบน</span>
+            <strong>{action_counts.get("ban", 0)}</strong>
+          </article>
+          <article class="logs-kpi-card kpi-mute">
+            <span class="logs-kpi-label">มิวต์</span>
+            <strong>{action_counts.get("mute", 0)}</strong>
+          </article>
+          <article class="logs-kpi-card kpi-warn">
+            <span class="logs-kpi-label">เตือน</span>
+            <strong>{action_counts.get("warn", 0)}</strong>
+          </article>
+        </section>
+
+        <section class="panel-sub detail-page-section logs-controls">
+          <div class="logs-filter-row">
+            <div class="logs-filter-group">
+              <button class="primary-btn log-filter-btn is-active" type="button" data-log-filter="all">ทั้งหมด</button>
+              <button class="ghost-btn log-filter-btn" type="button" data-log-filter="ban">แบน</button>
+              <button class="ghost-btn log-filter-btn" type="button" data-log-filter="mute">มิวต์</button>
+              <button class="ghost-btn log-filter-btn" type="button" data-log-filter="warn">คำเตือน</button>
+            </div>
+            <div class="logs-search-group">
+              <span class="mini-stat logs-page-size-pill">50 รายการ/หน้า</span>
+              <label class="logs-search-wrap" for="logSearchInput">
+                <i class="bi bi-search" aria-hidden="true"></i>
+                <input id="logSearchInput" type="text" placeholder="ค้นหาชื่อสมาชิก">
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel-sub detail-page-section logs-table-shell">
+          <div class="logs-table-wrap">
+            <table class="data-table logs-table">
+              <thead>
+                <tr>
+                  <th>ผู้ใช้</th>
+                  <th>ปฏิบัติการ</th>
+                  <th>ผู้รับผิดชอบ</th>
+                  <th>เวลาลงโทษ</th>
+                  <th>เวลาเหลือ</th>
+                  <th>บทลงโทษ</th>
+                </tr>
+              </thead>
+              <tbody id="moderationLogRows">
+                {''.join(rows_html)}
+              </tbody>
+            </table>
+          </div>
+          <div id="moderationLogEmpty" class="logs-empty" style="display:none;">
+            <i class="bi bi-inbox" aria-hidden="true"></i>
+            <span>ไม่พบบันทึกที่ตรงกับเงื่อนไข</span>
+          </div>
+          <div class="logs-pagination">
+            <button id="logPrevPageBtn" class="ghost-btn logs-page-btn" type="button">
+              <i class="bi bi-chevron-left" aria-hidden="true"></i> ก่อนหน้า
+            </button>
+            <span class="mini-stat logs-page-pill">หน้า <b id="logCurrentPage">1/1</b></span>
+            <button id="logNextPageBtn" class="ghost-btn logs-page-btn" type="button">
+              ถัดไป <i class="bi bi-chevron-right" aria-hidden="true"></i>
+            </button>
+          </div>
+        </section>
+      </section>
+    </section>
+    <script>{_render_dashboard_f_template("scripts/logs.js", __ctx)}</script>

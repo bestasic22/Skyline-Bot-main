@@ -1,0 +1,76 @@
+
+    <div class="section-stack dashboard-detail-shell page-server-stats-shell">
+        <section class="panel">
+            <div class="panel-header detail-page-hero detail-page-hero-server-stats">
+                <div class="panel-title detail-page-hero-copy">
+                    <h1 data-i18n="tab_server_stats" data-icon-key="server_stats">{_escape(title_text)}</h1>
+                    <p class="muted">{_escape(desc_text)}</p>
+                    <p class="muted">Current plan allows <strong>{max_stats_channels}</strong> channels | Enabled <strong id="serverStatsEnabledCount">{enabled_count}</strong> channels</p>
+                </div>
+                <div class="panel-actions">
+                    <label class="ux-toggle">
+                        <span class="ux-toggle-label">Enable module</span>
+                        <input type="checkbox" id="serverStatsToggle" {enabled_checked}>
+                        <span class="ux-switch"></span>
+                    </label>
+                </div>
+            </div>
+
+            <form method="post" action="/dashboard/guild/{current_guild['id']}/server_stats" id="serverStatsForm">
+                <input type="hidden" name="enabled" id="enabledHidden" value="{enabled_val}">
+
+                <div id="serverStatsContent" style="display:{content_display}; margin-top:8px;">
+                    <section class="panel-sub detail-page-section" style="margin-bottom:12px; padding:16px 20px;">
+                        <h2 style="margin-top:0;" data-icon-key="server_stats_category">Category Settings</h2>
+                        <div class="field-item">
+                            <label>Category name</label>
+                            <input type="text" name="category_name" value="{_escape(category_name)}" placeholder="Server Stats">
+                            <p class="muted" style="margin-top:4px;font-size:12px;">When enabled, the bot creates and updates stat voice channels under this category.</p>
+                        </div>
+                    </section>
+
+                    <section class="panel-sub detail-page-section" style="margin-bottom:12px;">
+                        <h2 class="stat-section-title" style="margin:0 0 12px;" data-icon-key="server_stats_general">General Counters</h2>
+                        <div class="stats-grid">
+                            {stat_cards}
+                        </div>
+                    </section>
+
+                    <section class="panel-sub detail-page-section" style="margin-bottom:12px;">
+                        <h2 class="stat-section-title" style="margin:0 0 8px;" data-icon-key="server_stats_presence">Presence Counters</h2>
+                        <p class="muted" style="margin-bottom:12px;font-size:13px;">Online / idle / dnd / offline counters can be configured independently.</p>
+                        <div class="stats-grid" style="margin-bottom:0;">
+                            {status_cards}
+                        </div>
+                    </section>
+                </div>
+
+                <div class="form-actions-fixed" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+                    <button class="primary-btn" type="submit">Save settings</button>
+                    <button class="ghost-btn" type="button" id="createChannelsBtn"
+                        onclick="document.getElementById('createChannelsInput').value='1';document.getElementById('serverStatsForm').submit();">
+                        Create channels now
+                    </button>
+                    <input type="hidden" name="auto_create" id="createChannelsInput" value="0">
+                </div>
+            </form>
+        </section>
+
+        <section class="panel panel-sub detail-page-section danger-zone-panel" style="border:1px solid rgba(255,80,80,0.2);">
+            <div class="panel-header" style="padding:0 0 10px;">
+                <div class="panel-title">
+                    <h2 style="color:#ff6b6b; margin:0;" data-icon-key="server_stats_cleanup">Delete All Stats Channels</h2>
+                    <p class="muted" style="margin-top:8px;">Remove every server-stats voice channel created by the bot.</p>
+                </div>
+            </div>
+            <form method="post" action="/dashboard/guild/{current_guild['id']}/server_stats/delete_all">
+                <div class="form-actions-fixed" style="position:static; justify-content:flex-start; padding:0; border:0;">
+                    <button class="danger-btn" type="submit"
+                        onclick="return confirm('Delete all stat channels?')">Delete all channels</button>
+                </div>
+            </form>
+        </section>
+    </div>
+    <script>{_render_dashboard_f_template("scripts/server_stats.js", __ctx)}</script>
+    <link rel="stylesheet" href="/dashboard/static/dashboard/pages/server_stats.css">
+    

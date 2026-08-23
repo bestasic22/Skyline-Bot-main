@@ -1,0 +1,169 @@
+
+    <div class="section-stack">
+        <section class="panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <h1 data-i18n="tab_donate">สนับสนุน (Donate)</h1>
+                    <p>สนับสนุน (Donate) ตั้งค่าช่องทางการรับโดเนต และสิทธิพิเศษสำหรับผู้สนับสนุน</p>
+                </div>
+            </div>
+            <div class="panel-sub" style="margin-bottom:16px;">
+              <h3 style="margin:0 0 10px;">ลิงก์หน้ารับโดเนตสำหรับผู้ใช้</h3>
+              <p class="muted" style="margin:0 0 10px;">หน้านี้แยกจากหน้าตั้งค่าแล้ว ใช้ลิงก์นี้สำหรับผู้ใช้ทั่วไป</p>
+              <div class="field-group" style="align-items:end;">
+                <div class="field-item">
+                  <label>Public Donate URL</label>
+                  <input type="text" value="{public_donate_url_html}" readonly>
+                </div>
+                <div class="auth-actions" style="justify-content:flex-start; gap:8px;">
+                  <button type="button" class="ghost-btn" data-copy-link="{public_donate_url_html}">คัดลอกลิงก์</button>
+                  <a class="primary-btn" href="{public_donate_path_html}" target="_blank" rel="noopener">เปิดหน้าผู้ใช้</a>
+                </div>
+              </div>
+            </div>
+
+            <form method="post" action="/dashboard/guild/{current_guild['id']}/donate" enctype="multipart/form-data" id="donateSettingsForm">
+                <label class="ux-toggle" style="margin-bottom:16px;"><span class="ux-toggle-label">เปิดใช้งานระบบโดเนต</span><input type="checkbox" name="enabled" {"checked" if data.get("enabled") else ""}><span class="ux-switch"></span></label>
+
+                <div class="field-group">
+                    <div class="field-item"><label>เลือกห้องโดเนต</label>{_render_channel_select("donation_channel_id", bot_guild, data.get('donation_channel_id'), placeholder="เลือกห้อง...")}</div>
+                    <div class="field-item"><label>สี</label><input type="color" name="color" value="{_escape(data.get('color') or '#6b8cff')}"></div>
+                </div>
+
+                <div class="field-item" style="margin-bottom:12px;"><label>คำอธิบาย (Discord)</label><textarea name="desc_discord" style="min-height:90px;" placeholder="คำอธิบาย">{_escape(data.get('desc_discord') or '')}</textarea></div>
+                <div class="field-item" style="margin-bottom:20px;"><label>คำอธิบาย (Web)</label><textarea name="desc_web" style="min-height:90px;" placeholder="คำอธิบาย">{_escape(data.get('desc_web') or '')}</textarea></div>
+
+                <details class="command-category" {"open" if methods_enabled.get("truemoney") else ""} style="margin-bottom:10px;"><summary><span>TrueMoney Wallet</span><label class="ux-toggle" style="padding:0;border:0;background:transparent;"><input type="checkbox" name="method_truemoney" {method_truemoney_checked} data-donate-toggle><span class="ux-switch"></span></label></summary><div class="command-category-body" style="display:grid;padding:10px 14px 14px;"><div class="field-item"><label>เบอร์ทรูวอลเล็ท</label><input type="text" name="truemoney_phone" value="{_escape(data.get('truemoney_phone') or '')}" placeholder="เช่น 08xxxxxxxx" inputmode="numeric" maxlength="10"></div></div></details>
+                <details class="command-category" {"open" if methods_enabled.get("promptpay") else ""} style="margin-bottom:10px;"><summary><span>พร้อมเพย์</span><label class="ux-toggle" style="padding:0;border:0;background:transparent;"><input type="checkbox" name="method_promptpay" {method_promptpay_checked} data-donate-toggle><span class="ux-switch"></span></label></summary><div class="command-category-body" style="display:grid;padding:10px 14px 14px;"><div class="field-item"><label>เลขพร้อมเพย์</label><input type="text" name="promptpay_number" value="{_escape(data.get('promptpay_number') or '')}" placeholder="เช่น 08xxxxxxxx" inputmode="numeric" maxlength="13"></div></div></details>
+                <details class="command-category" {"open" if methods_enabled.get("slipverify") else ""} style="margin-bottom:10px;">
+                  <summary>
+                    <span>SlipVerify (OCR + Match)</span>
+                    <label class="ux-toggle" style="padding:0;border:0;background:transparent;">
+                      <input type="checkbox" name="method_slipverify" {method_slipverify_checked} data-donate-toggle>
+                      <span class="ux-switch"></span>
+                    </label>
+                  </summary>
+                  <div class="command-category-body" style="display:grid;padding:10px 14px 14px;">
+                    <div class="field-group" style="margin-bottom:0;">
+                      <div class="field-item">
+                        <label>Verification Engine</label>
+                        <select name="slipcheck_verify_engine" data-slip-engine-select>
+                          <option value="skylinebotslip" {"selected" if (data.get("slipcheck_verify_engine") or "slipok") == "skylinebotslip" else ""}>SkylineBotSlip (Internal OCR + Rule Match)</option>
+                          <option value="slipok" {"selected" if (data.get("slipcheck_verify_engine") or "slipok") == "slipok" else ""}>SlipOK (API Verify + Rule Match)</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="field-group" style="margin-top:10px;" data-slip-engine-group="slipok">
+                      <div class="field-item">
+                        <label>SlipOK API URL</label>
+                        <input type="text" name="slipok_api_url" value="{_escape(data.get('slipok_api_url') or 'https://api.slipok.com/api/line/apikey/1150')}" placeholder="https://api.slipok.com/api/line/apikey/...">
+                      </div>
+                      <div class="field-item">
+                        <label>SlipOK API Key</label>
+                        <input type="text" name="slipok_key" value="{_escape(data.get('slipok_key') or '')}" placeholder="slipok_api_key">
+                      </div>
+                    </div>
+
+                    <div data-slip-engine-group="skylinebotslip">
+                      <div class="field-group" style="margin-top:10px;">
+                        <div class="field-item"><label>ชื่อบัญชีผู้รับ (Full Name)</label><input type="text" name="slipcheck_expected_receiver_name" value="{_escape(data.get('slipcheck_expected_receiver_name') or '')}" placeholder="เช่น สมชาย ใจดี"></div>
+                        <div class="field-item"><label>ชื่อ (TH)</label><input type="text" name="slipcheck_expected_receiver_first_name_th" value="{_escape(data.get('slipcheck_expected_receiver_first_name_th') or '')}" placeholder="ชื่อภาษาไทย"></div>
+                        <div class="field-item"><label>นามสกุล (TH)</label><input type="text" name="slipcheck_expected_receiver_last_name_th" value="{_escape(data.get('slipcheck_expected_receiver_last_name_th') or '')}" placeholder="นามสกุลภาษาไทย"></div>
+                        <div class="field-item"><label>First Name (EN)</label><input type="text" name="slipcheck_expected_receiver_first_name_en" value="{_escape(data.get('slipcheck_expected_receiver_first_name_en') or '')}" placeholder="First name"></div>
+                        <div class="field-item"><label>Last Name (EN)</label><input type="text" name="slipcheck_expected_receiver_last_name_en" value="{_escape(data.get('slipcheck_expected_receiver_last_name_en') or '')}" placeholder="Last name"></div>
+                        <div class="field-item"><label>เลขบัญชีผู้รับ</label><input type="text" name="slipcheck_expected_receiver_account" value="{_escape(data.get('slipcheck_expected_receiver_account') or '')}" placeholder="เลขบัญชีผู้รับ"></div>
+                      </div>
+
+                      <div class="field-group" style="margin-top:10px;">
+                        <div class="field-item"><label>Auto Approve Confidence (%)</label><input type="number" min="50" max="100" step="0.01" name="slipcheck_auto_approve_confidence" value="{_escape(data.get('slipcheck_auto_approve_confidence') or 85)}"></div>
+                        <div class="field-item"><label>Max Age (minutes)</label><input type="number" min="0" max="43200" name="slipcheck_max_age_minutes" value="{_escape(data.get('slipcheck_max_age_minutes') or 1440)}"></div>
+                        <div class="field-item"><label>Duplicate Window (hours)</label><input type="number" min="1" max="2160" name="slipcheck_duplicate_window_hours" value="{_escape(data.get('slipcheck_duplicate_window_hours') or 72)}"></div>
+                      </div>
+                    </div>
+
+                    <div class="field-group" style="margin-top:10px;">
+                      <div class="field-item"><label>Review Channel (low confidence)</label>{_render_channel_select("slipcheck_review_channel_id", bot_guild, data.get('slipcheck_review_channel_id'), placeholder="เลือกห้อง review")}</div>
+                      <div class="field-item"><label>Review DM User IDs (comma)</label><input type="text" name="slipcheck_review_dm_user_ids" value="{_escape(data.get('slipcheck_review_dm_user_ids') or '')}" placeholder="123,456"></div>
+                    </div>
+
+                    <input type="hidden" name="slipcheck_expected_receiver_bank" value="">
+                    <input type="hidden" name="slipcheck_expected_sender_name" value="">
+                    <input type="hidden" name="slipcheck_expected_sender_first_name_th" value="">
+                    <input type="hidden" name="slipcheck_expected_sender_last_name_th" value="">
+                    <input type="hidden" name="slipcheck_expected_sender_first_name_en" value="">
+                    <input type="hidden" name="slipcheck_expected_sender_last_name_en" value="">
+                    <input type="hidden" name="slipcheck_expected_sender_bank" value="">
+                    <input type="hidden" name="slipcheck_expected_sender_account" value="">
+                    <input type="hidden" name="slipcheck_expected_reference" value="">
+                    <input type="hidden" name="slipcheck_expected_qr_reference" value="">
+                    <input type="hidden" name="slipcheck_manual_review_confidence" value="0">
+                  </div>
+                </details>
+                <details class="command-category" {"open" if methods_enabled.get("bank") else ""} style="margin-bottom:10px;"><summary><span>ธนาคาร</span><label class="ux-toggle" style="padding:0;border:0;background:transparent;"><input type="checkbox" name="method_bank" {method_bank_checked} data-donate-toggle><span class="ux-switch"></span></label></summary><div class="command-category-body" style="display:grid;padding:10px 14px 14px;"><div class="field-group"><div class="field-item"><label>ชื่อธนาคาร</label><input type="text" name="bank_name" value="{_escape(data.get('bank_name') or '')}" placeholder="เช่น KBank"></div><div class="field-item"><label>เลขบัญชี</label><input type="text" name="bank_account_number" value="{_escape(data.get('bank_account_number') or '')}" placeholder="เลขบัญชี" inputmode="numeric" maxlength="20"></div></div><div class="field-item"><label>ชื่อเจ้าของบัญชี</label><input type="text" name="bank_account_name" value="{_escape(data.get('bank_account_name') or '')}" placeholder="ชื่อบัญชี"></div></div></details>
+
+                <div class="field-group">
+                    <div class="field-item"><label>เลือกยศ</label>{_render_role_select("reward_role_id", bot_guild, data.get('reward_role_id'), placeholder="เลือก...")}</div>
+                    <div class="field-item"><label>เลือกห้องสำหรับแจ้งเตือนเวลาได้รับโดเนต</label>{_render_channel_select("notification_channel_id", bot_guild, data.get('notification_channel_id'), placeholder="เลือกห้อง...")}</div>
+                </div>
+
+                <details class="command-category" {"open" if methods_enabled.get("goal", True) else ""} style="margin-bottom:16px;"><summary><span>เป้าโดเนต</span><label class="ux-toggle" style="padding:0;border:0;background:transparent;"><input type="checkbox" name="method_goal" {method_goal_checked} data-donate-toggle><span class="ux-switch"></span></label></summary><div class="command-category-body" style="display:grid;padding:10px 14px 14px;"><div class="field-group" style="margin-bottom:0;"><div class="field-item"><label>หัวข้อ (0 / 45)</label><input type="text" name="goal_title" maxlength="45" value="{_escape(data.get('goal_title') or '')}" placeholder="เป้าหมาย"></div><div class="field-item"><label>วันที่</label><input type="text" name="goal_start_date" value="{_escape(data.get('goal_start_date') or '')}" placeholder="2025/02/21"></div><div class="field-item"><label>จำนวนเงิน</label><input type="number" min="0" name="goal_start_amount" value="{_escape(data.get('goal_start_amount') or 0)}"></div><div class="field-item"><label>จำนวนเงิน</label><input type="number" min="0" name="goal_end_amount" value="{_escape(data.get('goal_end_amount') or 500)}"></div></div></div></details>
+
+                <div class="field-item" style="margin-bottom:14px;"><label>คลิกเพื่ออัปโหลดรูปภาพ (drag/drop ได้)</label><input type="text" id="donateImageUrlInput" name="image_url" value="{_escape(data.get('image_url') or '')}" placeholder="https://.../image.png"><input type="file" id="donateImageFileInput" name="image_file" accept=".png,.jpg,.jpeg,.webp,.gif" style="display:none;"><div id="donateDropzone" class="upload-dropzone" style="margin-top:8px;border:1px dashed rgba(255,110,199,.7);border-radius:14px;padding:22px;text-align:center;cursor:pointer;"><div class="muted">ลากไฟล์มาวาง หรือคลิกเพื่อเลือก</div><div id="donateFileName" style="margin-top:8px;font-size:12px;color:var(--muted);">รองรับ png/jpg/jpeg/webp/gif</div></div><span class="muted" style="font-size:12px;">ถ้าเลือกไฟล์ ระบบจะอัปโหลดไฟล์จริงและแทน URL อัตโนมัติ</span><div id="donateImagePreviewWrap" style="margin-top:10px;max-width:320px;{'' if preview_image_url else 'display:none;'}"><img id="donateImagePreview" src="{preview_image_url}" alt="donate-preview" style="max-width:320px;width:100%;max-height:240px;height:auto;display:block;border-radius:12px;border:1px solid var(--line);object-fit:cover;"></div></div>
+
+                <div class="panel-sub" style="margin-bottom:16px;">
+                  <h3 style="margin:0 0 10px;">ตัวอย่าง Embed ที่จะส่งในห้องโดเนต</h3>
+                  <div style="display:grid; gap:8px;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                      <img src="{preview_bot_avatar}" alt="{preview_bot_name}" style="width:34px;height:34px;border-radius:50%;object-fit:cover;">
+                      <div>
+                        <strong>{preview_bot_name}</strong>
+                        <div class="muted" style="font-size:12px;">สนับสนุน (Donate)</div>
+                      </div>
+                    </div>
+                    <div id="donateEmbedPreviewCard" style="border-left:4px solid {preview_color};border-radius:10px;background:rgba(0,0,0,.22);padding:10px 12px;">
+                      <div id="donateEmbedPreviewDesc">{preview_desc}</div>
+                      <div id="donateEmbedPreviewMethods" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;">{''.join(method_preview_tags)}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-actions-inline"><button class="primary-btn" type="submit">บันทึกการตั้งค่า</button></div>
+            </form>
+        </section>
+
+        <section class="panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <h2>สถานะการตรวจสลิป</h2>
+                    <p>ติดตามประวัติการโอน และเปลี่ยนสถานะเป็น รอตรวจ / ผ่าน / ไม่ผ่าน ได้ทันที</p>
+                </div>
+            </div>
+            <div style="overflow:auto;">
+              <table class="data-table" style="min-width:1180px;">
+                <thead>
+                  <tr>
+                    <th>Slip ID</th>
+                    <th>วันที่</th>
+                    <th>ผู้โอน</th>
+                    <th>จำนวนเงิน</th>
+                    <th>ช่องทาง</th>
+                    <th>สถานะ</th>
+                    <th>หมายเหตุ</th>
+                    <th>สลิป</th>
+                    <th>เวลาตรวจ</th>
+                    <th>ผู้ตรวจ</th>
+                    <th>จัดการ</th>
+                  </tr>
+                </thead>
+                <tbody id="donateSlipTableBody">
+                  {slip_table_html}
+                </tbody>
+              </table>
+            </div>
+            <p class="muted" id="donateSlipSyncMeta" style="margin-top:8px;font-size:12px;">ซิงก์สถานะอัตโนมัติทุก 5 วินาที</p>
+        </section>
+    </div>
+    <link rel="stylesheet" href="/dashboard/static/dashboard/pages/donate.css">
+    <script>{_render_dashboard_f_template("scripts/donate.js", __ctx)}</script>
+    

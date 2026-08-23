@@ -1,0 +1,123 @@
+<div class="section-stack dashboard-detail-shell">
+    <section class="panel">
+        <div class="panel-header detail-page-hero detail-page-hero-verify">
+            <div class="panel-title detail-page-hero-copy">
+                <h1>Voice Randomizer Panel</h1>
+                <p>Move users to a random voice room from an embed panel with category dropdown and room-mode dropdown.</p>
+            </div>
+        </div>
+
+        <form method="post" action="/dashboard/guild/{current_guild['id']}/voice_randomizer" id="voiceRandomizerForm" enctype="multipart/form-data">
+            <div class="ux-toggle-group" style="grid-template-columns:1fr; margin-bottom:14px;">
+                <label class="ux-toggle">
+                    <span class="ux-toggle-label">Enable voice randomizer panel</span>
+                    <input type="checkbox" name="enabled" {"checked" if data.get("enabled") else ""}>
+                    <span class="ux-switch"></span>
+                </label>
+            </div>
+
+            <div class="field-group">
+                <div class="field-item">
+                    <label>Panel destination channel</label>
+                    {_render_channel_select("panel_channel_id", bot_guild, data.get("panel_channel_id"), placeholder="Select text channel", filter_types=["text", "news", "forum"])}
+                    <p class="muted" style="margin-top:6px;">When saved, the dashboard will publish/update the panel in this channel automatically.</p>
+                </div>
+                <div class="field-item">
+                    <label>Default room mode</label>
+                    <select name="room_mode">
+                        {room_mode_options_html}
+                    </select>
+                </div>
+            </div>
+
+            <div class="field-group">
+                <div class="field-item">
+                    <label>Allowed categories (dropdown source)</label>
+                    {allowed_categories_select_html}
+                    <p class="muted" style="margin-top:6px;">If empty, all voice categories will be allowed.</p>
+                </div>
+                <div class="field-item">
+                    <label>Default category</label>
+                    {default_category_select_html}
+                </div>
+            </div>
+
+            <details class="command-category" open style="margin-bottom:14px;">
+                <summary><span>Embed Settings</span></summary>
+                <div class="command-category-body" style="display:grid;padding:10px 14px 14px;">
+                    <div class="field-group">
+                        <div class="field-item">
+                            <label>Embed title</label>
+                            <input type="text" name="embed_title" maxlength="120" value="{_escape(data.get('embed_title') or '')}" placeholder="Voice Room Randomizer">
+                        </div>
+                        <div class="field-item">
+                            <label>Embed color</label>
+                            <input type="color" name="embed_color" value="{_escape(data.get('embed_color') or '#5865F2')}">
+                        </div>
+                    </div>
+                    <div class="field-item" style="margin-bottom:10px;">
+                        <label>Embed description</label>
+                        <textarea name="embed_description" maxlength="2000" rows="4" placeholder="Pick category and mode, then press random.">{_escape(data.get('embed_description') or '')}</textarea>
+                    </div>
+                    <div class="field-group">
+                        <div class="field-item">
+                            <label>Embed footer</label>
+                            <input type="text" name="embed_footer" maxlength="200" value="{_escape(data.get('embed_footer') or '')}" placeholder="SkylineBOT Voice Randomizer">
+                        </div>
+                        <div class="field-item">
+                            <label>Category dropdown placeholder</label>
+                            <input type="text" name="category_placeholder" maxlength="100" value="{_escape(data.get('category_placeholder') or '')}" placeholder="Select category">
+                        </div>
+                    </div>
+                    <div class="field-group" style="margin-bottom:0;">
+                        <div class="field-item">
+                            <label>Mode dropdown placeholder</label>
+                            <input type="text" name="mode_placeholder" maxlength="100" value="{_escape(data.get('mode_placeholder') or '')}" placeholder="Select room type">
+                        </div>
+                        <div class="field-item">
+                            <label>Button label</label>
+                            <input type="text" name="button_label" maxlength="45" value="{_escape(data.get('button_label') or '')}" placeholder="Random move me">
+                        </div>
+                    </div>
+                    <div class="field-group" style="margin-top:10px; margin-bottom:0;">
+                        <div class="field-item">
+                            <label>Button color</label>
+                            <select name="button_color">
+                                <option value="green" {"selected" if selected_button_color == "green" else ""}>Green</option>
+                                <option value="blurple" {"selected" if selected_button_color == "blurple" else ""}>Blurple</option>
+                                <option value="red" {"selected" if selected_button_color == "red" else ""}>Red</option>
+                                <option value="gray" {"selected" if selected_button_color == "gray" else ""}>Gray</option>
+                            </select>
+                        </div>
+                        <div class="field-item">
+                            <label>Button emoji</label>
+                            <input type="text" name="button_emoji" maxlength="64" value="{_escape(data.get('button_emoji') or '')}" placeholder=":game_die: or <:emoji:1234567890>">
+                        </div>
+                        <div class="field-item">
+                            <label>Thumbnail URL</label>
+                            <input type="text" name="embed_thumbnail_url" maxlength="600" value="{_escape(data.get('embed_thumbnail_url') or '')}" placeholder="https://.../thumbnail.png">
+                        </div>
+                    </div>
+                    <div class="field-item" style="margin-top:10px;">
+                        <label>Image URL</label>
+                        <input type="text" name="embed_image_url" maxlength="600" value="{_escape(data.get('embed_image_url') or '')}" placeholder="https://.../image.png">
+                    </div>
+                    <div class="field-group" style="margin-top:10px; margin-bottom:0;">
+                        <div class="field-item">
+                            <label>Upload thumbnail image (optional)</label>
+                            <input type="file" name="embed_thumbnail_file" accept=".png,.jpg,.jpeg,.webp,.gif">
+                        </div>
+                        <div class="field-item">
+                            <label>Upload embed image (optional)</label>
+                            <input type="file" name="embed_image_file" accept=".png,.jpg,.jpeg,.webp,.gif">
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <div class="form-actions-fixed">
+                <button class="primary-btn" type="submit">Save Voice Randomizer Settings</button>
+            </div>
+        </form>
+    </section>
+</div>

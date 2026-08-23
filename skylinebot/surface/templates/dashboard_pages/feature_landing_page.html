@@ -1,0 +1,27 @@
+        <section class="feature-landing-page {feature_theme_class}{" feature-landing-plugins" if is_plugin_theme else ""}">
+          <section class="landing-hero-block feature-landing-shell feature-hero-stage">
+            <span class="feature-hero-orb feature-hero-orb-a" aria-hidden="true"></span>
+            <span class="feature-hero-orb feature-hero-orb-b" aria-hidden="true"></span>
+            <span class="feature-hero-glyph" aria-hidden="true"></span>
+            <div class="landing-hero-copy">
+              <p class="feature-landing-kicker">{_escape(title)}</p>
+              <h1>{_escape(heading)}</h1>
+              <p>{_escape(description)}</p>
+              {"<div class=\"feature-landing-badge-row\">" + hero_badges_html + "</div>" if hero_badges_html else ""}
+              <div class="auth-actions feature-landing-actions">
+                <a class="primary-btn" href="{_escape(cta_href)}">{_escape(cta_label)}</a>
+                <a class="ghost-btn" href="/report">Report Issue</a>
+              </div>
+            </div>
+            <div class="landing-hero-media feature-landing-media">
+              <img src="{_escape(hero_image_url)}" onerror="this.onerror=null;this.src='{_escape(hero_image_fallback_url)}';" alt="{_escape(heading)}">
+            </div>
+          </section>
+          {"<section class=\"panel feature-landing-shell feature-metric-shell\"><div class=\"feature-metric-grid\">" + hero_metrics_html + "</div></section>" if hero_metrics_html else ""}
+          <section class="panel feature-landing-shell feature-overview-panel">
+            <h2>{_escape(overview_heading)}</h2>
+            {overview_description_html}
+            <div class="landing-grid price-grid feature-overview-grid">{cards_html}</div>
+          </section>
+          {extra_sections_html}
+        </section>

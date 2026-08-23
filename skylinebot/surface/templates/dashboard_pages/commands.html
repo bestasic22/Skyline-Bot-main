@@ -1,0 +1,52 @@
+
+    <section class="panel cmd-all-shell">
+      <div class="cmd-all-head">
+        <div>
+          <h1 data-i18n="cmdall_title">All Commands</h1>
+          <p class="muted" data-i18n="cmdall_subtitle">Browse commands with descriptions, permissions, and availability.</p>
+        </div>
+        <div class="cmd-head-stats">
+          <span class="plugin-premium-pill"><span data-i18n="cmdall_plan_label">Plan</span>: {_escape(plan_name)}</span>
+          <span class="plugin-premium-pill"> {len(command_rows)} </span>
+          <span class="plugin-premium-pill"><span data-i18n="cmdall_mode_both_label">Both modes</span> {both_count}</span>
+          <span class="plugin-premium-pill"><span data-i18n="cmdall_mode_slash_label">Slash only</span> {slash_only_count}</span>
+          <span class="plugin-premium-pill"><span data-i18n="cmdall_mode_prefix_label">Prefix only</span> {prefix_only_count}</span>
+        </div>
+      </div>
+
+      <section class="cmd-disabled-panel">
+        <div class="cmd-disabled-head">
+          <h2 data-i18n="cmdall_disabled_title">Disabled Commands</h2>
+          <span class="plugin-premium-pill">{disabled_count} <span data-i18n="cmdall_items_label">items</span></span>
+        </div>
+        <div class="cmd-disabled-tools">
+          {bulk_tools_markup}
+        </div>
+        {disabled_table_markup}
+      </section>
+
+      <div class="cmd-filter-row">
+        <div class="cmd-cat-tabs">
+          {"".join(category_tabs)}
+        </div>
+        <input type="search" id="commandAllSearch" placeholder="play, ban, ticket" data-i18n-placeholder="cmdall_search_placeholder" oninput="filterCommandRows()">
+      </div>
+
+      <section class="cmd-favorite-zone">
+        <div class="cmd-favorite-head">
+          <h2 data-i18n="cmdall_favorites_title">Favorites</h2>
+          <button type="button" class="ghost-btn cmd-clear-fav-btn" id="commandFavoriteClearBtn" style="display:none;" data-i18n="cmdall_clear_favorites">Clear favorites</button>
+        </div>
+        <div id="commandFavoriteList" class="cmd-favorite-list"></div>
+      </section>
+
+      <div class="cmd-row-list" id="commandAllList">
+        {"".join(command_rows) if command_rows else '<div class="notice" data-i18n="cmdall_no_commands">No commands available.</div>'}
+      </div>
+      <div id="commandAllEmpty" class="notice" style="display:none; margin-top:10px;" data-i18n="cmdall_no_match">No commands match your filters.</div>
+    </section>
+
+    <script>{_render_dashboard_f_template("scripts/commands.js", __ctx)}</script>
+
+    <link rel="stylesheet" href="/dashboard/static/dashboard/pages/commands.css">
+    

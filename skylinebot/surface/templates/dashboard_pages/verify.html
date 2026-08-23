@@ -1,0 +1,336 @@
+﻿<div class="section-stack dashboard-detail-shell page-verify-shell">
+  <section class="panel">
+    <div class="panel-header detail-page-hero detail-page-hero-verify">
+      <div class="panel-title detail-page-hero-copy">
+        <h1 data-i18n="tab_verify" data-icon-key="verify">Verification</h1>
+        <p>Configure `verify` and `web_verify` as separate systems with independent panel channels, embeds, and buttons.</p>
+        <p class="muted">Plan: {_escape(plan_name)} | Pages: {max_pages} | Items/page: {max_items_per_page} | Title length: {title_max_length}</p>
+      </div>
+    </div>
+
+    <form method="post" action="/dashboard/guild/{current_guild['id']}/verify" enctype="multipart/form-data" id="verifySettingsForm">
+      <input type="hidden" name="verify_view_mode" id="verifyViewModeInput" value="{_escape(verify_view_mode)}">
+
+      <div class="field-item" style="margin-bottom:14px;">
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <a class="ghost-btn" href="/dashboard/guild/{current_guild['id']}/verify?view=verify" id="verifyViewSwitchVerify" style="{'border-color:rgba(124,179,255,.8);color:#eaf4ff;' if verify_view_mode == 'verify' else ''}">Verify</a>
+          <a class="ghost-btn" href="/dashboard/guild/{current_guild['id']}/verify?view=web_verify" id="verifyViewSwitchWeb" style="{'border-color:rgba(124,179,255,.8);color:#eaf4ff;' if verify_view_mode == 'web_verify' else ''}">Web Verify</a>
+        </div>
+      </div>
+
+      <div id="verifyPanelSection" data-verify-section="verify" style="{'display:none;' if verify_view_mode == 'web_verify' else ''}">
+        <div class="ux-toggle-group" style="grid-template-columns:1fr; margin-bottom:14px;">
+          <label class="ux-toggle">
+            <span class="ux-toggle-label">Enable Verify Panel</span>
+            <input type="checkbox" id="verifyEnabledToggle" name="enabled" {"checked" if data.get("enabled") else ""}>
+            <span class="ux-switch"></span>
+          </label>
+        </div>
+
+        <div class="field-group">
+          <div class="field-item">
+            <label>Reward Roles</label>
+            {_render_multi_role_select("reward_role_ids", bot_guild, data.get("reward_role_ids"))}
+          </div>
+          <div class="field-item">
+            <label>Embed Color</label>
+            <input type="color" name="color" value="{_escape(data.get('color') or '#39ff14')}">
+          </div>
+        </div>
+
+        <div class="field-item" style="margin-bottom:14px;">
+          <label>Remove Roles</label>
+          {_render_multi_role_select("remove_role_ids", bot_guild, data.get("remove_role_ids"))}
+        </div>
+
+        <div class="field-item" style="margin-bottom:14px;">
+          <label>Embed Description</label>
+          <textarea name="description" id="verifyDescriptionInput" style="min-height:110px;" placeholder="Verification description">{_escape(data.get('description') or '')}</textarea>
+        </div>
+
+        <details class="command-category" open style="margin-bottom:14px;">
+          <summary><span>Verify Embed</span></summary>
+          <div class="command-category-body" style="display:grid;padding:10px 14px 14px;">
+            <div class="field-group">
+              <div class="field-item">
+                <label>Embed Title</label>
+                <input type="text" name="embed_title" id="verifyEmbedTitleInput" maxlength="120" value="{_escape(data.get('embed_title') or 'ยืนยันตัวตน')}" placeholder="ยืนยันตัวตน">
+              </div>
+              <div class="field-item">
+                <label>Embed Footer</label>
+                <input type="text" name="embed_footer" id="verifyEmbedFooterInput" maxlength="200" value="{_escape(data.get('embed_footer') or '')}" placeholder="{preview_bot_name}">
+              </div>
+            </div>
+            <div class="field-group" style="margin-bottom:0;">
+              <div class="field-item">
+                <label>Thumbnail URL</label>
+                <input type="text" name="embed_thumbnail_url" id="verifyEmbedThumbnailInput" value="{_escape(data.get('embed_thumbnail_url') or '')}" placeholder="https://.../thumb.png">
+              </div>
+              <div class="field-item">
+                <label>Image URL</label>
+                <input type="text" name="embed_image_url" id="verifyEmbedImageInput" value="{_escape(data.get('embed_image_url') or '')}" placeholder="https://.../image.png">
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <div class="field-group" style="align-items:start;">
+          <div class="field-item">
+            <div class="panel-sub detail-page-section" style="padding:12px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <strong>Verify Form Pages</strong>
+                <div style="display:flex; gap:8px;">
+                  <button type="button" class="ghost-btn" id="verifyAddPageBtn">+ Add Page</button>
+                  <button type="button" class="danger-btn" id="verifyRemovePageBtn">- Remove Page</button>
+                </div>
+              </div>
+              <div id="verifyPlanLimitBadge" class="mini-stat" style="margin-bottom:8px; border-color:rgba(74,222,128,.45); color:#9af5bb;">Under Plan Limit</div>
+              <div class="muted" style="margin-bottom:8px; font-size:12px;">Limits: pages {max_pages} | items/page {max_items_per_page} | title {title_max_length}</div>
+              <div id="verifyPagesRoot"></div>
+              <input type="hidden" name="verify_pages_json" id="verifyPagesJson">
+            </div>
+          </div>
+
+          <div class="field-item">
+            <div class="panel-sub detail-page-section" style="padding:12px;">
+              <h3 style="margin-top:0;">{preview_bot_name} Preview</h3>
+              <div id="verifyPreviewCard" style="border:1px solid var(--line); border-radius:14px; padding:12px; background:rgba(10,15,35,.65);">
+                <div style="display:flex; gap:10px; align-items:center; margin-bottom:8px;">
+                  <img src="{preview_bot_avatar}" alt="{preview_bot_name}" style="width:36px; height:36px; border-radius:50%; object-fit:cover;">
+                  <div>
+                    <div style="font-weight:700;">{preview_bot_name}</div>
+                    <div class="muted" style="font-size:12px;">Verify Panel</div>
+                  </div>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:8px;">
+                  <div id="verifyPreviewTitle" style="font-weight:700; font-size:1.02rem;">{_escape(data.get('embed_title') or 'ยืนยันตัวตน')}</div>
+                  <img id="verifyPreviewThumb" src="{_escape(data.get('embed_thumbnail_url') or '')}" alt="verify-thumb" style="width:46px;height:46px;border-radius:10px;object-fit:cover;border:1px solid var(--line); {'display:none;' if not (data.get('embed_thumbnail_url') or '').strip() else ''}">
+                </div>
+                <div id="verifyPreviewDescription" class="muted" style="margin-bottom:10px;">{_escape(data.get('description') or 'Verification description')}</div>
+                <img id="verifyPreviewImage" src="{_escape(data.get('embed_image_url') or '')}" alt="verify-preview" style="max-width:420px;width:100%;max-height:320px;height:auto;object-fit:cover; border-radius:10px; border:1px solid var(--line); margin-bottom:10px; {'display:none;' if not (data.get('embed_image_url') or '').strip() else ''}">
+                <div style="display:grid; gap:6px; margin-bottom:8px;">
+                  <div><span class="muted" style="font-size:12px;">Give:</span> <span id="verifyPreviewRoleGive" style="display:inline-flex;flex-wrap:wrap;gap:6px;"></span></div>
+                  <div><span class="muted" style="font-size:12px;">Remove:</span> <span id="verifyPreviewRoleRemove" style="display:inline-flex;flex-wrap:wrap;gap:6px;"></span></div>
+                </div>
+                <div id="verifyPreviewMeta" class="muted" style="font-size:12px; margin-bottom:10px;">1/1</div>
+                <button type="button" id="verifyPreviewButton" style="border:0; border-radius:10px; padding:8px 14px; color:#fff; background:{_escape(preview_button_color)};">{_escape(data.get('button_label') or 'ยืนยัน')}</button>
+                <div id="verifyPreviewFooter" class="muted" style="font-size:12px; margin-top:8px;">{_escape(data.get('embed_footer') or '')}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-item">
+            <label>Verify Panel Channel</label>
+            {_render_channel_select("verify_channel_id", bot_guild, data.get("verify_channel_id"), placeholder="Select channel")}
+          </div>
+          <div class="field-item">
+            <label>Verify Notify Channel</label>
+            {_render_channel_select("notify_channel_id", bot_guild, data.get("notify_channel_id"), placeholder="Select channel")}
+          </div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-item">
+            <label>Auto Role</label>
+            <select name="auto_role_enabled">
+              <option value="off" {"selected" if not data.get("auto_role_enabled") else ""}>Off</option>
+              <option value="on" {"selected" if data.get("auto_role_enabled") else ""}>On</option>
+            </select>
+          </div>
+          <div class="field-item">
+            <label>Nickname from First Input</label>
+            <select name="nickname_from_first_input">
+              <option value="off" {"selected" if not data.get("nickname_from_first_input") else ""}>Off</option>
+              <option value="on" {"selected" if data.get("nickname_from_first_input") else ""}>On</option>
+            </select>
+          </div>
+          <div class="field-item">
+            <label>Button Color</label>
+            <select name="button_color" id="verifyButtonColorSelect">
+              <option value="green" {"selected" if selected_button_color == "green" else ""}>Green</option>
+              <option value="blurple" {"selected" if selected_button_color == "blurple" else ""}>Blurple</option>
+              <option value="red" {"selected" if selected_button_color == "red" else ""}>Red</option>
+              <option value="gray" {"selected" if selected_button_color == "gray" else ""}>Gray</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field-item" style="margin-bottom:14px;">
+          <label>Button Label (0/45)</label>
+          <input type="text" name="button_label" id="verifyButtonLabelInput" maxlength="45" value="{_escape(data.get('button_label') or 'ยืนยัน')}" placeholder="ยืนยัน">
+        </div>
+        <div class="field-item" style="margin-bottom:14px;">
+          <label>Button Emoji</label>
+          <input type="text" name="button_emoji" id="verifyButtonEmojiInput" maxlength="64" value="{_escape(data.get('button_emoji') or '')}" placeholder="✅ or <:emoji:123>">
+        </div>
+      </div>
+
+      <div id="webVerifyPageSection" data-verify-section="web_verify" style="{'display:none;' if verify_view_mode != 'web_verify' else ''}">
+        <div class="ux-toggle-group" style="grid-template-columns:1fr; margin-bottom:14px;">
+          <label class="ux-toggle">
+            <span class="ux-toggle-label">Enable Web Verify Panel</span>
+            <input type="checkbox" id="webVerifyEnabledToggle" name="web_verify_enabled" {"checked" if data.get("web_verify_enabled") else ""}>
+            <span class="ux-switch"></span>
+          </label>
+        </div>
+
+        <details class="command-category" open style="margin-bottom:14px;">
+          <summary><span>Web Verify Discord Panel</span></summary>
+          <div class="command-category-body" style="display:grid;padding:10px 14px 14px;">
+            <div class="field-group">
+              <div class="field-item">
+                <label>Panel Channel</label>
+                {_render_channel_select("web_verify_channel_id", bot_guild, data.get("web_verify_channel_id"), placeholder="Select channel")}
+              </div>
+              <div class="field-item">
+                <label>Embed Color</label>
+                <input type="color" name="web_verify_color" id="verifyWebColorInput" value="{_escape(data.get('web_verify_color') or '#5865f2')}">
+              </div>
+            </div>
+            <div class="field-group">
+              <div class="field-item">
+                <label>Verify Status Channel</label>
+                {_render_channel_select("web_verify_notify_channel_id", bot_guild, data.get("web_verify_notify_channel_id"), placeholder="Select channel")}
+              </div>
+            </div>
+            <div class="field-group">
+              <div class="field-item">
+                <label>Reward Roles</label>
+                {_render_multi_role_select("web_verify_reward_role_ids", bot_guild, data.get("web_verify_reward_role_ids"))}
+              </div>
+              <div class="field-item">
+                <label>Remove Roles</label>
+                {_render_multi_role_select("web_verify_remove_role_ids", bot_guild, data.get("web_verify_remove_role_ids"))}
+              </div>
+            </div>
+            <div class="field-group">
+              <div class="field-item">
+                <label>Auto Role</label>
+                <select name="web_verify_auto_role_enabled">
+                  <option value="off" {"selected" if not data.get("web_verify_auto_role_enabled") else ""}>Off</option>
+                  <option value="on" {"selected" if data.get("web_verify_auto_role_enabled") else ""}>On</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <div class="field-item">
+                <label>Embed Title</label>
+                <input type="text" name="web_verify_embed_title" id="verifyWebEmbedTitleInput" maxlength="120" value="{_escape(data.get('web_verify_embed_title') or 'ยืนยันตัวตนผ่านเว็บ')}" placeholder="ยืนยันตัวตนผ่านเว็บ">
+              </div>
+              <div class="field-item">
+                <label>Embed Footer</label>
+                <input type="text" name="web_verify_embed_footer" id="verifyWebEmbedFooterInput" maxlength="200" value="{_escape(data.get('web_verify_embed_footer') or '')}" placeholder="{preview_bot_name}">
+              </div>
+            </div>
+
+            <div class="field-item" style="margin-bottom:14px;">
+              <label>Embed Description</label>
+              <textarea name="web_verify_embed_description" id="verifyWebEmbedDescriptionInput" rows="3" maxlength="400" placeholder="กดปุ่มด้านล่างเพื่อเปิดหน้า Web Verify">{_escape(data.get('web_verify_embed_description') or '')}</textarea>
+            </div>
+
+            <div class="field-group" style="margin-bottom:0;">
+              <div class="field-item">
+                <label>Thumbnail URL</label>
+                <input type="text" name="web_verify_embed_thumbnail_url" id="verifyWebEmbedThumbInput" value="{_escape(data.get('web_verify_embed_thumbnail_url') or '')}" placeholder="https://.../thumb.png">
+              </div>
+              <div class="field-item">
+                <label>Image URL</label>
+                <input type="text" id="verifyWebEmbedImageInput" name="web_verify_embed_image_url" value="{_escape(data.get('web_verify_embed_image_url') or '')}" placeholder="https://.../image.png">
+              </div>
+            </div>
+
+            <input type="file" id="verifyWebEmbedImageFileInput" name="web_verify_embed_image_file" accept=".png,.jpg,.jpeg,.webp" style="display:none;">
+            <div id="verifyWebDropzone" class="upload-dropzone" style="margin-top:8px;border:1px dashed rgba(255,110,199,.7);border-radius:14px;padding:20px;text-align:center;cursor:pointer;">
+              <div class="muted">Drop image here or click to upload</div>
+              <div id="verifyWebFileName" style="margin-top:8px;font-size:12px;color:var(--muted);">Supports png/jpg/jpeg/webp</div>
+            </div>
+
+            <div class="field-group" style="margin-top:14px; margin-bottom:0;">
+              <div class="field-item">
+                <label>Panel Button Label</label>
+                <input type="text" name="web_verify_button_label" id="verifyWebButtonLabelInput" maxlength="45" value="{_escape(data.get('web_verify_button_label') or 'ยืนยันตัวตนตอนนี้')}" placeholder="ยืนยันตัวตนตอนนี้">
+              </div>
+              <div class="field-item">
+                <label>Panel Button Color</label>
+                <select name="web_verify_button_color" id="verifyWebButtonColorSelect">
+                  <option value="green" {"selected" if selected_web_button_color == "green" else ""}>Green</option>
+                  <option value="blurple" {"selected" if selected_web_button_color == "blurple" else ""}>Blurple</option>
+                  <option value="red" {"selected" if selected_web_button_color == "red" else ""}>Red</option>
+                  <option value="gray" {"selected" if selected_web_button_color == "gray" else ""}>Gray</option>
+                </select>
+              </div>
+            </div>
+            <div class="field-item" style="margin-top:10px;">
+              <label>Panel Button Emoji</label>
+              <input type="text" name="web_verify_button_emoji" id="verifyWebButtonEmojiInput" maxlength="64" value="{_escape(data.get('web_verify_button_emoji') or '')}" placeholder="✅ or <:emoji:123>">
+            </div>
+          </div>
+        </details>
+
+        <div class="field-group" style="align-items:start; margin-bottom:14px;">
+          <div class="field-item">
+            <div class="panel-sub detail-page-section" style="padding:12px;">
+              <h3 style="margin-top:0;">{preview_bot_name} Web Verify Preview</h3>
+              <div id="webVerifyPreviewCard" style="border:1px solid var(--line); border-radius:14px; padding:12px; background:rgba(10,15,35,.65);">
+                <div style="display:flex; gap:10px; align-items:center; margin-bottom:8px;">
+                  <img src="{preview_bot_avatar}" alt="{preview_bot_name}" style="width:36px; height:36px; border-radius:50%; object-fit:cover;">
+                  <div>
+                    <div style="font-weight:700;">{preview_bot_name}</div>
+                    <div class="muted" style="font-size:12px;">Web Verify Panel</div>
+                  </div>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:8px;">
+                  <div id="webVerifyPreviewTitle" style="font-weight:700; font-size:1.02rem;">{_escape(data.get('web_verify_embed_title') or 'ยืนยันตัวตนผ่านเว็บ')}</div>
+                  <img id="webVerifyPreviewThumb" src="{_escape(data.get('web_verify_embed_thumbnail_url') or '')}" alt="web-verify-thumb" style="width:46px;height:46px;border-radius:10px;object-fit:cover;border:1px solid var(--line); {'display:none;' if not (data.get('web_verify_embed_thumbnail_url') or '').strip() else ''}">
+                </div>
+                <div id="webVerifyPreviewDescription" class="muted" style="margin-bottom:10px;">{_escape(data.get('web_verify_embed_description') or 'กดปุ่มด้านล่างเพื่อเปิดหน้า Web Verify')}</div>
+                <img id="webVerifyPreviewImage" src="{_escape(data.get('web_verify_embed_image_url') or '')}" alt="web-verify-preview" style="max-width:420px;width:100%;max-height:320px;height:auto;object-fit:cover; border-radius:10px; border:1px solid var(--line); margin-bottom:10px; {'display:none;' if not (data.get('web_verify_embed_image_url') or '').strip() else ''}">
+                <button type="button" id="webVerifyPreviewButton" style="border:0; border-radius:10px; padding:8px 14px; color:#fff; background:{_escape(preview_web_button_color)};">{_escape(data.get('web_verify_button_label') or 'ยืนยันตัวตนตอนนี้')}</button>
+                <div id="webVerifyPreviewFooter" class="muted" style="font-size:12px; margin-top:8px;">{_escape(data.get('web_verify_embed_footer') or '')}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <details class="command-category" open style="margin-bottom:14px;">
+          <summary><span>Web Verify Page Text</span></summary>
+          <div class="command-category-body" style="display:grid;padding:10px 14px 14px;">
+            <div class="field-group">
+              <div class="field-item">
+                <label>Intro Message</label>
+                <textarea name="web_verify_intro" id="verifyWebIntroInput" rows="3" maxlength="280" placeholder="กดปุ่มด้านล่างเพื่อยืนยันตัวตนผ่านเว็บ">{_escape(data.get('web_verify_intro') or '')}</textarea>
+              </div>
+              <div class="field-item">
+                <label>Success Message</label>
+                <textarea name="web_verify_success" id="verifyWebSuccessInput" rows="3" maxlength="280" placeholder="ยืนยันตัวตนสำเร็จแล้ว">{_escape(data.get('web_verify_success') or '')}</textarea>
+              </div>
+            </div>
+            <div class="field-group">
+              <div class="field-item">
+                <label>Error Message</label>
+                <textarea name="web_verify_error" id="verifyWebErrorInput" rows="3" maxlength="280" placeholder="ไม่สามารถยืนยันตัวตนได้">{_escape(data.get('web_verify_error') or '')}</textarea>
+              </div>
+              <div class="field-item">
+                <label>Back Button Label</label>
+                <input type="text" name="web_back_button_label" id="verifyBackButtonLabelInput" maxlength="45" value="{_escape(data.get('web_back_button_label') or 'กลับสู่ Server')}" placeholder="กลับสู่ Server">
+              </div>
+            </div>
+            <div class="field-item" style="margin-bottom:0;">
+              <label>Back To Server URL</label>
+              <input type="text" name="back_to_server_url" id="verifyBackToServerUrlInput" maxlength="500" value="{_escape(data.get('back_to_server_url') or '')}" placeholder="https://discord.com/channels/123456789012345678" readonly>
+              <p class="muted" style="margin-top:6px;">This URL is generated by bot and locked.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <div class="form-actions-fixed">
+        <button class="primary-btn" type="submit">Save Verification Settings</button>
+      </div>
+    </form>
+  </section>
+</div>
+<script>{_render_dashboard_f_template("scripts/verify.js", __ctx)}</script>

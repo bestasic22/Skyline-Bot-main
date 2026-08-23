@@ -1,0 +1,67 @@
+<link rel="stylesheet" href="/dashboard/static/dashboard/pages/reaction_roles.css">
+
+<section class="panel reaction-roles-page">
+  <div class="panel-header">
+    <div class="panel-title">
+      <h1>Reaction Roles</h1>
+      <p>ตั้งค่า emoji -> role แล้วใช้คำสั่ง <code>/reaction_roles</code> เพื่อส่งแผงไปยังห้องที่กำหนด</p>
+    </div>
+  </div>
+
+  <form
+    method="post"
+    action="/dashboard/guild/{current_guild['id']}/reaction_roles"
+    id="reactionRolesForm"
+    data-rr-limit="{int(reaction_roles_limit)}"
+  >
+    <label class="ux-toggle rr-main-toggle">
+      <span class="ux-toggle-label">Enable Reaction Roles</span>
+      <input type="checkbox" name="enabled" {"checked" if settings.get("enabled") else ""}>
+      <span class="ux-switch"></span>
+    </label>
+
+    <section class="panel-sub rr-plan-card">
+      <div class="rr-plan-head">
+        <div>
+          <h2>Plan & Limits</h2>
+          <p>นับโควต้าต่อ 1 mapping (emoji-role) และรองรับเฉพาะช่องข้อความ/ประกาศ</p>
+        </div>
+        <span class="pill rr-plan-pill">{_escape(plan_name)}</span>
+      </div>
+      <div class="rr-plan-grid">
+        <div class="rr-plan-metric">
+          <span class="rr-metric-label">Used</span>
+          <strong id="rrUsageCounter">{int(used_reaction_roles)}/{int(reaction_roles_limit)}</strong>
+        </div>
+        <div class="rr-plan-metric">
+          <span class="rr-metric-label">Max Roles</span>
+          <strong>{int(reaction_roles_limit)}</strong>
+        </div>
+        <label class="rr-inline-field" for="rrRootSelectionMode">
+          <span>Default Selection</span>
+          <select name="selection_mode" id="rrRootSelectionMode">
+            <option value="single" {"selected" if str(settings.get("selection_mode") or "single").strip().lower() != "multiple" else ""}>Single role</option>
+            <option value="multiple" {"selected" if str(settings.get("selection_mode") or "").strip().lower() == "multiple" else ""}>Multiple roles</option>
+          </select>
+        </label>
+      </div>
+      <p class="rr-plan-note">Quick flow: 1) เลือก Channel 2) เพิ่ม Mapping 3) Save 4) ใช้ <code>/reaction_roles</code> ใน Discord</p>
+    </section>
+
+    <div class="rr-toolbar">
+      <h2>Reaction List</h2>
+      <button type="button" class="ghost-btn" id="rrAddBtn">+ Add Item</button>
+    </div>
+
+    <div id="rrList" class="section-stack rr-list"></div>
+    <input type="hidden" name="items_json" id="rrItemsJson" value="{_escape(items_json)}">
+
+    <div class="form-actions-fixed">
+      <button class="primary-btn" type="submit">Save Reaction Roles</button>
+    </div>
+  </form>
+</section>
+
+<script id="rrRoleOptionsSeed" type="application/json">{role_options_json.replace("</", "<\\/")}</script>
+<script id="rrChannelOptionsSeed" type="application/json">{channel_options_json.replace("</", "<\\/")}</script>
+<script src="/dashboard/static/dashboard/pages/reaction_roles.js" defer></script>

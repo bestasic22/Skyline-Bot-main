@@ -1,0 +1,103 @@
+<section class="panel cmdhelp-shell">
+  <header class="cmdhelp-hero">
+    <div class="cmdhelp-hero-copy">
+      <p class="cmdhelp-kicker" data-i18n="cmdhelp_kicker">SkylineBOT Command Center</p>
+      <h1 data-i18n="cmdhelp_title">Command Center</h1>
+      <p class="muted" data-i18n="cmdhelp_subtitle">
+        Browse every command with usage, examples, supported mode, plan requirement,
+        and live runtime status.
+      </p>
+    </div>
+    <div class="cmdhelp-hero-meta">
+      <span class="plugin-premium-pill"><span data-i18n="cmdhelp_meta_bot">Bot</span>: {_escape(bot_status_label)}</span>
+      <span class="plugin-premium-pill"><span data-i18n="cmdhelp_meta_slash_mode">Slash Mode</span>: {_escape(slash_mode_label)}</span>
+      <a class="ghost-btn cmdhelp-source-btn" href="{_escape(commands_source_url)}"><span data-i18n="cmdhelp_meta_source">Source</span>: <span data-i18n="dashboard_label">Dashboard</span></a>
+    </div>
+  </header>
+
+  <section class="cmdhelp-stats" aria-label="Command stats" data-i18n-aria-label="cmdhelp_stats_aria">
+    <article class="cmdhelp-stat">
+      <strong>{total_commands}</strong>
+      <span data-i18n="cmdhelp_stat_total">Total Commands</span>
+    </article>
+    <article class="cmdhelp-stat">
+      <strong>{open_count}</strong>
+      <span data-i18n="cmdhelp_stat_open">Open</span>
+    </article>
+    <article class="cmdhelp-stat">
+      <strong>{closed_count}</strong>
+      <span data-i18n="cmdhelp_stat_closed">Closed</span>
+    </article>
+    <article class="cmdhelp-stat">
+      <strong>{free_count}</strong>
+      <span data-i18n="cmdhelp_stat_free">Free</span>
+    </article>
+    <article class="cmdhelp-stat">
+      <strong>{premium_count}</strong>
+      <span data-i18n="cmdhelp_stat_premium">Premium</span>
+    </article>
+    <article class="cmdhelp-stat">
+      <strong>{both_count}</strong>
+      <span data-i18n="cmdhelp_stat_both">Slash + Prefix</span>
+    </article>
+    <article class="cmdhelp-stat">
+      <strong>{slash_count}</strong>
+      <span data-i18n="cmdhelp_stat_slash">Slash Supported</span>
+    </article>
+    <article class="cmdhelp-stat">
+      <strong>{prefix_count}</strong>
+      <span data-i18n="cmdhelp_stat_prefix">Prefix Supported</span>
+    </article>
+  </section>
+
+  <section class="cmdhelp-favorites">
+    <div class="cmdhelp-favorites-head">
+      <h2 data-i18n="cmdhelp_favorites_title">Favorites (Saved on this browser)</h2>
+      <button type="button" class="ghost-btn cmdhelp-clear-btn" id="commandHelpFavoriteClearBtn" style="display:none;" data-i18n="cmdhelp_clear_favorites">Clear favorites</button>
+    </div>
+    <div class="cmdhelp-favorites-list" id="commandHelpFavoriteList"></div>
+  </section>
+
+  <section class="cmdhelp-toolbar">
+    <label class="cmdhelp-field">
+      <span data-i18n="cmdhelp_search_label">Search</span>
+      <input id="commandHelpSearch" type="search" placeholder="Search command name, usage, category, or status" data-i18n-placeholder="cmdhelp_search_placeholder">
+    </label>
+    <label class="cmdhelp-field">
+      <span data-i18n="cmdhelp_plan_label">Plan</span>
+      <select id="commandHelpPlanFilter">
+        <option value="" data-i18n="cmdhelp_all_plans">All plans</option>
+        <option value="free" data-i18n="cmdhelp_plan_free">Free</option>
+        <option value="premium" data-i18n="cmdhelp_plan_premium">Premium</option>
+      </select>
+    </label>
+    <label class="cmdhelp-field">
+      <span data-i18n="cmdhelp_status_label">Status</span>
+      <select id="commandHelpStatusFilter">
+        <option value="" data-i18n="cmdhelp_all_statuses">All statuses</option>
+        <option value="open" data-i18n="cmdhelp_status_open">Open</option>
+        <option value="closed" data-i18n="cmdhelp_status_closed">Closed</option>
+      </select>
+    </label>
+  </section>
+
+  <section class="cmdhelp-presets" aria-label="Quick presets" data-i18n-aria-label="cmdhelp_presets_aria">
+    <button type="button" class="cmdhelp-preset-btn active" data-filter-preset="" data-i18n="cmdhelp_preset_all">All</button>
+    <button type="button" class="cmdhelp-preset-btn" data-filter-preset="open" data-i18n="cmdhelp_preset_open">Open only</button>
+    <button type="button" class="cmdhelp-preset-btn" data-filter-preset="free" data-i18n="cmdhelp_preset_free">Free only</button>
+    <button type="button" class="cmdhelp-preset-btn" data-filter-preset="open_free" data-i18n="cmdhelp_preset_open_free">Open + Free</button>
+  </section>
+
+  <div class="cmdhelp-chip-row">
+    {"".join(category_buttons)}
+  </div>
+
+  <section class="cmdhelp-list" id="commandHelpList">
+    {"".join(command_cards) if command_cards else cmdhelp_no_commands_markup}
+  </section>
+
+  <div id="commandHelpEmpty" class="notice" style="display:none;" data-i18n="cmdhelp_no_match">No commands match your current filters.</div>
+</section>
+
+<link rel="stylesheet" href="/dashboard/static/dashboard/pages/commands-help.css?v=20260522-docbg-1">
+<script src="/dashboard/static/dashboard/pages/commands-help.js?v=20260520-1" defer></script>

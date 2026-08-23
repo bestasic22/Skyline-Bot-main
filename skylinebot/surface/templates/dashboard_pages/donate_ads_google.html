@@ -1,0 +1,79 @@
+<section class="panel donate-ads-panel">
+  <div class="donate-section-head" style="margin-bottom:10px;">
+    <div>
+      <h3 style="margin:0 0 6px;">โฆษณาผู้สนับสนุน</h3>
+      <p class="muted" style="margin:0;">โฆษณานี้แสดงจริงจาก Google และจะแสดงเฉพาะเซิร์ฟเวอร์ที่ใช้ Free Plan</p>
+    </div>
+    <span class="ads-label">Advertisement</span>
+  </div>
+  <div class="donate-ads-slot">
+    <ins class="adsbygoogle donate-ads-slot-ins"
+         style="display:block"
+         data-ad-client="{ads_client}"
+         data-ad-slot="{ads_slot}"
+         data-ad-format="horizontal"
+         data-full-width-responsive="true"></ins>
+    <div class="donate-ads-fallback" hidden>
+      <p class="donate-ads-fallback-title">No sponsored ad is available right now.</p>
+      <p class="muted donate-ads-fallback-copy">Support this server directly using the donation methods below.</p>
+    </div>
+  </div>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7880329046774106"
+     crossorigin="anonymous"></script>
+  <script>{_render_dashboard_f_template("scripts/donate_ads_google_push.js", __ctx)}</script>
+  <script>
+    (() => {{
+      const panel = document.currentScript ? document.currentScript.closest(".donate-ads-panel") : null;
+      if (!(panel instanceof HTMLElement)) return;
+      const slot = panel.querySelector(".donate-ads-slot");
+      const ins = panel.querySelector(".donate-ads-slot-ins");
+      const fallback = panel.querySelector(".donate-ads-fallback");
+      if (!(slot instanceof HTMLElement) || !(ins instanceof HTMLElement) || !(fallback instanceof HTMLElement)) return;
+      const startedAt = Date.now();
+      const staleAfterMs = 4200;
+
+      const setState = (state) => {{
+        slot.setAttribute("data-ads-slot-state", state);
+        const hasAd = state === "filled";
+        panel.classList.toggle("is-unfilled", !hasAd);
+        fallback.hidden = hasAd;
+      }};
+
+      const evaluate = () => {{
+        const status = String(ins.getAttribute("data-ad-status") || "").trim().toLowerCase();
+        const adDone = String(ins.getAttribute("data-adsbygoogle-status") || "").trim().toLowerCase() === "done";
+        if (status === "filled") {{
+          setState("filled");
+          return;
+        }}
+        if (status === "unfilled" || status === "unfill-optimized") {{
+          setState("unfilled");
+          return;
+        }}
+        const hasFrame = !!ins.querySelector("iframe");
+        if (Date.now() - startedAt >= staleAfterMs) {{
+          setState("unfilled");
+          return;
+        }}
+        if (adDone && !hasFrame) {{
+          setState("unfilled");
+          return;
+        }}
+        setState(hasFrame ? "loading" : "unfilled");
+      }};
+
+      const observer = new MutationObserver(evaluate);
+      observer.observe(ins, {{
+        attributes: true,
+        attributeFilter: ["data-ad-status", "data-adsbygoogle-status", "style"],
+        childList: true,
+        subtree: true,
+      }});
+
+      setState("loading");
+      window.setTimeout(evaluate, 900);
+      window.setTimeout(evaluate, 2200);
+      window.setTimeout(evaluate, 4200);
+    }})();
+  </script>
+</section>

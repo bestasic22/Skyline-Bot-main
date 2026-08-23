@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Support Center - {{APP_NAME}}</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" type="image/png" href="/favicon.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="/dashboard/static/dashboard/public-pages.css">
+  <style>
+    :root {
+      --support-accent: #49d0ff;
+      --support-accent-soft: #1e7cff;
+      --support-ok: #5af8b8;
+      --support-warn: #ffc56b;
+    }
+
+    .support-hero {
+      isolation: isolate;
+      border: 1px solid rgba(122, 190, 255, 0.36);
+      background:
+        radial-gradient(circle at 14% 8%, rgba(88, 162, 255, 0.28), transparent 42%),
+        radial-gradient(circle at 88% 12%, rgba(73, 208, 255, 0.24), transparent 44%),
+        linear-gradient(162deg, rgba(11, 23, 44, 0.96), rgba(7, 18, 37, 0.94));
+      overflow: hidden;
+    }
+
+    .support-hero::before,
+    .support-hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(1px);
+      z-index: -1;
+      animation: float-orb 9s ease-in-out infinite;
+    }
+
+    .support-hero::before {
+      width: 250px;
+      height: 250px;
+      right: -70px;
+      top: -90px;
+      background: radial-gradient(circle, rgba(92, 236, 255, 0.32), transparent 72%);
+    }
+
+    .support-hero::after {
+      width: 220px;
+      height: 220px;
+      left: -95px;
+      bottom: -130px;
+      background: radial-gradient(circle, rgba(77, 124, 255, 0.3), transparent 72%);
+      animation-delay: -4.5s;
+    }
+
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(130, 199, 255, 0.44);
+      background: rgba(11, 24, 46, 0.7);
+      color: #d9edff;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+    .hero-sub {
+      max-width: 800px;
+      margin-top: 12px !important;
+      color: #cde2ff;
+      font-size: 1.02rem;
+    }
+
+    .hero-nav {
+      margin-top: 15px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
+    }
+
+    .hero-btn {
+      position: relative;
+      min-height: 46px;
+      border-radius: 12px;
+      border: 1px solid rgba(124, 182, 255, 0.45);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 800;
+      text-decoration: none;
+      transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .hero-btn::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      background: linear-gradient(120deg, rgba(130, 218, 255, 0.18), transparent 60%);
+      opacity: 0;
+      transition: opacity .2s ease;
+      z-index: -1;
+    }
+
+    .hero-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 26px rgba(2, 11, 29, 0.42);
+      text-decoration: none;
+      filter: brightness(1.04);
+    }
+
+    .hero-btn:hover::before {
+      opacity: 1;
+    }
+
+    .hero-btn.primary {
+      color: #07172c;
+      background: linear-gradient(145deg, #5ed7ff, #57a6ff);
+    }
+
+    .hero-btn.ghost {
+      color: #d9ecff;
+      background: rgba(13, 28, 52, 0.82);
+    }
+
+    .hero-btn.soft {
+      color: #d9ecff;
+      background: rgba(20, 43, 72, 0.8);
+    }
+
+    .route-grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+    }
+
+    .route-card {
+      position: relative;
+      border: 1px solid rgba(128, 178, 255, 0.28);
+      border-radius: 15px;
+      padding: 14px;
+      background: linear-gradient(162deg, rgba(12, 22, 42, 0.9), rgba(10, 17, 31, 0.94));
+      box-shadow: inset 0 0 0 1px rgba(106, 155, 255, 0.08);
+      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+      animation: fade-rise .55s ease both;
+    }
+
+    .route-card:nth-child(2) {
+      animation-delay: .08s;
+    }
+
+    .route-card:nth-child(3) {
+      animation-delay: .16s;
+    }
+
+    .route-card:nth-child(4) {
+      animation-delay: .24s;
+    }
+
+    .route-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(133, 199, 255, 0.46);
+      box-shadow: 0 16px 30px rgba(3, 12, 30, 0.34);
+    }
+
+    .route-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .route-title {
+      margin: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1rem;
+    }
+
+    .route-tag {
+      border: 1px solid rgba(131, 194, 255, 0.34);
+      border-radius: 999px;
+      background: rgba(15, 33, 61, 0.75);
+      color: #cfe7ff;
+      padding: 4px 8px;
+      font-size: .76rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .route-card p {
+      margin: 0;
+      color: #b7cdee;
+      line-height: 1.58;
+      font-size: .93rem;
+    }
+
+    .route-meta {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(124, 180, 255, 0.3);
+      background: rgba(13, 31, 59, 0.6);
+      color: #c8e2ff;
+      padding: 4px 8px;
+      font-size: 0.76rem;
+      font-weight: 650;
+    }
+
+    .route-link {
+      margin-top: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border-radius: 10px;
+      padding: 7px 11px;
+      border: 1px solid rgba(118, 182, 255, 0.42);
+      background: rgba(18, 40, 70, 0.68);
+      color: #dff0ff;
+      font-weight: 760;
+      text-decoration: none;
+      transition: transform .15s ease, filter .15s ease;
+    }
+
+    .route-link:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.06);
+      text-decoration: none;
+    }
+
+    .mini-help-grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+    }
+
+    .mini-help-card {
+      border-radius: 13px;
+      border: 1px solid rgba(127, 182, 255, 0.28);
+      background: rgba(10, 22, 42, 0.64);
+      padding: 11px;
+    }
+
+    .mini-help-card strong {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+      color: #dff1ff;
+    }
+
+    .mini-help-card p {
+      margin: 0;
+      font-size: .88rem;
+    }
+
+    .support-checklist {
+      margin-top: 10px;
+      padding-left: 0;
+      list-style: none;
+      display: grid;
+      gap: 9px;
+    }
+
+    .support-checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      border-radius: 11px;
+      padding: 10px;
+      border: 1px solid rgba(129, 187, 255, 0.24);
+      background: rgba(12, 26, 47, 0.55);
+    }
+
+    .check-ic {
+      margin-top: 1px;
+      width: 22px;
+      height: 22px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #032f2c;
+      background: linear-gradient(145deg, #6dffd8, #44e0c6);
+      flex-shrink: 0;
+      font-size: .85rem;
+      box-shadow: 0 0 0 2px rgba(91, 248, 184, 0.2);
+    }
+
+    .status-line {
+      margin-top: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(119, 181, 255, 0.4);
+      background: rgba(10, 28, 49, 0.7);
+      padding: 7px 11px;
+      color: #d6ecff;
+      font-size: .82rem;
+      font-weight: 700;
+    }
+
+    .status-line i {
+      color: var(--support-warn);
+    }
+
+    @keyframes float-orb {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes fade-rise {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .support-hero::before,
+      .support-hero::after,
+      .route-card,
+      .hero-btn,
+      .route-link {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .hero-nav {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .route-grid,
+      .mini-help-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body class="public-doc">
+  <main class="public-shell">
+    <section class="public-card hero-card support-hero">
+      <span class="hero-kicker"><i class="bi bi-stars"></i>Skyline Help Navigator</span>
+      <h1 class="title-row"><span class="title-icon"><i class="bi bi-life-preserver"></i></span>Support Center ของ {{APP_NAME}}</h1>
+      <p class="hero-sub">ถ้าคุณไม่แน่ใจว่าจะต้องไปช่องทางไหน หน้านี้จะพาไปยังจุดที่ถูกต้องทันที: แจ้งบั๊ก, คุยเคสส่วนตัว, หรือขอคำแนะนำจากทีม Support Server</p>
+
+      <div class="hero-nav">
+        <a class="hero-btn primary" href="/report"><i class="bi bi-bug"></i>ไปหน้า /report</a>
+        <a class="hero-btn ghost" href="{{CONTACT_URL}}"><i class="bi bi-chat-left-dots"></i>ไปหน้าติดต่อทีมงาน</a>
+        <a class="hero-btn soft" href="/ServerSupport"><i class="bi bi-headset"></i>ไปหน้า /ServerSupport</a>
+        <a class="hero-btn soft" href="{{SUPPORT_SERVER_URL}}" target="_blank" rel="noopener noreferrer"><i class="bi bi-discord"></i>เข้า Discord Support</a>
+      </div>
+
+      <span class="status-line"><i class="bi bi-activity"></i>เช็กสถานะระบบก่อนแจ้งปัญหาได้ที่ <a href="{{SUPPORT_STATUS_URL}}" target="_blank" rel="noopener noreferrer">Service Status</a></span>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-signpost-2"></i></span>เลือกเส้นทางช่วยเหลือให้ตรงที่สุด</h2>
+      <div class="route-grid">
+        <article class="route-card">
+          <div class="route-head">
+            <h3 class="route-title"><i class="bi bi-bug"></i>Bug Report</h3>
+            <span class="route-tag">/report</span>
+          </div>
+          <p>ใช้เมื่อคำสั่งพัง, ฟีเจอร์ทำงานไม่ถูกต้อง, หรือระบบตอบกลับผิดจากที่เคยเป็น เพื่อให้ทีม dev ตรวจเช็กและไล่ประวัติได้ครบถ้วน</p>
+          <div class="route-meta">
+            <span class="meta-pill"><i class="bi bi-camera"></i>แนบภาพได้</span>
+            <span class="meta-pill"><i class="bi bi-card-text"></i>เก็บรายละเอียดเชิงเทคนิค</span>
+          </div>
+          <a class="route-link" href="/report"><i class="bi bi-arrow-right-circle"></i>เปิดหน้า Report</a>
+        </article>
+
+        <article class="route-card">
+          <div class="route-head">
+            <h3 class="route-title"><i class="bi bi-chat-left-text"></i>Private Case</h3>
+            <span class="route-tag">Contact</span>
+          </div>
+          <p>ใช้เมื่ออยากคุยรายละเอียดเฉพาะเซิร์ฟเวอร์, ต้องแนบข้อมูลเพิ่ม, และต้องการติดตามเคสแบบต่อเนื่องในรูปแบบแชท</p>
+          <div class="route-meta">
+            <span class="meta-pill"><i class="bi bi-lock"></i>คุยเคสส่วนตัว</span>
+            <span class="meta-pill"><i class="bi bi-clock-history"></i>ติดตามสถานะต่อเนื่อง</span>
+          </div>
+          <a class="route-link" href="{{CONTACT_URL}}"><i class="bi bi-arrow-right-circle"></i>เปิดหน้า Contact</a>
+        </article>
+
+        <article class="route-card">
+          <div class="route-head">
+            <h3 class="route-title"><i class="bi bi-headset"></i>ServerSupport Guide</h3>
+            <span class="route-tag">/ServerSupport</span>
+          </div>
+          <p>ใช้เมื่ออยากได้แนวทางตั้งค่า Dashboard, วิธีเปิดสิทธิ์ให้บอท, หรืออยากดูคู่มือช่วยเหลือแบบเป็นขั้นตอนก่อนเปิดเคส</p>
+          <div class="route-meta">
+            <span class="meta-pill"><i class="bi bi-compass"></i>คู่มือใช้งาน</span>
+            <span class="meta-pill"><i class="bi bi-lightning-charge"></i>เหมาะกับการเริ่มต้นเร็ว</span>
+          </div>
+          <a class="route-link" href="/ServerSupport"><i class="bi bi-arrow-right-circle"></i>เปิดหน้า ServerSupport</a>
+        </article>
+
+        <article class="route-card">
+          <div class="route-head">
+            <h3 class="route-title"><i class="bi bi-discord"></i>Discord Support</h3>
+            <span class="route-tag">Community</span>
+          </div>
+          <p>ใช้เมื่อเป็นคำถามทั่วไปหรืออยากได้คำตอบไวจากทีมและคอมมูนิตี้ เช่น การตั้งค่าพื้นฐานหรือการใช้งานเบื้องต้น</p>
+          <div class="route-meta">
+            <span class="meta-pill"><i class="bi bi-people"></i>คุยได้หลายคน</span>
+            <span class="meta-pill"><i class="bi bi-chat-dots"></i>ตอบแบบ real-time</span>
+          </div>
+          <a class="route-link" href="{{SUPPORT_SERVER_URL}}" target="_blank" rel="noopener noreferrer"><i class="bi bi-arrow-right-circle"></i>เข้า Discord Support</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-magic"></i></span>Quick Triage</h2>
+      <div class="mini-help-grid">
+        <article class="mini-help-card">
+          <strong><i class="bi bi-1-circle"></i>บอทผิดปกติ?</strong>
+          <p>เริ่มที่ <a href="/report">/report</a> เพื่อส่งข้อมูลเชิงเทคนิคให้ครบที่สุด</p>
+        </article>
+        <article class="mini-help-card">
+          <strong><i class="bi bi-2-circle"></i>ต้องคุยเคสเฉพาะ?</strong>
+          <p>เข้า <a href="{{CONTACT_URL}}">หน้าติดต่อทีมงาน</a> เพื่อเปิดเคสติดตามงานกับทีมซัพพอร์ต</p>
+        </article>
+        <article class="mini-help-card">
+          <strong><i class="bi bi-3-circle"></i>ต้องการคู่มือก่อน?</strong>
+          <p>ดู <a href="/ServerSupport">/ServerSupport</a> เพื่อเริ่มจากแนวทางที่ชัดเจน</p>
+        </article>
+        <article class="mini-help-card">
+          <strong><i class="bi bi-4-circle"></i>กลัวระบบล่ม?</strong>
+          <p>ตรวจที่ <a href="{{SUPPORT_STATUS_URL}}" target="_blank" rel="noopener noreferrer">Service Status</a> ก่อนแจ้งเคส</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-clipboard-check"></i></span>ข้อมูลที่ควรเตรียมก่อนแจ้ง</h2>
+      <ul class="support-checklist">
+        <li><span class="check-ic"><i class="bi bi-check2"></i></span><span>ชื่อเซิร์ฟเวอร์, ห้องที่เกิดปัญหา, และเวลาเกิดเหตุโดยประมาณ</span></li>
+        <li><span class="check-ic"><i class="bi bi-check2"></i></span><span>คำสั่งที่ใช้หรือขั้นตอนที่ทำก่อนเกิดปัญหา (step-by-step)</span></li>
+        <li><span class="check-ic"><i class="bi bi-check2"></i></span><span>ข้อความ error, รูปหน้าจอ, หรือ log ที่เกี่ยวข้อง</span></li>
+        <li><span class="check-ic"><i class="bi bi-check2"></i></span><span>บทบาทของบอทและบทบาทผู้ทดสอบ (ถ้าเกี่ยวกับ permission)</span></li>
+      </ul>
+    </section>
+
+    <section class="public-footer">© {{CURRENT_YEAR}} {{APP_NAME}} · Support Center</section>
+  </main>
+</body>
+</html>

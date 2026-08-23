@@ -1,0 +1,60 @@
+
+        {report_page_style_markup}
+
+        <section class="panel report-page-shell">
+          <header class="report-head">
+            <h1 data-i18n="report_title">Report Issue and Feedback</h1>
+            <p class="muted" data-i18n="report_subtitle">Report issues you found or share feedback to improve SkylineBOT.</p>
+          </header>
+          {notice_markup}
+          {reporter_card_markup}
+
+          <form method="post" action="/report" enctype="multipart/form-data" class="settings-grid" style="margin-top:2px;">
+            <label class="switch-row report-field">
+              <span data-i18n="report_issue_title_label">Issue title</span>
+              <input
+                type="text"
+                name="title"
+                required
+                maxlength="120"
+                value="{title_value}"
+                placeholder="{_escape(issue_title_placeholder)}"
+                data-i18n-placeholder="report_issue_title_placeholder"
+              >
+            </label>
+            <label class="switch-row report-field">
+              <span data-i18n="report_contact_label">Contact channel</span>
+              <input
+                type="text"
+                name="contact"
+                required
+                maxlength="120"
+                value="{contact_value}"
+                placeholder="{_escape(contact_placeholder)}"
+                data-i18n-placeholder="{contact_placeholder_key}"
+              >
+            </label>
+            {related_guild_field_markup}
+            <label class="switch-row report-field">
+              <span data-i18n="report_details_label">Details</span>
+              <textarea
+                name="detail"
+                rows="7"
+                required
+                placeholder="{_escape(detail_placeholder)}"
+                data-i18n-placeholder="report_details_placeholder"
+              >{detail_value}</textarea>
+            </label>
+            <label class="switch-row report-field">
+              <span data-i18n="report_image_label">Screenshot / image (optional)</span>
+              <input class="report-upload-input" type="file" name="image" accept="image/*">
+              {image_field_help_markup}
+            </label>
+            {challenge_block_markup}
+            <div class="auth-actions report-submit-row">
+              <button class="primary-btn" type="submit" data-i18n="report_submit_btn">Submit report</button>
+              <a class="ghost-btn" href="/dashboard" data-i18n="report_back_dashboard">Back to Dashboard</a>
+            </div>
+          </form>
+        </section>
+        

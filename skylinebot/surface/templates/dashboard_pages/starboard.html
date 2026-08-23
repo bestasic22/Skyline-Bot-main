@@ -1,0 +1,183 @@
+<section class="panel section-stack sb-page">
+  <div class="panel-header">
+    <div class="panel-title">
+      <h1>Starboard Control Center</h1>
+      <p class="muted" style="margin-top:6px;">ตั้งค่าระบบปักหมุดข้อความเด่นด้วยการกดดาว พร้อมปรับรูปแบบข้อความและ Embed ได้ในหน้าเดียว</p>
+    </div>
+  </div>
+
+  <form method="post" action="/dashboard/guild/{current_guild['id']}/starboard" id="starboardForm" class="section-stack" enctype="multipart/form-data">
+    <input type="hidden" name="fields_json" id="starboardFieldsJsonInput" value="{starboard_fields_json}">
+
+    <section class="panel-sub sb-hero">
+      <div class="sb-hero-grid">
+        <article class="sb-status-card">
+          <div class="sb-status-head">
+            <strong>สถานะระบบ</strong>
+            <span class="sb-status-pill" id="starboardStatusBadge">ตรวจสอบ...</span>
+          </div>
+          <div class="sb-status-list">
+            <div><span>โหมด</span><strong id="starboardSummaryMode">-</strong></div>
+            <div><span>Threshold</span><strong id="starboardSummaryThreshold">-</strong></div>
+            <div><span>อีโมจิ</span><strong id="starboardSummaryEmoji">-</strong></div>
+            <div><span>ช่องต้นทาง</span><strong id="starboardSummarySource">-</strong></div>
+            <div><span>ช่องปลายทาง</span><strong id="starboardSummaryTarget">-</strong></div>
+          </div>
+        </article>
+        <article class="sb-status-card">
+          <div class="sb-status-head">
+            <strong>Quick Checklist</strong>
+          </div>
+          <ul class="sb-checklist" id="starboardWarnings">
+            <li>เลือกช่องปลายทางให้บอทส่งข้อความได้</li>
+            <li>ตั้ง Threshold ให้เหมาะกับความคึกคักของเซิร์ฟเวอร์</li>
+            <li>ทดสอบกดดาวในห้องที่เปิดใช้งาน</li>
+          </ul>
+        </article>
+      </div>
+      <div class="sb-save-row">
+        <button class="primary-btn" id="starboardSubmitBtn" type="submit">บันทึกการตั้งค่า Starboard</button>
+      </div>
+    </section>
+
+    <section class="panel-sub">
+      <div class="sb-section-head">
+        <strong>1) การตั้งค่าหลัก</strong>
+      </div>
+      <label class="ux-toggle" style="margin-bottom:12px;">
+        <span class="ux-toggle-label">เปิดใช้ Starboard</span>
+        <input type="checkbox" name="enabled" id="starboardEnabledToggle" {"checked" if settings.get("enabled") else ""}>
+        <span class="ux-switch"></span>
+      </label>
+      <div class="field-group">
+        <div class="field-item">
+          <label>Starboard Name</label>
+          <input type="text" name="name" maxlength="80" value="{_escape(settings.get('name') or 'starboard')}" placeholder="starboard">
+        </div>
+        <div class="field-item">
+          <label>ช่องที่เปิดใช้งาน (Source Channel)</label>
+          {_render_channel_select("enabled_channel_id", bot_guild, settings.get("enabled_channel_id"), placeholder="เลือก..", filter_types=["text", "news", "forum"]) }
+          <div class="sb-inline-hint">ปล่อยว่างได้ หากต้องการให้ทุกช่องสามารถติดดาวได้</div>
+        </div>
+        <div class="field-item">
+          <label>ช่องปลายทาง (Starboard Channel)</label>
+          {_render_channel_select("channel_id", bot_guild, settings.get("channel_id"), placeholder="เลือก..", filter_types=["text", "news"]) }
+        </div>
+        <div class="field-item">
+          <label>บทบาทที่อนุญาตให้ติดดาว</label>
+          {_render_role_select("required_role_id", bot_guild, settings.get("required_role_id"), placeholder="เลือก..") }
+          <div class="sb-inline-hint">ปล่อยว่างได้ หากต้องการให้ทุกคนช่วยโหวตข้อความได้</div>
+        </div>
+        <div class="field-item">
+          <label>Stars Limit</label>
+          <div class="sb-stepper">
+            <button type="button" class="ghost-btn" data-step-target="stars_limit" data-step-delta="-1">-</button>
+            <input type="number" min="1" max="20" name="stars_limit" id="starboardStarsLimitInput" value="{int(settings.get('stars_limit') or 3)}">
+            <button type="button" class="ghost-btn" data-step-target="stars_limit" data-step-delta="1">+</button>
+          </div>
+        </div>
+        <div class="field-item">
+          <label>Custom Emoji</label>
+          <input type="text" name="custom_emoji" id="starboardEmojiInput" maxlength="64" value="{_escape(settings.get('custom_emoji') or '⭐')}" placeholder="⭐ หรือ <:name:id>">
+        </div>
+      </div>
+    </section>
+
+    <section class="panel-sub">
+      <div class="sb-section-head">
+        <strong>2) รูปแบบข้อความ</strong>
+      </div>
+      <input type="hidden" name="message_mode" id="starboardMessageModeInput" value="{_escape(message_mode)}">
+      <div class="sb-tab-row">
+        <button id="starboardTextTabBtn" class="{text_tab_class}" type="button">ข้อความ</button>
+        <button id="starboardEmbedTabBtn" class="{embed_tab_class}" type="button">Embed</button>
+      </div>
+
+      <div id="starboardMessageTokensWrap" class="sb-token-list">
+        <button type="button" class="sb-token-btn" data-sb-token="[author]">[author]</button>
+        <button type="button" class="sb-token-btn" data-sb-token="[stars]">[stars]</button>
+        <button type="button" class="sb-token-btn" data-sb-token="[channel]">[channel]</button>
+        <button type="button" class="sb-token-btn" data-sb-token="[link]">[link]</button>
+        <button type="button" class="sb-token-btn" data-sb-token="[content]">[content]</button>
+        <button type="button" class="sb-token-btn" data-sb-token="[emoji]">[emoji]</button>
+      </div>
+
+      <div id="starboardMessageContentWrap" class="field-item">
+        <label>เนื้อหาข้อความ</label>
+        <textarea name="message_template" id="starboardMessageContentInput" class="sb-large-input" maxlength="400" placeholder="ตัวอย่าง: [emoji] [stars] โดย [author] ใน [channel]\n[link]\n[content]">{_escape(settings.get("message_template") or "")}</textarea>
+      </div>
+
+      <div id="starboardEmbedEditor" class="panel-sub sb-embed-editor" style="border-left:3px solid {color_value};">
+        <div class="sb-color-row">
+          <span class="muted" style="font-size:12px;">สี Embed</span>
+          <button type="button" class="embed-color-dot" data-color="#ED4245" style="background:#ED4245;"></button>
+          <button type="button" class="embed-color-dot" data-color="#F97316" style="background:#F97316;"></button>
+          <button type="button" class="embed-color-dot" data-color="#FACC15" style="background:#FACC15;"></button>
+          <button type="button" class="embed-color-dot" data-color="#34D399" style="background:#34D399;"></button>
+          <button type="button" class="embed-color-dot" data-color="#38BDF8" style="background:#38BDF8;"></button>
+          <button type="button" class="embed-color-dot" data-color="#5865F2" style="background:#5865F2;"></button>
+          <input type="color" id="starboardColorInput" name="color" value="{color_value}" style="width:36px;height:28px;padding:0;">
+        </div>
+
+        <input type="hidden" name="embed_author_icon_url" id="starboardAuthorIconInput" value="{_escape(str(settings.get('embed_author_icon_url') or ''))}">
+        <input type="hidden" name="embed_thumbnail_url" id="starboardThumbnailInput" value="{_escape(str(settings.get('embed_thumbnail_url') or ''))}">
+        <input type="hidden" name="embed_image_url" id="starboardImageInput" value="{_escape(str(settings.get('embed_image_url') or ''))}">
+        <input type="hidden" name="embed_footer_icon_url" id="starboardFooterIconInput" value="{_escape(str(settings.get('embed_footer_icon_url') or ''))}">
+        <input type="file" name="embed_author_icon_file" id="starboardAuthorIconFileInput" accept=".png,.jpg,.jpeg,.webp,.gif" style="display:none;">
+        <input type="file" name="embed_thumbnail_file" id="starboardThumbnailFileInput" accept=".png,.jpg,.jpeg,.webp,.gif" style="display:none;">
+        <input type="file" name="embed_image_file" id="starboardImageFileInput" accept=".png,.jpg,.jpeg,.webp,.gif" style="display:none;">
+        <input type="file" name="embed_footer_icon_file" id="starboardFooterIconFileInput" accept=".png,.jpg,.jpeg,.webp,.gif" style="display:none;">
+
+        <div class="sb-composer-grid">
+          <button type="button" id="starboardAuthorIconPicker" class="sb-icon-picker" title="คลิกเพื่ออัปโหลด / ดับเบิลคลิกเพื่อล้าง">🖼️</button>
+          <input type="text" name="embed_author_name" id="starboardAuthorNameInput" maxlength="256" placeholder="ชื่อผู้เขียน" value="{_escape(str(settings.get('embed_author_name') or ''))}">
+          <input type="text" name="embed_author_url" id="starboardAuthorUrlInput" maxlength="600" placeholder="ลิงก์ผู้เขียน" value="{_escape(str(settings.get('embed_author_url') or ''))}">
+          <button type="button" id="starboardThumbPicker" class="sb-thumb-picker" title="คลิกเพื่ออัปโหลด / ดับเบิลคลิกเพื่อล้าง">🖼️</button>
+        </div>
+        <div class="field-item"><label>หัวข้อ</label><input type="text" name="embed_title" id="starboardTitleInput" maxlength="120" value="{_escape(settings.get('embed_title') or '')}" placeholder="หัวข้อ"></div>
+        <div class="field-item"><label>คำอธิบาย</label><textarea name="embed_description" id="starboardDescInput" class="sb-large-input" maxlength="4000" placeholder="คำอธิบาย">{_escape(settings.get("embed_description") or starboard_placeholder)}</textarea></div>
+
+        <div class="sb-fields-head">
+          <strong>Embed Fields</strong>
+          <button type="button" id="starboardAddFieldBtn" class="primary-btn">เพิ่มฟิลด์</button>
+        </div>
+        <div id="starboardFieldsWrap" class="section-stack" style="margin-top:8px;"></div>
+
+        <button type="button" id="starboardImagePicker" class="sb-image-picker" title="คลิกเพื่ออัปโหลด / ดับเบิลคลิกเพื่อล้าง">
+          <span>คลิกเพื่อเพิ่มรูปภาพใหญ่</span>
+        </button>
+
+        <div class="sb-composer-grid" style="margin-top:10px;">
+          <button type="button" id="starboardFooterIconPicker" class="sb-icon-picker" title="คลิกเพื่ออัปโหลด / ดับเบิลคลิกเพื่อล้าง">🖼️</button>
+          <input type="text" name="embed_footer_text" id="starboardFooterTextInput" maxlength="2048" placeholder="ข้อความท้าย" value="{_escape(str(settings.get('embed_footer_text') or ''))}" style="grid-column: span 3;">
+        </div>
+        <div class="sb-upload-hint">เคล็ดลัด: คลิกช่องรูปเพื่ออัปโหลด และดับเบิลคลิกเพื่อล้างรูปที่ตั้งไว้</div>
+      </div>
+    </section>
+
+    <section class="panel-sub">
+      <div class="sb-section-head">
+        <strong>3) ตัวเลือกเพิ่มเติม</strong>
+      </div>
+      <div class="field-group">
+        <label class="ux-toggle">
+          <span class="ux-toggle-label">เปิดระบบ</span>
+          <input type="checkbox" name="active" {"checked" if settings.get("active") else ""}>
+          <span class="ux-switch"></span>
+        </label>
+        <label class="ux-toggle">
+          <span class="ux-toggle-label">Ignore Self Stars</span>
+          <input type="checkbox" name="ignore_self_stars" {"checked" if settings.get("ignore_self_stars") else ""}>
+          <span class="ux-switch"></span>
+        </label>
+        <label class="ux-toggle">
+          <span class="ux-toggle-label">React To Starboard Post</span>
+          <input type="checkbox" name="react_to_starboard_post" {"checked" if settings.get("react_to_starboard_post") else ""}>
+          <span class="ux-switch"></span>
+        </label>
+      </div>
+    </section>
+  </form>
+</section>
+<link rel="stylesheet" href="/dashboard/static/dashboard/pages/starboard.css">
+<script>{_render_dashboard_f_template("scripts/starboard.js", __ctx)}</script>

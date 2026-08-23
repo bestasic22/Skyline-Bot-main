@@ -1,0 +1,52 @@
+﻿
+    <section class="panel" style="max-width:1120px; margin:0 auto; display:grid; gap:18px;">
+      <div>
+        <h1>เลือก Plan SkylineBOT</h1>
+        <p class="muted">เลือกแพ็กเกจให้เหมาะกับเซิร์ฟเวอร์ของคุณ พร้อมตารางเทียบฟีเจอร์และสิทธิ์โดเนตแบบครบถ้วน</p>
+      </div>
+      <div class="landing-grid price-grid">
+        {pricing_cards}
+      </div>
+      {subscribe_plan_shell_markup}
+      <section class="panel" style="background:transparent; border-style:dashed;">
+        <h2>ตารางเทียบฟีเจอร์</h2>
+        <div class="table-wrap" style="margin-top:8px;">
+          <table class="pricing-table">
+            <thead>{comparison_table_header_row}</thead>
+            <tbody>{comparison_rows}</tbody>
+          </table>
+        </div>
+      </section>
+      <section class="panel" style="background:transparent; border-style:dashed;">
+        <h2>ตารางคำสั่งตามแพ็กเกจ</h2>
+        <div class="table-wrap" style="margin-top:8px;">
+          <table class="pricing-table">
+            <thead>{command_table_header_row}</thead>
+            <tbody>{command_rows}</tbody>
+          </table>
+        </div>
+      </section>
+      <section class="panel" style="background:transparent; border-style:dashed;">
+        <h2>ระบบโดเนตสนับสนุน</h2>
+        <div class="table-wrap" style="margin-top:8px;">
+          <table class="pricing-table">
+            <thead>{donate_table_header_row}</thead>
+            <tbody>{donate_rows}</tbody>
+          </table>
+        </div>
+      </section>
+      <section class="panel" style="background:transparent; border-style:dashed;">
+        <h2>วิธีสมัครและอัปเกรด</h2>
+        <ul class="muted" style="padding-left:18px; line-height:1.85; margin:0;">
+          <li>เลือกแพ็กเกจที่เหมาะกับขนาดเซิร์ฟเวอร์ของคุณ</li>
+          <li>เปิดหน้า Subscribe Plan แล้วเลือกกิลด์ จากนั้นกดสมัครแพ็กเกจที่ต้องการได้ทันที</li>
+          <li>หลังยืนยันสิทธิ์ ฟีเจอร์ Premium จะเปิดใน Dashboard ของเซิร์ฟเวอร์นั้นทันที</li>
+        </ul>
+        <div class="auth-actions" style="justify-content:flex-start; margin-top:14px;">
+          <a class="primary-btn" href="/dashboard">กลับหน้าแดชบอร์ด</a>
+          <a class="ghost-btn" href="/docs">ดูข้อมูลเว็บไซต์</a>
+        </div>
+      </section>
+      {subscribe_plan_script_markup}
+    </section>
+    

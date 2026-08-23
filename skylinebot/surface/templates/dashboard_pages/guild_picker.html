@@ -1,0 +1,504 @@
+
+    <style>
+      .page-guild-picker-v2 [data-guild-picker-home] {{
+        --gp-gap: clamp(12px, 1.5vw, 18px);
+        --gp-line: color-mix(in srgb, var(--ux-brand) 32%, var(--ux-line));
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .detail-page-hero {{
+        gap: 18px;
+        border-radius: 18px;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .detail-page-hero-copy {{
+        display: grid;
+        gap: 6px;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .detail-page-hero-copy h1 {{
+        margin: 0;
+        font-size: clamp(1.58rem, 2.1vw, 2.05rem);
+        line-height: 1.08;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .detail-page-hero-copy p {{
+        margin: 0;
+        max-width: 70ch;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-picker-hero-badges {{
+        align-self: flex-start;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-picker-kpi-shell {{
+        border-radius: 22px;
+        padding: clamp(14px, 1.8vw, 20px);
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-picker-kpi-shell-head {{
+        display: grid;
+        gap: 4px;
+        margin-bottom: 14px;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-picker-kpi-shell-head h2 {{
+        margin: 0;
+        font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-picker-kpi-shell-head .muted {{
+        font-size: 0.84rem;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-picker-kpis {{
+        display: grid !important;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: var(--gp-gap);
+        align-items: stretch;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-picker-kpi {{
+        min-height: 140px;
+        border-radius: 18px;
+        padding: 15px;
+        gap: 10px;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-picker-kpi-copy {{
+        gap: 8px;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-picker-kpi-label {{
+        font-size: 0.72rem;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-picker-kpi strong {{
+        font-size: clamp(1.2rem, 1.75vw, 1.6rem);
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-picker-kpi-sub {{
+        font-size: 0.8rem;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-picker-kpi-value-line {{
+        padding: 10px 11px;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-picker-kpi-meter {{
+        height: 9px;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-picker-sections-grid {{
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.95fr);
+        gap: var(--gp-gap);
+        align-items: stretch;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-picker-sections-grid.is-managed-only {{
+        grid-template-columns: minmax(0, 1fr);
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-section-managed,
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-section-invite {{
+        height: 100%;
+        border-radius: 18px;
+        padding: clamp(14px, 1.7vw, 20px);
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-section-head {{
+        gap: 10px;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-section-head h2 {{
+        margin: 0;
+        font-size: clamp(1.08rem, 1.4vw, 1.24rem);
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-grid {{
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+        gap: 13px;
+        margin-top: 14px !important;
+        align-items: stretch;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-card {{
+        position: relative;
+        isolation: isolate;
+        border-radius: 16px !important;
+        padding: 13px;
+        gap: 10px;
+        transition: transform .24s ease, box-shadow .24s ease, border-color .24s ease;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-card::after {{
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity .24s ease;
+        background: radial-gradient(118% 110% at 100% 0%, rgba(104, 154, 255, .2), transparent 58%);
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-card:hover {{
+        transform: translateY(-3px);
+        box-shadow: 0 18px 34px rgba(2, 9, 24, .28);
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-card:hover::after {{
+        opacity: 1;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-card h3 {{
+        margin: 0;
+        font-size: 1.26rem;
+        line-height: 1.15;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-card .muted {{
+        font-size: 0.84rem;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-card .mini-stat {{
+        font-size: 0.8rem;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-card .primary-btn {{
+        min-height: 38px;
+        font-weight: 700;
+        border-radius: 12px;
+        border-color: rgba(138, 184, 255, .44);
+        background: linear-gradient(135deg, #3a88ff, #2f7bff);
+        box-shadow: 0 10px 20px rgba(20, 66, 150, .3);
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .invite-guild-card .primary-btn {{
+        background: linear-gradient(135deg, #f59e0b, #fb7185);
+        box-shadow: 0 10px 20px rgba(141, 67, 20, .32);
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-card-head img {{
+        width: 56px;
+        height: 56px;
+        border-radius: 15px;
+        box-shadow: 0 10px 22px rgba(0, 0, 0, .26), 0 0 0 1px rgba(149, 190, 255, .42);
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-card-topline {{
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 8px;
+        flex-wrap: wrap;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-card-score {{
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-height: 24px;
+        padding: 0 10px;
+        border-radius: 999px;
+        font-size: .72rem;
+        font-weight: 700;
+        border: 1px solid rgba(147, 188, 255, .35);
+        background: rgba(14, 26, 56, .55);
+        white-space: nowrap;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-card-actions {{
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-left: auto;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        position: relative;
+        z-index: 4;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-pin-btn {{
+        appearance: none;
+        border: 1px solid rgba(145, 184, 255, .34);
+        background: rgba(14, 26, 56, .55);
+        color: #d7e8ff;
+        border-radius: 999px;
+        min-height: 26px;
+        padding: 0 10px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: .71rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, background .18s ease;
+        white-space: nowrap;
+        position: relative;
+        z-index: 5;
+        pointer-events: auto;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-pin-btn:hover {{
+        transform: translateY(-1px);
+        border-color: rgba(245, 184, 88, .72);
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-pin-btn.is-active {{
+        border-color: rgba(246, 198, 108, .82);
+        background: linear-gradient(140deg, rgba(141, 96, 24, .72), rgba(107, 63, 14, .66));
+        box-shadow: 0 10px 18px rgba(82, 51, 12, .32);
+        color: #ffeab8;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .managed-guild-card.is-pinned {{
+        border-color: rgba(250, 204, 120, .62);
+        box-shadow: 0 20px 34px rgba(72, 41, 10, .26);
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .managed-guild-card.is-pinned::after {{
+        opacity: 1;
+        background: radial-gradient(116% 112% at 100% 0%, rgba(251, 191, 36, .3), transparent 58%);
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .managed-guild-card.is-pinned::before {{
+        background: linear-gradient(90deg, rgba(245, 158, 11, .92), rgba(251, 191, 36, .86));
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-card-title-row {{
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        flex-wrap: wrap;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-card-favorite-badge {{
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        border-radius: 999px;
+        min-height: 22px;
+        padding: 0 9px;
+        font-size: .66rem;
+        font-weight: 700;
+        letter-spacing: .02em;
+        color: #ffe9b5;
+        border: 1px solid rgba(247, 207, 126, .6);
+        background: rgba(101, 67, 14, .62);
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-card-favorite-badge[hidden] {{
+        display: none !important;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-card-tag {{
+        white-space: nowrap;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-card-copy h3 {{
+        max-width: 100%;
+        line-height: 1.15;
+        overflow-wrap: anywhere;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-picker-pill i,
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-picker-kpi-icon i,
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-section-chip i,
+      .page-guild-picker-v2 [data-guild-picker-home] .managed-guild-card .guild-access-icon i,
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-card-tag i,
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-card-score i,
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-pin-btn i,
+      .page-guild-picker-v2 [data-guild-picker-home] .guild-card-favorite-badge i {{
+        font-size: .95rem;
+        line-height: 1;
+        display: inline-block;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .managed-guild-card .guild-access-indicator {{
+        position: relative;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        column-gap: 10px;
+        row-gap: 6px;
+        align-items: center;
+        border-radius: 14px;
+        border: 1px solid rgba(132, 165, 236, 0.28);
+        background: linear-gradient(145deg, rgba(20, 32, 67, 0.84), rgba(14, 25, 54, 0.72));
+        padding: 8px 10px;
+        overflow: hidden;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .managed-guild-card .guild-access-indicator::after {{
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(110% 110% at 100% 0%, rgba(138, 187, 255, 0.22), transparent 58%);
+        pointer-events: none;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .managed-guild-card .guild-access-icon {{
+        width: 30px;
+        height: 30px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(152, 188, 255, 0.36);
+        background: linear-gradient(165deg, rgba(48, 81, 149, 0.8), rgba(29, 52, 107, 0.66));
+        color: #e4efff;
+        box-shadow: 0 8px 16px rgba(5, 12, 31, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .managed-guild-card .guild-access-copy {{
+        min-width: 0;
+        display: grid;
+        gap: 1px;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .managed-guild-card .guild-access-copy strong {{
+        font-size: 0.78rem;
+        line-height: 1.2;
+        letter-spacing: 0.01em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .managed-guild-card .guild-access-copy small {{
+        font-size: 0.67rem;
+        color: color-mix(in srgb, var(--ux-text-muted) 90%, #cfe1ff);
+        line-height: 1.22;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .managed-guild-card .guild-access-scopes {{
+        grid-column: 1 / -1;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .managed-guild-card .guild-access-scope {{
+        display: inline-flex;
+        align-items: center;
+        min-height: 20px;
+        padding: 0 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(132, 165, 236, 0.3);
+        background: rgba(19, 33, 71, 0.56);
+        color: #d4e6ff;
+        font-size: 0.62rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .managed-guild-card .guild-access-scope::before {{
+        content: "";
+        width: 4px;
+        height: 4px;
+        border-radius: 999px;
+        margin-right: 6px;
+        background: currentColor;
+        opacity: 0.72;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .managed-guild-card .guild-access-owner {{
+        border-color: rgba(247, 204, 110, 0.42);
+        background: linear-gradient(145deg, rgba(63, 47, 20, 0.82), rgba(43, 30, 12, 0.7));
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .managed-guild-card .guild-access-owner .guild-access-icon {{
+        border-color: rgba(248, 208, 129, 0.54);
+        background: linear-gradient(165deg, rgba(167, 118, 28, 0.8), rgba(109, 73, 17, 0.66));
+        color: #ffedbe;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .managed-guild-card .guild-access-admin {{
+        border-color: rgba(136, 184, 255, 0.42);
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .managed-guild-card .guild-access-authorized {{
+        border-color: rgba(128, 214, 184, 0.42);
+        background: linear-gradient(145deg, rgba(17, 49, 44, 0.8), rgba(12, 34, 30, 0.68));
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .managed-guild-card .guild-access-authorized .guild-access-icon {{
+        border-color: rgba(125, 214, 183, 0.56);
+        background: linear-gradient(165deg, rgba(33, 125, 96, 0.82), rgba(22, 86, 67, 0.7));
+        color: #d8fff2;
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .managed-guild-card .guild-access-ownerbot {{
+        border-color: rgba(148, 220, 245, 0.44);
+        background: linear-gradient(145deg, rgba(15, 50, 62, 0.82), rgba(10, 35, 44, 0.7));
+      }}
+      .page-guild-picker-v2 [data-guild-picker-home] .managed-guild-card .guild-access-ownerbot .guild-access-icon {{
+        border-color: rgba(145, 220, 243, 0.58);
+        background: linear-gradient(165deg, rgba(39, 137, 170, 0.82), rgba(23, 92, 117, 0.7));
+        color: #dbf6ff;
+      }}
+      @media (max-width: 1320px) {{
+        .page-guild-picker-v2 [data-guild-picker-home] .guild-picker-kpis {{
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }}
+      }}
+      @media (max-width: 1060px) {{
+        .page-guild-picker-v2 [data-guild-picker-home] .guild-picker-sections-grid {{
+          grid-template-columns: minmax(0, 1fr);
+        }}
+      }}
+      @media (max-width: 760px) {{
+        .page-guild-picker-v2 [data-guild-picker-home] .detail-page-hero {{
+          padding: 14px;
+          gap: 12px;
+        }}
+        .page-guild-picker-v2 [data-guild-picker-home] .guild-picker-kpis {{
+          grid-template-columns: minmax(0, 1fr);
+        }}
+        .page-guild-picker-v2 [data-guild-picker-home] .guild-grid {{
+          grid-template-columns: minmax(0, 1fr);
+        }}
+        .page-guild-picker-v2 [data-guild-picker-home] .guild-card-actions {{
+          width: 100%;
+          justify-content: flex-end;
+        }}
+        .page-guild-picker-v2 [data-guild-picker-home] .guild-card-score {{
+          max-width: 100%;
+        }}
+        .page-guild-picker-v2 [data-guild-picker-home] .managed-guild-card .guild-access-copy small {{
+          font-size: 0.64rem;
+        }}
+      }}
+    </style>
+
+    <section class="section-stack dashboard-detail-shell page-guild-picker-shell page-guild-picker-v2">
+      <section class="panel guild-home-panel" data-guild-picker-home>
+        <div class="panel-header detail-page-hero detail-page-hero-guild-picker">
+          <div class="panel-title detail-page-hero-copy">
+            <h1 data-icon-key="dashboard_home">Dashboard Home</h1>
+            <p>Choose a server to open its control panel and manage modules in one place.</p>
+          </div>
+          <div class="guild-picker-hero-badges">
+            <span class="plugin-premium-pill guild-picker-pill">
+              <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+              Managed: {managed_count}
+            </span>
+            <span class="plugin-premium-pill guild-picker-pill invite">
+              <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
+              Invite-ready: {invite_count}
+            </span>
+          </div>
+        </div>
+
+        <section class="guild-picker-kpi-shell">
+          <div class="guild-picker-kpi-shell-head">
+            <h2 style="margin:0;" data-icon-key="overview">Overview Snapshot</h2>
+            <small class="muted">Live health of your managed communities.</small>
+          </div>
+          <div class="guild-picker-kpis">
+            <article class="guild-picker-kpi kpi-managed">
+              <span class="guild-picker-kpi-icon" aria-hidden="true"><i class="fa-solid fa-layer-group"></i></span>
+              <div class="guild-picker-kpi-copy">
+                <span class="guild-picker-kpi-label">Managed Guilds</span>
+                <div class="guild-picker-kpi-value-line">
+                  <strong>{managed_count}</strong>
+                  <span class="guild-picker-kpi-badge">Control</span>
+                </div>
+                <small class="guild-picker-kpi-sub">Servers ready to manage now</small>
+              </div>
+            </article>
+            <article class="guild-picker-kpi kpi-members">
+              <span class="guild-picker-kpi-icon" aria-hidden="true"><i class="fa-solid fa-users"></i></span>
+              <div class="guild-picker-kpi-copy">
+                <span class="guild-picker-kpi-label">Total Members</span>
+                <div class="guild-picker-kpi-value-line">
+                  <strong>{managed_members_total:,}</strong>
+                  <span class="guild-picker-kpi-badge">Audience</span>
+                </div>
+                <small class="guild-picker-kpi-sub">Combined members across managed guilds</small>
+              </div>
+            </article>
+            <article class="guild-picker-kpi kpi-security">
+              <span class="guild-picker-kpi-icon" aria-hidden="true"><i class="fa-solid fa-shield-halved"></i></span>
+              <div class="guild-picker-kpi-copy">
+                <span class="guild-picker-kpi-label">Avg Security</span>
+                <div class="guild-picker-kpi-value-line">
+                  <strong>{avg_security_score}%</strong>
+                  <span class="guild-picker-kpi-badge security">Protection</span>
+                </div>
+                <div class="guild-picker-kpi-meter"><span class="guild-picker-kpi-meter-fill" style="width:{avg_security_score}%"></span></div>
+              </div>
+            </article>
+            <article class="guild-picker-kpi kpi-health">
+              <span class="guild-picker-kpi-icon" aria-hidden="true"><i class="fa-solid fa-heart-pulse"></i></span>
+              <div class="guild-picker-kpi-copy">
+                <span class="guild-picker-kpi-label">Avg Health</span>
+                <div class="guild-picker-kpi-value-line">
+                  <strong>{avg_health_score}%</strong>
+                  <span class="guild-picker-kpi-badge health">Runtime</span>
+                </div>
+                <div class="guild-picker-kpi-meter"><span class="guild-picker-kpi-meter-fill" style="width:{avg_health_score}%"></span></div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <div class="guild-picker-sections-grid {"is-managed-only" if not show_invite_section else ""}">
+          <section class="panel-sub detail-page-section guild-section-managed">
+            <div class="guild-section-head">
+              <h2 style="margin-top:0;" data-icon-key="dashboard_joined">Managed Guilds</h2>
+              <span class="guild-section-chip">
+                <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                {managed_count}
+              </span>
+            </div>
+            <p class="muted" style="margin-top:4px;">Servers where SkylineBOT is already installed and manageable.</p>
+            <div class="guild-grid" style="margin-top:16px;" data-managed-guild-grid="1">
+              {''.join(joined_cards) if joined_cards else '<div class="notice" data-i18n="no_manageable_guilds">No manageable guilds found yet.</div>'}
+            </div>
+          </section>
+          {invite_panel_markup}
+        </div>
+      </section>
+    </section>
+    <script src="/dashboard/static/dashboard/pages/guild-picker-auto-refresh.js?v=20260521-pinfix2" defer></script>
+    

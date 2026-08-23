@@ -1,0 +1,124 @@
+
+    <section class="panel section-stack dashboard-detail-shell page-music-shell">
+      <div class="panel-header detail-page-hero detail-page-hero-music">
+        <div class="panel-title detail-page-hero-copy">
+                    <h1 data-i18n="tab_music" data-icon-key="music">{_escape(title_text)}</h1>
+                    <p>{_escape(desc_text)}</p>
+        </div>
+        <span class="plugin-premium-pill music-plan-chip">Plan: {_escape(plan_name)}</span>
+      </div>
+
+      <div class="guild-meta detail-page-metrics">
+        <span class="pill">{t['queue']}: {current.get('queue_size', 0)}</span>
+        <span class="pill">{t['volume']}: {current.get('volume', 0)}%</span>
+        <span class="pill">{t['loop']}: {loop_state}</span>
+      </div>
+
+      <details class="panel-sub panel-collapsible detail-page-section" open>
+        <summary>
+          <strong data-icon-key="music_now_playing">1) {t['now_playing']}</strong>
+          <span class="summary-sub">{t['voice']}: {_escape(current.get('channel') or '-')}</span>
+        </summary>
+        <div class="panel-sub-body">
+          <div class="music-now">
+            <img class="music-artwork" data-live="music-artwork" src="{music_artwork}" alt="music artwork" onerror="this.onerror=null;this.src='{_escape(style_urls.DEFAULT_MUSIC_BANNER)}';">
+            <div class="music-panel-card">
+              <div class="pill" data-live="music-state">{now_state}</div>
+              <h3 style="margin-top:10px;" data-live="music-title">{_escape(now_title)}</h3>
+              <p class="muted" data-live="music-author">{_escape(now_author)}</p>
+              <div class="pill" style="margin-top:10px;" data-live="music-channel">{t['voice']}: {_escape(current.get('channel') or '-')}</div>
+              <p class="muted" style="margin-top:10px;" data-live="music-time">{_escape(current.get('position') or '0s')} / {_escape(current.get('duration') or '0s')}</p>
+              <p class="muted" data-live="music-stats">{t['queue']}: {current.get('queue_size', 0)} | {t['volume']}: {current.get('volume', 0)}%</p>
+              <p class="muted" data-live="music-loop-status">{t['loop']}: {loop_state}</p>
+              <div class="notice" data-live="music-active-notice" style="margin-top:10px;{'display:none;' if current.get('active') else ''}">{t['no_session']}</div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="panel-sub panel-collapsible detail-page-section" open>
+        <summary>
+          <strong data-icon-key="music_controls">2) {t['controls']}</strong>
+          <span class="summary-sub">{t['controls_desc']}</span>
+        </summary>
+        <div class="panel-sub-body">
+          <div class="music-control-grid">
+            <form id="musicQuickAddForm" method="post" action="{_escape(music_control_post_path)}">
+              <input type="hidden" name="action" value="search_tracks">
+              <div class="field-item">
+                <label>{t['add_song']}</label>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                  <input id="musicQueryInput" type="text" name="query" placeholder="{_escape(t['add_placeholder'])}" autocomplete="off">
+                  <button class="primary-btn" type="submit" style="white-space:nowrap;">{t['enqueue']}</button>
+                </div>
+              </div>
+            </form>
+            <div class="music-search-results" data-live="music-search-results"></div>
+            <div class="field-item">
+              <label>เพลย์ลิสต์อัตโนมัติ (วนซ้ำ)</label>
+              <div class="music-playlist-row">
+                <select id="musicPlaylistSelect">{playlist_options_html}</select>
+                <button id="musicAddPlaylistBtn" class="primary-btn" type="button">เพิ่มเพลย์ลิสต์</button>
+              </div>
+            </div>
+            <div class="music-action-row">
+              <button class="ux-btn" type="button" data-music-action-btn data-action="pause_toggle">{t['toggle_play']}</button>
+              <button class="ux-btn" type="button" data-music-action-btn data-action="previous">{t['previous']}</button>
+              <button class="ux-btn" type="button" data-music-action-btn data-action="skip">{t['skip']}</button>
+              <button class="ux-btn" type="button" data-music-action-btn data-action="loop_toggle">{t['toggle_loop']}</button>
+              <button class="ux-btn" type="button" data-music-action-btn data-action="stop" style="color:#ff9696;">{t['stop_leave']}</button>
+            </div>
+            <div class="music-action-row">
+              <button class="ux-btn" type="button" data-music-action-btn data-action="volume_down">{t['vol_down']}</button>
+              <button class="ux-btn" type="button" data-music-action-btn data-action="volume_up">{t['vol_up']}</button>
+              <button class="ux-btn" type="button" data-music-action-btn data-action="seek_backward"> 10s</button>
+              <button class="ux-btn" type="button" data-music-action-btn data-action="seek_forward">10s </button>
+            </div>
+            <div class="field-item">
+              <label>YouTube-style Seek Bar</label>
+              <div class="music-seek-row">
+                <input
+                  id="musicSeekInput"
+                  type="range"
+                  min="0"
+                  max="{max(0, int(current.get('duration_ms', 0) or 0))}"
+                  value="{max(0, int(current.get('position_ms', 0) or 0))}"
+                  step="1000"
+                  data-live="music-seek-input"
+                >
+                <button id="musicSeekApplyBtn" class="ux-btn" type="button">Seek</button>
+              </div>
+            </div>
+            <div class="field-group" style="margin-top:4px;">
+              <div class="field-item">
+                <label>{t['set_volume']}</label>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                  <input id="musicVolumeInput" type="number" min="0" max="100" value="{_escape(current.get('volume', 80))}">
+                  <button id="musicSetVolumeBtn" class="primary-btn" type="button" style="white-space:nowrap;">{t['confirm_volume']}</button>
+                </div>
+              </div>
+            </div>
+            <div class="music-feedback" data-live="music-feedback"></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="panel-sub panel-collapsible detail-page-section" open>
+        <summary>
+          <strong data-icon-key="music_queue">3) {t['queue_table']} + {t['recent_activity']}</strong>
+          <span class="summary-sub">ตรวจสอบคิวและกิจกรรมล่าสุดแบบเรียลไทม์</span>
+        </summary>
+        <div class="panel-sub-body">
+          <div class="guild-meta" data-live="music-queue">
+            {queue_lines or f'<span class="mini-stat">{t["queue_empty"]}</span>'}
+          </div>
+          <div class="music-queue-cards" data-live="music-queue-cards">
+            {queue_cards or f'<div class="music-queue-empty">{t["queue_empty_table"]}</div>'}
+          </div>
+          <div class="log-box" data-live="music-log-box" style="max-height:300px; font-size:0.85rem;">{music_logs}</div>
+        </div>
+      </details>
+
+      {settings_section_html}
+    </section>
+    

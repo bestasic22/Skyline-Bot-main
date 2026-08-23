@@ -1,0 +1,263 @@
+.cmd-all-shell { padding: 18px; }
+      .cmd-all-head {
+        display: flex; justify-content: space-between; align-items: flex-start;
+        gap: 12px; flex-wrap: wrap; margin-bottom: 14px;
+      }
+      .cmd-head-stats { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+      .cmd-filter-row {
+        display: grid; gap: 10px; margin: 12px 0 14px;
+      }
+      .cmd-cat-tabs {
+        display: flex; gap: 8px; flex-wrap: wrap;
+      }
+      .cmd-cat-tab {
+        border: 1px solid var(--line);
+        background: rgba(10, 16, 34, .55);
+        color: var(--muted);
+        border-radius: 999px;
+        padding: 7px 12px;
+        cursor: pointer;
+        font-size: .82rem;
+      }
+      .cmd-cat-tab.active {
+        color: #eef4ff;
+        border-color: rgba(79, 148, 255, .55);
+        box-shadow: 0 0 0 2px rgba(79, 148, 255, .18);
+      }
+      #commandAllSearch {
+        width: 100%;
+        max-width: 460px;
+        background: rgba(6,10,24,.48);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        color: var(--text);
+        padding: 10px 12px;
+        outline: none;
+      }
+      #commandAllSearch:focus { border-color: var(--brand); box-shadow: 0 0 0 2px var(--focus); }
+      .cmd-row-list { display: grid; gap: 10px; }
+      .cmd-row {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: linear-gradient(180deg, rgba(19, 26, 52, 0.92), rgba(13, 18, 36, 0.94));
+        overflow: hidden;
+      }
+      .cmd-row.on { border-color: rgba(74,222,128,.25); }
+      .cmd-row.off { border-color: rgba(248,113,113,.25); }
+      .cmd-row.locked { border-color: rgba(255,204,51,.32); }
+      .cmd-row summary {
+        list-style: none;
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        cursor: pointer;
+        padding: 14px;
+      }
+      .cmd-row summary::-webkit-details-marker { display: none; }
+      .cmd-row-left { display: grid; gap: 4px; }
+      .cmd-title { font-weight: 800; color: #f2f6ff; font-size: .98rem; }
+      .cmd-desc { color: var(--muted); font-size: .84rem; }
+      .cmd-row-right {
+        display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+        justify-content: flex-end;
+      }
+      .cmd-fav-btn {
+        border: 1px solid rgba(255,255,255,.16);
+        background: rgba(255,255,255,.05);
+        color: rgba(255,255,255,.62);
+        border-radius: 999px;
+        min-width: 34px;
+        height: 30px;
+        padding: 0 10px;
+        font-size: .9rem;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .cmd-fav-btn.active {
+        color: #ff5f8f;
+        border-color: rgba(255,95,143,.55);
+        background: rgba(255,95,143,.15);
+      }
+      .cmd-badge {
+        border-radius: 999px;
+        padding: 5px 9px;
+        font-size: .72rem;
+        font-weight: 800;
+        border: 1px solid transparent;
+      }
+      .cmd-favorite-zone {
+        border: 1px solid rgba(255,255,255,.08);
+        border-radius: 14px;
+        background: rgba(8, 12, 26, .45);
+        padding: 12px;
+        margin: 0 0 14px;
+      }
+      .cmd-favorite-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+      .cmd-favorite-head h2 {
+        margin: 0;
+        font-size: 1rem;
+      }
+      .cmd-favorite-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 10px;
+      }
+      .cmd-favorite-card {
+        border: 1px solid rgba(255,255,255,.12);
+        border-radius: 12px;
+        background: rgba(255,255,255,.04);
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      .cmd-favorite-main {
+        display: grid;
+        gap: 3px;
+      }
+      .cmd-favorite-main strong {
+        font-size: .9rem;
+        color: #f4f7ff;
+      }
+      .cmd-favorite-main small {
+        color: var(--muted);
+        font-size: .78rem;
+      }
+      .cmd-favorite-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .cmd-favorite-open,
+      .cmd-favorite-remove {
+        border: 1px solid rgba(255,255,255,.15);
+        border-radius: 8px;
+        min-height: 30px;
+        padding: 4px 10px;
+        background: rgba(255,255,255,.06);
+        color: #dbe8ff;
+        cursor: pointer;
+        font-size: .76rem;
+        font-weight: 700;
+      }
+      .cmd-favorite-remove {
+        color: #ff8cab;
+      }
+      .cmd-badge.mode.both { color: #7dd3fc; background: rgba(125,211,252,.12); border-color: rgba(125,211,252,.35); }
+      .cmd-badge.mode.slash { color: #a5b4fc; background: rgba(165,180,252,.12); border-color: rgba(165,180,252,.35); }
+      .cmd-badge.mode.prefix { color: #fdba74; background: rgba(253,186,116,.12); border-color: rgba(253,186,116,.35); }
+      .cmd-badge.status.on { color: #4ade80; background: rgba(74,222,128,.12); border-color: rgba(74,222,128,.35); }
+      .cmd-badge.status.off { color: #f87171; background: rgba(248,113,113,.12); border-color: rgba(248,113,113,.35); }
+      .cmd-badge.status.locked { color: #ffcc33; background: rgba(255,204,51,.12); border-color: rgba(255,204,51,.35); }
+      .cmd-row-body {
+        border-top: 1px solid rgba(255,255,255,.08);
+        padding: 12px 14px 14px;
+        display: grid;
+        gap: 12px;
+      }
+      .cmd-meta-grid {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      }
+      .cmd-meta-box {
+        border: 1px solid rgba(255,255,255,.08);
+        border-radius: 12px;
+        background: rgba(8, 12, 26, .4);
+        padding: 10px;
+      }
+      .cmd-meta-box strong { display:block; margin-bottom: 7px; font-size: .82rem; }
+      .cmd-meta-box ul { margin: 0; padding-left: 18px; display: grid; gap: 5px; }
+      .cmd-meta-box p { margin: 0; color: var(--muted); }
+      .cmd-meta-box code { white-space: pre-wrap; word-break: break-word; }
+      .cmd-row-action {
+        display: flex;
+        justify-content: flex-end;
+      }
+      .cmd-row-action form { margin: 0; }
+      .cmd-disabled-panel {
+        border: 1px solid rgba(255,255,255,.1);
+        border-radius: 14px;
+        background: rgba(8, 12, 26, .45);
+        padding: 12px;
+        margin: 0 0 14px;
+      }
+      .cmd-disabled-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+      .cmd-disabled-head h2 {
+        margin: 0;
+        font-size: 1rem;
+      }
+      .cmd-disabled-tools {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+      .cmd-disabled-tools form { margin: 0; }
+      .cmd-disabled-table-wrap {
+        overflow-x: auto;
+      }
+      .cmd-disabled-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 560px;
+      }
+      .cmd-disabled-table th,
+      .cmd-disabled-table td {
+        border-bottom: 1px solid rgba(255,255,255,.08);
+        padding: 10px 8px;
+        text-align: left;
+        font-size: .84rem;
+      }
+      .cmd-disabled-table th {
+        color: #cbd8f2;
+        font-weight: 800;
+        font-size: .76rem;
+        letter-spacing: .03em;
+      }
+      .cmd-disabled-table code {
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      .cmd-mini-btn {
+        min-height: 32px;
+        border-radius: 9px;
+        padding: 6px 12px;
+        border: 1px solid rgba(255,255,255,.15);
+        background: rgba(255,255,255,.06);
+        color: #e5edff;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .cmd-mini-btn-enable {
+        border-color: rgba(74,222,128,.35);
+        background: rgba(74,222,128,.13);
+        color: #9bf3b6;
+      }
+      .cmd-mini-btn-disable {
+        border-color: rgba(248,113,113,.35);
+        background: rgba(248,113,113,.13);
+        color: #ffb0b0;
+      }
+      .cmd-action-btn {
+        min-height: 36px;
+        border-radius: 10px;
+        padding: 8px 14px;
+      }
+      @media (max-width: 720px) {
+        .cmd-row summary { flex-direction: column; align-items: flex-start; }
+        .cmd-row-right { justify-content: flex-start; }
+      }
+

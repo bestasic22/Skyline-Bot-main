@@ -1,0 +1,23 @@
+.slip-status-badge {
+  display: inline-flex;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  border: 1px solid var(--line);
+}
+
+.slip-status-pending {
+  background: rgba(245, 158, 11, 0.16);
+  color: #facc15;
+}
+
+.slip-status-approved {
+  background: rgba(34, 197, 94, 0.16);
+  color: #4ade80;
+}
+
+.slip-status-rejected {
+  background: rgba(239, 68, 68, 0.16);
+  color: #f87171;
+}

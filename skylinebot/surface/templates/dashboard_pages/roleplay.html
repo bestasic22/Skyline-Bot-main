@@ -1,0 +1,534 @@
+    <section class="panel section-stack dashboard-detail-shell page-roleplay-shell">
+      <div class="panel-header detail-page-hero detail-page-hero-roleplay">
+        <div class="panel-title detail-page-hero-copy">
+          <h1>Roleplay</h1>
+          <p>City roleplay control center: complete one-click setup, economy guard, scheduler, audit rollback, import/export, and analytics.</p>
+          <small class="muted">{_escape(actor_permission_summary)}</small>
+        </div>
+        <div class="rp-hero-metrics">
+          <span class="pill">Preset: <strong>{_escape(str(settings.get('preset_key') or 'modern_city'))}</strong></span>
+          <span class="pill">Scenarios: <strong>{len(scenarios)}</strong></span>
+          <span class="pill">Event: <strong>{event_badge_text}</strong></span>
+          <span class="pill">Active 7d: <strong>{active_players_7d}</strong></span>
+        </div>
+      </div>
+
+      <form method="post" action="/dashboard/guild/{current_guild['id']}/roleplay" id="roleplaySettingsForm">
+        <input type="hidden" name="action" value="save">
+        <section class="panel-sub detail-page-section">
+          <div class="rp-section-head">
+            <h2>Quick Setup</h2>
+            <div class="rp-inline-actions">
+              <button type="submit" class="ghost-btn" id="rpApplyPresetButton" name="action" value="apply_city_starter" {'disabled' if not can_apply_preset else ''}>Apply City RP Starter Pack</button>
+            </div>
+          </div>
+          <fieldset class="rp-fieldset" {'disabled' if not can_save_settings else ''}>
+            <div class="field-group">
+              <div class="field-item">
+                <label>Preset</label>
+                <input type="hidden" name="preset_key" value="modern_city">
+                <input type="text" value="modern_city (City Roleplay Pack)" readonly data-rp-force-enabled="true">
+                <small class="muted">Locked to city roleplay only for this dashboard.</small>
+              </div>
+              <div class="field-item">
+                <label>Currency Symbol</label>
+                <input type="text" name="currency_symbol" maxlength="12" value="{_escape(str(settings.get('currency_symbol') or 'coin'))}">
+              </div>
+              <div class="field-item">
+                <label>Start Coins</label>
+                <input type="number" name="start_coins" min="0" max="2000000" value="{int(settings.get('start_coins') or 0)}">
+              </div>
+              <div class="field-item">
+                <label>XP Per Level</label>
+                <input type="number" name="xp_per_level" min="20" max="10000" value="{int(settings.get('xp_per_level') or 120)}">
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="ux-toggle">
+                <span class="ux-toggle-label">Enable Roleplay</span>
+                <input type="checkbox" name="enabled" {'checked' if settings.get('enabled') else ''}>
+                <span class="ux-switch"></span>
+              </label>
+              <label class="ux-toggle">
+                <span class="ux-toggle-label">Allow Custom Config</span>
+                <input type="checkbox" name="allow_custom_config" {'checked' if settings.get('allow_custom_config') else ''}>
+                <span class="ux-switch"></span>
+              </label>
+              <label class="ux-toggle">
+                <span class="ux-toggle-label">Allow Custom Scenarios</span>
+                <input type="checkbox" name="allow_custom_scenarios" {'checked' if settings.get('allow_custom_scenarios') else ''}>
+                <span class="ux-switch"></span>
+              </label>
+            </div>
+          </fieldset>
+          <p class="muted">Starter pack sets RP to city mode, enables RP system, installs city scenarios, and enables economy guard defaults automatically.</p>
+        </section>
+
+        <section class="panel-sub detail-page-section">
+          <h2>Reward & Cooldown Rules</h2>
+          <fieldset class="rp-fieldset" {'disabled' if not can_save_settings else ''}>
+            <div class="field-group">
+              <div class="field-item">
+                <label>Daily Reward Min</label>
+                <input type="number" name="daily_reward_min" min="0" max="200000" value="{int(settings.get('daily_reward_min') or 0)}">
+              </div>
+              <div class="field-item">
+                <label>Daily Reward Max</label>
+                <input type="number" name="daily_reward_max" min="0" max="300000" value="{int(settings.get('daily_reward_max') or 0)}">
+              </div>
+              <div class="field-item">
+                <label>Story Reward Min</label>
+                <input type="number" name="story_reward_min" min="0" max="100000" value="{int(settings.get('story_reward_min') or 0)}">
+              </div>
+              <div class="field-item">
+                <label>Story Reward Max</label>
+                <input type="number" name="story_reward_max" min="0" max="150000" value="{int(settings.get('story_reward_max') or 0)}">
+              </div>
+              <div class="field-item">
+                <label>Story Minimum Length</label>
+                <input type="number" name="story_min_length" min="5" max="2000" value="{int(settings.get('story_min_length') or 20)}">
+              </div>
+              <div class="field-item">
+                <label>Story Cooldown (sec)</label>
+                <input type="number" name="story_cooldown_seconds" min="0" max="86400" value="{int(settings.get('story_cooldown_seconds') or 0)}">
+              </div>
+              <div class="field-item">
+                <label>Scenario Cooldown (sec)</label>
+                <input type="number" name="scenario_cooldown_seconds" min="0" max="86400" value="{int(settings.get('scenario_cooldown_seconds') or 0)}">
+              </div>
+              <div class="field-item">
+                <label>Max Custom Scenarios</label>
+                <input type="number" name="max_custom_scenarios" min="1" max="200" value="{int(settings.get('max_custom_scenarios') or 30)}">
+              </div>
+            </div>
+          </fieldset>
+        </section>
+
+        <section class="panel-sub detail-page-section">
+          <h2>Event Reward Defaults</h2>
+          <fieldset class="rp-fieldset" {'disabled' if not can_save_settings else ''}>
+            <div class="field-group">
+              <div class="field-item">
+                <label>Default Event XP</label>
+                <input type="number" name="event_reward_xp" min="0" max="250000" value="{int(settings.get('event_reward_xp') or 0)}">
+              </div>
+              <div class="field-item">
+                <label>Default Event Coins</label>
+                <input type="number" name="event_reward_coins" min="0" max="250000" value="{int(settings.get('event_reward_coins') or 0)}">
+              </div>
+              <div class="field-item">
+                <label>Schedule Notification Channel</label>
+                <select name="event_announce_channel_id">{event_announce_channel_select_html}</select>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="ux-toggle">
+                <span class="ux-toggle-label">Notify on Schedule Start</span>
+                <input type="checkbox" name="schedule_notify_on_start" {'checked' if settings.get('schedule_notify_on_start') else ''}>
+                <span class="ux-switch"></span>
+              </label>
+              <label class="ux-toggle">
+                <span class="ux-toggle-label">Notify on Schedule End</span>
+                <input type="checkbox" name="schedule_notify_on_end" {'checked' if settings.get('schedule_notify_on_end') else ''}>
+                <span class="ux-switch"></span>
+              </label>
+            </div>
+          </fieldset>
+        </section>
+
+        <div id="roleplaySaveBar" class="rp-savebar" hidden>
+          <span id="roleplaySaveBarText">Unsaved changes</span>
+          <div class="rp-inline-actions">
+            <a class="ghost-btn" href="/dashboard/guild/{current_guild['id']}/roleplay">Reset</a>
+            <button type="submit" class="primary-btn" {'disabled' if not can_save_settings else ''}>Save Roleplay Settings</button>
+          </div>
+        </div>
+      </form>
+
+      <section class="panel-sub detail-page-section">
+        <h2>RP + Economy Integration</h2>
+        <p class="muted">Roleplay city system uses your economy module directly. Configure wallet/gameplay detail in Economy tab, then use this Roleplay tab for city RP progression and events.</p>
+        <div class="rp-inline-actions">
+          <a class="ghost-btn" href="{_escape(economy_tab_url)}">Open Economy Tab</a>
+          <span class="pill">Currency: <strong>{_escape(economy_currency_symbol)}</strong></span>
+          <span class="pill">Command Channels: <strong>{_escape(economy_command_mode_text)}</strong></span>
+        </div>
+        <div class="rp-analytics-grid" style="margin-top:10px;">
+          <div class="pill">`/work`: <strong>{'ON' if economy_work_enabled else 'OFF'}</strong></div>
+          <div class="pill">`/crime`: <strong>{'ON' if economy_crime_enabled else 'OFF'}</strong></div>
+          <div class="pill">Role Income: <strong>{'ON' if economy_role_income_enabled else 'OFF'}</strong></div>
+          <div class="pill">Chat Income: <strong>{'ON' if economy_chat_money_enabled else 'OFF'}</strong></div>
+        </div>
+      </section>
+      <section class="panel-sub detail-page-section">
+        <h2>Permission Matrix</h2>
+        <p class="muted">Control which RP dashboard actions require <code>OWNER/ADMIN/GM/PLAYER</code>.</p>
+        <form method="post" action="/dashboard/guild/{current_guild['id']}/roleplay" id="roleplayPermissionsForm">
+          <input type="hidden" name="action" value="save_permissions">
+          <div class="table-wrap">
+            <table class="table-like">
+              <thead>
+                <tr>
+                  <th>Action</th>
+                  <th>Required Level</th>
+                </tr>
+              </thead>
+              <tbody>{permission_matrix_rows_html}</tbody>
+            </table>
+          </div>
+          <div class="table-wrap">
+            <table class="table-like">
+              <thead>
+                <tr>
+                  <th>Role</th>
+                  <th>GM</th>
+                  <th>Player</th>
+                </tr>
+              </thead>
+              <tbody>{role_matrix_rows_html}</tbody>
+            </table>
+          </div>
+          <button type="submit" class="primary-btn" {'disabled' if not can_manage_permissions else ''}>Save Permission Matrix</button>
+        </form>
+      </section>
+
+      <section class="panel-sub detail-page-section">
+        <h2>Economy Balance Guard</h2>
+        <p class="muted">Caps rewards and auto-reduces payouts when average coins become too high.</p>
+        <form method="post" action="/dashboard/guild/{current_guild['id']}/roleplay">
+          <input type="hidden" name="action" value="save_economy_guard">
+          <fieldset class="rp-fieldset" {'disabled' if not can_manage_guard else ''}>
+            <div class="field-group">
+              <label class="ux-toggle">
+                <span class="ux-toggle-label">Enable Guard</span>
+                <input type="checkbox" name="guard_enabled" {'checked' if economy_guard.get('enabled') else ''}>
+                <span class="ux-switch"></span>
+              </label>
+              <div class="field-item">
+                <label>Max XP Reward / Action</label>
+                <input type="number" name="guard_max_reward_xp" min="0" max="2500000" value="{int(economy_guard.get('max_reward_xp') or 0)}">
+              </div>
+              <div class="field-item">
+                <label>Max Coins Reward / Action</label>
+                <input type="number" name="guard_max_reward_coins" min="0" max="2500000" value="{int(economy_guard.get('max_reward_coins') or 0)}">
+              </div>
+              <div class="field-item">
+                <label>Inflation Threshold (Avg Coins)</label>
+                <input type="number" name="guard_inflation_threshold_avg_coins" min="1" max="10000000" value="{int(economy_guard.get('inflation_threshold_avg_coins') or 0)}">
+              </div>
+              <div class="field-item">
+                <label>Base Reduce (%)</label>
+                <input type="number" name="guard_base_reduce_percent" min="0" max="95" value="{int(economy_guard.get('base_reduce_percent') or 0)}">
+              </div>
+              <div class="field-item">
+                <label>Minimum Multiplier (%)</label>
+                <input type="number" name="guard_min_multiplier_percent" min="5" max="100" value="{int(economy_guard.get('min_multiplier_percent') or 0)}">
+              </div>
+              <div class="field-item">
+                <label>Last Applied Multiplier (%)</label>
+                <input type="number" value="{int(economy_guard.get('last_multiplier_percent') or 100)}" disabled>
+              </div>
+            </div>
+          </fieldset>
+          <button type="submit" class="primary-btn" {'disabled' if not can_manage_guard else ''}>Save Economy Guard</button>
+        </form>
+      </section>
+
+      <section class="panel-sub detail-page-section">
+        <h2>Scenario Library</h2>
+        <div class="rp-subtitle">Current custom scenarios: <strong>{custom_count}</strong></div>
+        <div class="table-wrap">
+          <table class="table-like">
+            <thead>
+              <tr>
+                <th>Key</th>
+                <th>Name</th>
+                <th>Difficulty</th>
+                <th>XP</th>
+                <th>Coins</th>
+                <th>Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>{scenario_table_html}</tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel-sub detail-page-section">
+        <div class="rp-two-col">
+          <form method="post" action="/dashboard/guild/{current_guild['id']}/roleplay" id="roleplayScenarioAddForm">
+            <input type="hidden" name="action" value="add_scenario">
+            <h3>Add Custom Scenario</h3>
+            <fieldset class="rp-fieldset" {'disabled' if not can_add_scenario else ''}>
+              <div class="field-item">
+                <label>Name</label>
+                <input type="text" name="scenario_name" maxlength="120" placeholder="Downtown Negotiation">
+              </div>
+              <div class="field-item">
+                <label>Description</label>
+                <textarea name="scenario_description" rows="4" maxlength="800" placeholder="Describe the roleplay situation"></textarea>
+              </div>
+              <div class="field-group">
+                <div class="field-item">
+                  <label>Difficulty</label>
+                  <select name="scenario_difficulty">
+                    <option value="easy">easy</option>
+                    <option value="normal" selected>normal</option>
+                    <option value="hard">hard</option>
+                  </select>
+                </div>
+                <div class="field-item">
+                  <label>XP Reward</label>
+                  <input type="number" name="scenario_reward_xp" min="0" max="500000" value="70">
+                </div>
+                <div class="field-item">
+                  <label>Coin Reward</label>
+                  <input type="number" name="scenario_reward_coins" min="0" max="500000" value="150">
+                </div>
+              </div>
+            </fieldset>
+            <button type="submit" class="primary-btn" {'disabled' if not can_add_scenario else ''}>Create Scenario</button>
+          </form>
+
+          <form method="post" action="/dashboard/guild/{current_guild['id']}/roleplay" id="roleplayScenarioDeleteForm">
+            <input type="hidden" name="action" value="delete_scenario">
+            <h3>Delete Custom Scenario</h3>
+            <fieldset class="rp-fieldset" {'disabled' if not can_delete_scenario else ''}>
+              <div class="field-item">
+                <label>Custom Scenario</label>
+                <select name="delete_scenario_id">{scenario_delete_select_html}</select>
+              </div>
+            </fieldset>
+            <button type="submit" class="ghost-btn danger" id="rpDeleteScenarioButton" {'disabled' if not can_delete_scenario else ''}>Delete Selected Scenario</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="panel-sub detail-page-section">
+        <h2>Live Event Control</h2>
+        <div class="rp-event-status {event_badge_class}">
+          <div class="rp-event-status-head">
+            <strong>{_escape(event_title)}</strong>
+            <span class="rp-event-pill">{event_badge_text}</span>
+          </div>
+          <div class="rp-event-meta">
+            <span>Template: <code>{_escape(event_template)}</code></span>
+            <span>Participants: <strong>{len(event_participants)}</strong></span>
+            <span>Reward: <strong>{event_reward_xp:,} XP</strong> + <strong>{event_reward_coins:,}</strong></span>
+            <span>Started: {_escape(event_started_at)}</span>
+            <span>Ends: {_escape(event_ends_at)}</span>
+          </div>
+        </div>
+
+        <div class="rp-two-col">
+          <form method="post" action="/dashboard/guild/{current_guild['id']}/roleplay" id="roleplayStartEventForm">
+            <input type="hidden" name="action" value="start_event">
+            <h3>Start Event</h3>
+            <fieldset class="rp-fieldset" {'disabled' if not can_start_event else ''}>
+              <div class="field-item">
+                <label>Scenario</label>
+                <select name="event_scenario_id">
+                  <option value="">Random scenario</option>
+                  {scenario_event_select_html}
+                </select>
+              </div>
+              <div class="field-group">
+                <div class="field-item">
+                  <label>Duration (minutes)</label>
+                  <input type="number" name="event_minutes" min="5" max="180" value="30">
+                </div>
+                <div class="field-item">
+                  <label>Reward XP Override</label>
+                  <input type="number" name="event_reward_xp" min="0" max="500000" value="{int(settings.get('event_reward_xp') or 0)}">
+                </div>
+                <div class="field-item">
+                  <label>Reward Coins Override</label>
+                  <input type="number" name="event_reward_coins" min="0" max="500000" value="{int(settings.get('event_reward_coins') or 0)}">
+                </div>
+              </div>
+            </fieldset>
+            <button type="submit" class="primary-btn" id="rpStartEventButton" {'disabled' if not can_start_event else ''}>Start Event</button>
+          </form>
+
+          <form method="post" action="/dashboard/guild/{current_guild['id']}/roleplay" id="roleplayEndEventForm">
+            <input type="hidden" name="action" value="end_event">
+            <h3>End Event</h3>
+            <p class="muted">Ends the active event and grants reward to all joined participants.</p>
+            <button type="submit" class="ghost-btn danger" id="rpEndEventButton" {'disabled' if not can_end_event else ''}>End Active Event</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="panel-sub detail-page-section">
+        <h2>Auto Event Scheduler</h2>
+        <div class="table-wrap">
+          <table class="table-like">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Frequency</th>
+                <th>Local Time</th>
+                <th>Duration</th>
+                <th>Scenario</th>
+                <th>Next Run</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>{schedule_table_html}</tbody>
+          </table>
+        </div>
+        <form method="post" action="/dashboard/guild/{current_guild['id']}/roleplay" id="roleplayAddScheduleForm">
+          <input type="hidden" name="action" value="add_schedule">
+          <fieldset class="rp-fieldset" {'disabled' if not can_manage_scheduler else ''}>
+            <div class="field-group">
+              <div class="field-item">
+                <label>Schedule Name</label>
+                <input type="text" name="schedule_name" maxlength="80" placeholder="Weekend Warzone">
+              </div>
+              <div class="field-item">
+                <label>Frequency</label>
+                <select name="schedule_frequency">
+                  <option value="daily">daily</option>
+                  <option value="weekly">weekly</option>
+                </select>
+              </div>
+              <div class="field-item">
+                <label>Weekday (0-6)</label>
+                <input type="number" name="schedule_weekday" min="0" max="6" value="0">
+              </div>
+              <div class="field-item">
+                <label>Hour (0-23)</label>
+                <input type="number" name="schedule_hour" min="0" max="23" value="20">
+              </div>
+              <div class="field-item">
+                <label>Minute (0-59)</label>
+                <input type="number" name="schedule_minute" min="0" max="59" value="0">
+              </div>
+              <div class="field-item">
+                <label>Timezone Offset (minutes)</label>
+                <input type="number" name="schedule_timezone_offset_minutes" min="-720" max="840" value="420">
+              </div>
+              <div class="field-item">
+                <label>Duration (minutes)</label>
+                <input type="number" name="schedule_duration_minutes" min="5" max="180" value="30">
+              </div>
+              <div class="field-item">
+                <label>Scenario</label>
+                <select name="schedule_scenario_key">
+                  <option value="">auto</option>
+                  {scenario_schedule_select_html}
+                </select>
+              </div>
+            </div>
+          </fieldset>
+          <button type="submit" class="primary-btn" {'disabled' if not can_manage_scheduler else ''}>Add Schedule</button>
+        </form>
+      </section>
+
+      <section class="panel-sub detail-page-section">
+        <h2>Import / Export RP Config</h2>
+        <div class="rp-inline-actions">
+          <a class="ghost-btn" href="{_escape(export_config_url)}" {'aria-disabled="true"' if not can_export_config else ''}>Export JSON</a>
+        </div>
+        <form method="post" action="/dashboard/guild/{current_guild['id']}/roleplay" enctype="multipart/form-data">
+          <input type="hidden" name="action" value="import_config">
+          <fieldset class="rp-fieldset" {'disabled' if not can_import_config else ''}>
+            <div class="field-item">
+              <label>Import JSON Text</label>
+              <textarea name="import_json_payload" rows="8" placeholder='{{"version":1,"settings":...}}'></textarea>
+            </div>
+            <div class="field-item">
+              <label>Or Upload JSON File</label>
+              <input type="file" name="import_json_file" accept="application/json,.json">
+            </div>
+          </fieldset>
+          <button type="submit" class="primary-btn" {'disabled' if not can_import_config else ''}>Import Config</button>
+        </form>
+      </section>
+
+      <section class="panel-sub detail-page-section">
+        <h2>RP Audit Log + Rollback</h2>
+        <p class="muted">Every RP config/scenario/event/scheduler change is tracked with snapshots.</p>
+        <div class="table-wrap">
+          <table class="table-like">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Time</th>
+                <th>Actor</th>
+                <th>Action</th>
+                <th>Scope</th>
+                <th>Note</th>
+                <th>Rollback</th>
+              </tr>
+            </thead>
+            <tbody>{audit_table_html}</tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel-sub detail-page-section">
+        <h2>Analytics Dashboard</h2>
+        <div class="rp-analytics-grid">
+          <div class="pill">Active Players (7d): <strong>{active_players_7d}</strong></div>
+          <div class="pill">Tracked Events: <strong>{history_event_count}</strong></div>
+          <div class="pill">Most Popular Event: <strong>{_escape(best_popular_event_name)}</strong></div>
+          <div class="pill">Most Rewarding Event: <strong>{_escape(best_reward_event_name)}</strong></div>
+        </div>
+        <div class="table-wrap">
+          <table class="table-like">
+            <thead>
+              <tr>
+                <th>Scenario</th>
+                <th>Play Count</th>
+                <th>Event Starts</th>
+                <th>Total XP</th>
+                <th>Total Coins</th>
+              </tr>
+            </thead>
+            <tbody>{scenario_analytics_html}</tbody>
+          </table>
+        </div>
+        <div class="table-wrap">
+          <table class="table-like">
+            <thead>
+              <tr>
+                <th>Event</th>
+                <th>Scenario Key</th>
+                <th>Participants</th>
+                <th>Total XP</th>
+                <th>Total Coins</th>
+                <th>XP / Player</th>
+                <th>Coins / Player</th>
+              </tr>
+            </thead>
+            <tbody>{event_analytics_html}</tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel-sub detail-page-section">
+        <h2>Top Roleplay Characters</h2>
+        <div class="table-wrap">
+          <table class="table-like">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>User</th>
+                <th>Character</th>
+                <th>Level</th>
+                <th>XP</th>
+                <th>Coins</th>
+                <th>Reputation</th>
+              </tr>
+            </thead>
+            <tbody>{leaderboard_html}</tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+    <link rel="stylesheet" href="/dashboard/static/dashboard/pages/roleplay.css">
+    <script>{_render_dashboard_f_template("scripts/roleplay.js", __ctx)}</script>
+

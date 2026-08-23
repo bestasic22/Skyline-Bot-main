@@ -1,0 +1,185 @@
+﻿<link rel="stylesheet" href="/dashboard/static/dashboard/pages/color_sets.css">
+
+<section class="panel color-sets-page">
+  <div class="panel-header color-page-hero">
+    <div class="panel-title">
+      <h1>Color Roles Studio</h1>
+      <p>Manage <code>/color</code> and <code>/colors</code> in one place with collapsible setup guidance.</p>
+    </div>
+    <span class="pill color-hero-pill">Guild: {_escape(current_guild.get("name") or "-")}</span>
+  </div>
+
+  <form method="post" action="/dashboard/guild/{current_guild['id']}/colors" id="colorSetsForm" class="color-sets-form" enctype="multipart/form-data">
+    <input type="hidden" name="color_action" id="colorActionInput" value="save">
+
+    <details class="panel-sub color-collapse-card" open>
+      <summary>
+        <span class="color-summary-main">
+          <strong class="color-summary-title">1) Getting Started & Core Setup</strong>
+          <span class="muted color-summary-desc">Enable color roles, set list naming, and configure shape/background for your brand.</span>
+        </span>
+      </summary>
+      <div class="color-card-content">
+        <div class="ux-toggle-group color-toggle-grid">
+          <label class="ux-toggle"><span class="ux-toggle-label">Enable Color Roles</span><input type="checkbox" name="enabled" {"checked" if settings.get("enabled") else ""}><span class="ux-switch"></span></label>
+          <label class="ux-toggle"><span class="ux-toggle-label">Enable /color command</span><input type="checkbox" name="command_color_enabled" {"checked" if settings.get("command_color_enabled") else ""}><span class="ux-switch"></span></label>
+          <label class="ux-toggle"><span class="ux-toggle-label">Enable /colors command</span><input type="checkbox" name="command_colors_enabled" {"checked" if settings.get("command_colors_enabled") else ""}><span class="ux-switch"></span></label>
+        </div>
+
+        <div class="field-group color-field-grid">
+          <div class="field-item">
+            <label>Color List Title</label>
+            <input type="text" name="list_name" maxlength="60" value="{_escape(settings.get('list_name') or 'Color List')}" placeholder="Example: Skyline Color Palette">
+            <small class="muted">The title users will see above the color list.</small>
+          </div>
+
+          <div class="field-item">
+            <label>Shape Name</label>
+            <select name="shape_name" id="colorShapeNameSelect" class="color-select">
+              <option value="circle" {"selected" if settings.get("shape_name") == "circle" else ""}>circle</option>
+              <option value="square" {"selected" if settings.get("shape_name") == "square" else ""}>square</option>
+            </select>
+          </div>
+
+          <div class="field-item">
+            <label>Background Style</label>
+            <select name="background_style" id="colorBackgroundStyleSelect" class="color-select">
+              <option value="transparent" {"selected" if settings.get("background_style") == "transparent" else ""}>transparent</option>
+              <option value="custom image" {"selected" if settings.get("background_style") == "custom image" else ""}>custom image</option>
+            </select>
+            <input type="hidden" name="background_image_url" id="colorBackgroundImageUrlInput" value="{_escape(str(settings.get('background_image_url') or ''))}">
+            <div id="colorBackgroundImageUploadWrap" class="color-background-upload-wrap" style="{'display:none;' if settings.get('background_style') != 'custom image' else ''}">
+              <label for="colorBackgroundImageFileInput" class="muted">Upload background image</label>
+              <input type="file" name="background_image_file" id="colorBackgroundImageFileInput" accept=".png,.jpg,.jpeg,.webp,.gif">
+              <small class="muted" id="colorBackgroundImageFileName">Supports png/jpg/jpeg/webp/gif</small>
+              <a id="colorBackgroundImageCurrentLink" href="{_escape(str(settings.get('background_image_url') or ''))}" target="_blank" rel="noreferrer" style="{'display:none;' if not str(settings.get('background_image_url') or '').strip() else ''}">View current image</a>
+              <button type="button" class="ghost-btn quick-fill-pill" id="colorBackgroundImageClearBtn">Remove saved background image</button>
+            </div>
+            <small class="muted">If using a background image, keep file size under 3MB.</small>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="panel-sub color-collapse-card" open>
+      <summary>
+        <span class="color-summary-main">
+          <strong class="color-summary-title">2) Preset Color Sets</strong>
+          <span class="muted color-summary-desc">Choose a color set card and confirm to apply instantly.</span>
+        </span>
+      </summary>
+      <div class="color-card-content">
+        <div class="color-preset-toolbar">
+          <h2 style="margin:0;">Color Sets</h2>
+          <button type="button" class="ghost-btn" id="addColorSetBtn">+ Add color set</button>
+        </div>
+
+        <div id="presetColorSetGrid" class="color-set-preset-grid"></div>
+
+        <div class="notice color-live-status">
+          Current selected set: <strong id="activeColorSetName">-</strong>
+        </div>
+        <div class="notice" id="colorApplyNotice" style="display:none;"></div>
+        <input type="hidden" name="applied_set_id" id="appliedSetIdInput" value="{_escape(applied_set_id)}">
+      </div>
+    </details>
+
+    <details class="panel-sub color-collapse-card">
+      <summary>
+        <span class="color-summary-main">
+          <strong class="color-summary-title">3) Advanced Set Editing</strong>
+          <span class="muted color-summary-desc">Add/remove colors in each set directly and save the real system structure.</span>
+        </span>
+      </summary>
+      <div class="color-card-content">
+        <div id="colorSetsGrid" class="screening-cat-grid color-editor-grid"></div>
+        <input type="hidden" name="sets_json" id="colorSetsJsonInput" value="{_escape(sets_json)}">
+      </div>
+    </details>
+
+    <details class="panel-sub color-collapse-card">
+      <summary>
+        <span class="color-summary-main">
+          <strong class="color-summary-title">4) Existing Color Roles in This Server</strong>
+          <span class="muted color-summary-desc">Review roles detected by numeric names (1, 2, 3, ...) and remove them from here.</span>
+        </span>
+      </summary>
+      <div class="color-card-content color-roles-live-box">
+        <div class="color-roles-live-head">
+          <h3 style="margin:0;">Live Color Roles</h3>
+          <div class="color-roles-live-head-actions">
+            <span class="muted" id="colorRolesCount">0 items</span>
+            <button type="button" class="danger-btn" id="deleteAllColorRolesBtn">Delete all</button>
+          </div>
+        </div>
+        <div class="muted" id="colorRolesEmpty">No color roles found in this guild (use numeric role names: 1,2,3...)</div>
+        <div id="colorRolesList" class="color-roles-live-list"></div>
+      </div>
+    </details>
+
+    <details class="panel-sub color-collapse-card">
+      <summary>
+        <span class="color-summary-main">
+          <strong class="color-summary-title">Guide: Custom Color Roles for Your Discord Server</strong>
+          <span class="muted color-summary-desc">Short card-style summary for quick reading.</span>
+        </span>
+      </summary>
+      <div class="color-card-content">
+        <div class="color-guide-grid">
+          <article class="color-guide-card">
+            <h4>Color Roles Feature</h4>
+            <p>Lets server owners create custom color roles for members to choose, improving visual identity and engagement.</p>
+          </article>
+          <article class="color-guide-card">
+            <h4>Getting Started</h4>
+            <p>Open the dashboard, choose your server, and enter the color module.</p>
+          </article>
+          <article class="color-guide-card">
+            <h4>Configuration</h4>
+            <p>Create roles named 1, 2, 3, 4 (numeric only). The bot auto-detects them as color choices.</p>
+          </article>
+          <article class="color-guide-card">
+            <h4>List Title</h4>
+            <p>Set the Color List Title to match your server brand.</p>
+          </article>
+          <article class="color-guide-card">
+            <h4>Shape</h4>
+            <p>Choose circle or square icons from the settings panel.</p>
+          </article>
+          <article class="color-guide-card">
+            <h4>Background</h4>
+            <p>Use transparent or custom-image background (recommended under 3MB).</p>
+          </article>
+          <article class="color-guide-card">
+            <h4>Preset Sets</h4>
+            <p>Pick a preset card and confirm to apply it.</p>
+          </article>
+          <article class="color-guide-card">
+            <h4>Tips</h4>
+            <p>Users should select one color role, and the bot role must be above color roles in server hierarchy.</p>
+          </article>
+        </div>
+      </div>
+    </details>
+
+    <div class="form-actions-fixed">
+      <button class="primary-btn" type="submit">Save Color Sets</button>
+    </div>
+  </form>
+</section>
+
+<div id="applyColorSetModal" class="dashboard-modal-overlay" aria-hidden="true">
+  <div class="panel dashboard-modal" role="dialog" aria-modal="true" aria-label="Confirm color set apply">
+    <h3 id="applyColorSetModalTitle" style="margin-top:0;">Apply color set</h3>
+    <p class="muted" style="margin:0;line-height:1.6;">
+      Applying this set will automatically create roles matching the selected colors.
+    </p>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px;">
+      <button id="applyColorSetCancelBtn" type="button" class="ghost-btn">Cancel</button>
+      <button id="applyColorSetConfirmBtn" type="button" class="primary-btn">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<script>{_render_dashboard_f_template("scripts/color_sets.js", __ctx)}</script>
+

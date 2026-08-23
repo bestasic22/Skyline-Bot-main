@@ -1,0 +1,148 @@
+
+    <section class="panel section-stack">
+	      <form method="post" action="{save_endpoint}" id="tempChannelsForm" enctype="multipart/form-data">
+        <input type="hidden" name="redirect_tab" value="{_escape(resolved_tab_slug)}">
+        <input type="hidden" name="fields_json" id="tempFieldsJsonInput" value="{temp_fields_json}">
+        <div class="panel-header">
+          <div class="panel-title">
+            <h1>Join To Create VC</h1>
+            <p class="muted" style="margin:6px 0 0;">กำหนดห้อง VC อัตโนมัติ พร้อมสิทธิ์ควบคุมห้อง</p>
+          </div>
+          <label class="ux-toggle">
+            <input type="checkbox" name="enabled" {enabled_checked}>
+            <span class="ux-switch"></span>
+          </label>
+        </div>
+
+        <section class="panel-sub">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;">
+            <strong>ตั้งค่าพื้นฐาน</strong>
+            <span class="muted"></span>
+          </div>
+          <div class="field-group">
+            <div class="field-item"><label>หมวดหมู่ปลายทาง (สร้างห้องในหมวดนี้)</label>{category_select}</div>
+            <div class="field-item"><label>ห้องต้นทาง Join To Create</label>{create_channel_select}</div>
+            <div class="field-item">
+              <label>ดีเลย์ก่อนลบ (วินาที)</label>
+              <div class="tv-stepper">
+                <button type="button" class="ghost-btn" data-step-target="delete_delay_seconds" data-step-delta="-1">-</button>
+                <input type="number" name="delete_delay_seconds" value="{int(settings.get('delete_delay_seconds') or 3)}" min="0" max="3600">
+                <button type="button" class="ghost-btn" data-step-target="delete_delay_seconds" data-step-delta="1">+</button>
+              </div>
+            </div>
+            <div class="field-item">
+              <label>จำนวนช่องสูงสุดที่ผู้ใช้สร้างได้</label>
+              <div class="tv-stepper">
+                <button type="button" class="ghost-btn" data-step-target="max_channels_per_user" data-step-delta="-1">-</button>
+                <input type="number" name="max_channels_per_user" value="{int(settings.get('max_channels_per_user') or 1)}" min="1" max="25">
+                <button type="button" class="ghost-btn" data-step-target="max_channels_per_user" data-step-delta="1">+</button>
+              </div>
+            </div>
+            <div class="field-item">
+              <label>จำนวนผู้ใช้สูงสุดเริ่มต้น</label>
+              <div class="tv-stepper">
+                <button type="button" class="ghost-btn" data-step-target="default_user_limit" data-step-delta="-1">-</button>
+                <input type="number" name="default_user_limit" value="{int(settings.get('default_user_limit') or 0)}" min="0" max="99">
+                <button type="button" class="ghost-btn" data-step-target="default_user_limit" data-step-delta="1">+</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel-sub">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;">
+            <div>
+              <strong>/temp</strong>
+              <p class="muted" style="margin:3px 0 0;">ตั้งค่าคำสั่งสำหรับควบคุมห้องชั่วคราว</p>
+            </div>
+            <button class="primary-btn" type="button" style="padding:0 16px;">รีเซ็ตค่าคำสั่ง</button>
+          </div>
+          <div class="field-group">
+            <div class="field-item"><label>ชื่อคำสั่ง</label><input type="text" name="command_name" value="{_escape(str(settings.get('command_name') or 'temp'))}" placeholder="temp ..." maxlength="32"></div>
+            <div class="field-item"><label>บทบาทที่อนุญาตให้ใช้</label>{enable_role_select}</div>
+            <div class="field-item"><label>บทบาทที่ไม่อนุญาต</label>{disable_role_select}</div>
+            <div class="field-item"><label>ช่องที่เปิดใช้งาน</label>{enabled_channel_select}</div>
+            <div class="field-item"><label>ช่องที่ปิดใช้งาน</label>{disabled_channel_select}</div>
+          </div>
+          <div class="field-group" style="margin-top:8px;">
+            <label class="ux-toggle"><span class="ux-toggle-label">Auto-Delete ข้อความ</span><input type="checkbox" name="auto_delete_message" {auto_delete_message_checked}><span class="ux-switch"></span></label>
+            <label class="ux-toggle"><span class="ux-toggle-label">ลบคำสั่งโดยอัตโนมัติ</span><input type="checkbox" name="auto_delete_command" {auto_delete_command_checked}><span class="ux-switch"></span></label>
+            <label class="ux-toggle"><span class="ux-toggle-label">ลบการตอบกลับของบอทอัตโนมัติหลัง 5 วินาที</span><input type="checkbox" name="auto_delete_bot_reply" {auto_delete_bot_reply_checked}><span class="ux-switch"></span></label>
+          </div>
+          <div class="form-actions-fixed" style="position:static;justify-content:flex-start;padding:12px 0 0;">
+            <button class="primary-btn" type="submit">บันทึกการตั้งค่า</button>
+            <a class="ghost-btn" href="{redirect_tab_path}">ยกเลิก</a>
+          </div>
+        </section>
+
+        <section class="panel-sub">
+          <h3 style="margin-top:0;">ตัวอย่างอินเทอร์เฟซ</h3>
+          <input type="hidden" name="interface_mode" id="tempInterfaceModeInput" value="{_escape(str(settings.get('interface_mode') or 'embed'))}">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+            <button id="tempTabTextBtn" class="{message_tab_class}" type="button">ข้อความ</button>
+            <button id="tempTabEmbedBtn" class="{embed_tab_class}" type="button">Embed</button>
+          </div>
+	          <div id="tempInterfaceContentWrap" class="field-item">
+	            <label>ข้อความ</label>
+	            <textarea id="tempInterfaceContentInput" name="interface_content" style="min-height:90px;" placeholder="ข้อความสำหรับแสดงในโหมดข้อความ">{_escape(str(settings.get("interface_content") or ""))}</textarea>
+	          </div>
+
+          <div id="tempEmbedEditor" class="panel-sub" style="margin-top:10px;border-left:3px solid {_escape(str(settings.get('embed_color') or '#5865F2'))};">
+            <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:10px;">
+              <span class="muted" style="font-size:12px;">สี</span>
+              <button type="button" class="embed-color-dot" data-color="#ED4245" style="background:#ED4245;"></button>
+              <button type="button" class="embed-color-dot" data-color="#FAA61A" style="background:#FAA61A;"></button>
+              <button type="button" class="embed-color-dot" data-color="#FEE75C" style="background:#FEE75C;"></button>
+              <button type="button" class="embed-color-dot" data-color="#57F287" style="background:#57F287;"></button>
+              <button type="button" class="embed-color-dot" data-color="#00A8FC" style="background:#00A8FC;"></button>
+              <button type="button" class="embed-color-dot" data-color="#5865F2" style="background:#5865F2;"></button>
+              <input id="tempEmbedColorInput" name="embed_color" type="color" value="{_escape(str(settings.get('embed_color') or '#5865F2'))}" style="width:36px;height:28px;padding:0;">
+            </div>
+	            <input type="hidden" name="embed_author_icon_url" id="tempAuthorIconInput" value="{_escape(str(settings.get('embed_author_icon_url') or ''))}">
+	            <input type="hidden" name="embed_thumbnail_url" id="tempThumbnailInput" value="{_escape(str(settings.get('embed_thumbnail_url') or ''))}">
+	            <input type="hidden" name="embed_image_url" id="tempImageInput" value="{_escape(str(settings.get('embed_image_url') or ''))}">
+	            <input type="hidden" name="embed_footer_icon_url" id="tempFooterIconInput" value="{_escape(str(settings.get('embed_footer_icon_url') or ''))}">
+	            <input type="file" id="tempAuthorIconFileInput" name="embed_author_icon_file" accept=".png,.jpg,.jpeg,.webp,.gif" style="display:none;">
+	            <input type="file" id="tempThumbnailFileInput" name="embed_thumbnail_file" accept=".png,.jpg,.jpeg,.webp,.gif" style="display:none;">
+	            <input type="file" id="tempImageFileInput" name="embed_image_file" accept=".png,.jpg,.jpeg,.webp,.gif" style="display:none;">
+	            <input type="file" id="tempFooterIconFileInput" name="embed_footer_icon_file" accept=".png,.jpg,.jpeg,.webp,.gif" style="display:none;">
+            <div class="tv-composer-grid">
+              <button type="button" id="tempAuthorIconPicker" class="tv-icon-picker" title="รูป">🖼️</button>
+              <input type="text" name="embed_author_name" id="tempAuthorNameInput" value="{_escape(str(settings.get('embed_author_name') or ''))}" maxlength="256" placeholder="">
+              <input type="text" name="embed_author_url" id="tempAuthorUrlInput" value="{_escape(str(settings.get('embed_author_url') or ''))}" maxlength="600" placeholder="ลิงก์">
+              <button type="button" id="tempThumbPicker" class="tv-thumb-picker" title="รูป">🖼️</button>
+            </div>
+            <div class="field-item"><input type="text" name="embed_title" value="{_escape(str(settings.get('embed_title') or 'TempVoice Interface'))}" maxlength="256" placeholder="หัวข้อ"></div>
+            <div class="field-item"><textarea name="embed_description" style="min-height:96px;" maxlength="4000" placeholder="คำอธิบาย">{_escape(str(settings.get("embed_description") or ""))}</textarea></div>
+            <div style="display:flex;justify-content:flex-end;margin-top:8px;">
+              <button type="button" id="tempAddFieldBtn" class="primary-btn">เพิ่มฟิลด์</button>
+            </div>
+            <div id="tempFieldsWrap" class="section-stack" style="margin-top:8px;"></div>
+            <button type="button" id="tempImagePicker" class="tv-image-picker" title="รูป"><span>คลิกเพื่อเพิ่มรูปตัวอย่าง</span></button>
+            <div class="tv-composer-grid" style="margin-top:10px;">
+              <button type="button" id="tempFooterIconPicker" class="tv-icon-picker" title="ไอคอนท้าย">🖼️</button>
+              <input type="text" name="embed_footer_text" value="{_escape(str(settings.get('embed_footer_text') or ''))}" maxlength="2048" placeholder="ข้อความท้าย" style="grid-column: span 3;">
+            </div>
+          </div>
+
+          <div class="panel-sub" style="margin-top:12px;">
+            <div class="tv-buttons-grid">
+              {button_toggles_html}
+            </div>
+            <div class="muted" style="margin-top:8px;">เลือกปุ่มที่ต้องการให้ผู้ใช้กดใช้งาน</div>
+          </div>
+        </section>
+
+        <section class="panel-sub">
+          <h3 style="margin-top:0;">ห้องแผงควบคุม (Panel)</h3>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <div style="flex:1;min-width:260px;">{send_channel_select}</div>
+            <button id="tempSendInterfaceBtn" class="primary-btn" type="button">ส่ง</button>
+          </div>
+          <p class="muted" style="margin-top:8px;">ผู้ใช้จะกดปุ่มจากข้อความนี้เพื่อจัดการห้อง J2C ของตัวเองได้ทันที</p>
+        </section>
+      </form>
+    </section>
+    <link rel="stylesheet" href="/dashboard/static/dashboard/pages/temp_channels.css">
+    <script>{_render_dashboard_f_template("scripts/temp_channels.js", __ctx)}</script>
+    

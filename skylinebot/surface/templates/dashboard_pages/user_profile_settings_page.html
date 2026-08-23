@@ -1,0 +1,151 @@
+<section class="panel profile-user-shell">
+  <div class="profile-user-banner" style="{banner_style}"></div>
+  <div class="profile-user-head">
+    <img src="{avatar_url}" alt="{display_name}" class="profile-user-avatar" onerror="this.onerror=null;this.src='{avatar_fallback_url}';">
+    <div class="profile-user-title">
+      <h1>{display_name}</h1>
+      <p>{user_tag}</p>
+      <span class="profile-user-status status-{status_key}">{user_status}</span>
+    </div>
+  </div>
+
+  <div class="profile-account-strip">
+    <div class="profile-metric-row">
+      <article class="profile-metric-chip">
+        <i class="fa-solid fa-wallet" aria-hidden="true"></i>
+        <div>
+          <span>มีจำนวนเงิน</span>
+          <strong>{_escape(wallet_balance_text)} THB</strong>
+        </div>
+      </article>
+      <article class="profile-metric-chip">
+        <i class="fa-solid fa-coins" aria-hidden="true"></i>
+        <div>
+          <span>จำนวนเงินที่เติม</span>
+          <strong>{_escape(_fmt_money(total_topup_amount))} THB</strong>
+        </div>
+      </article>
+      <article class="profile-metric-chip">
+        <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
+        <div>
+          <span>ประวัติการเติมเงิน</span>
+          <strong>{_escape(str(topup_history_count))} รายการ</strong>
+        </div>
+      </article>
+    </div>
+
+    <details class="profile-account-menu">
+      <summary class="profile-account-trigger" role="button" aria-label="เปิดเมนูบัญชีผู้ใช้">
+        <span class="profile-account-trigger-avatar">
+          <img src="{avatar_url}" alt="{display_name}" onerror="this.onerror=null;this.src='{avatar_fallback_url}';">
+        </span>
+        <span class="profile-account-trigger-name">{display_name}</span>
+        <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+      </summary>
+      <div class="profile-account-dropdown">
+        <a href="/dashboard/SetingProfileUser"><i class="fa-solid fa-user"></i><span>บัญชีผู้ใช้</span></a>
+        <a href="{_escape(topup_page_url)}"><i class="fa-solid fa-wallet"></i><span>เติมเงิน</span></a>
+        <a href="#profile-plan-manager"><i class="fa-solid fa-crown"></i><span>เลือก plan</span></a>
+        <a href="{_escape(profile_topup_history_url)}"><i class="fa-solid fa-clock-rotate-left"></i><span>ประวัติการเติมเงิน</span></a>
+        <a href="{_escape(profile_premium_history_url)}"><i class="fa-solid fa-gem"></i><span>ประวัติฟรีเมียม</span></a>
+        <a class="danger" href="/dashboard/logout"><i class="fa-solid fa-right-from-bracket"></i><span>ออกจากระบบ</span></a>
+      </div>
+    </details>
+  </div>
+
+  <div class="profile-user-grid">
+    <article class="profile-user-card" id="profile-account-overview">
+      <h3>Account Info</h3>
+      <ul>
+        <li><span>User ID</span><strong>{user_id}</strong></li>
+        <li><span>Username</span><strong>{_escape(profile.get('username') or '-')}</strong></li>
+        <li><span>Global Name</span><strong>{_escape(profile.get('global_name') or '-')}</strong></li>
+        <li><span>Tag</span><strong>{user_tag}</strong></li>
+      </ul>
+    </article>
+    <article class="profile-user-card">
+      <h3>Account Status</h3>
+      <ul>
+        <li><span>Status</span><strong>{user_status}</strong></li>
+        <li><span>Accent Color</span><strong>{accent_hex}</strong></li>
+        <li><span>Account Created</span><strong>{account_created}</strong></li>
+        <li><span>Last Dashboard Login</span><strong>{dashboard_login_at}</strong></li>
+      </ul>
+    </article>
+  </div>
+
+  <div class="profile-user-grid profile-user-grid-billing">
+    <article class="profile-user-card profile-user-card-billing">
+      <h3>Topup Summary</h3>
+      <ul>
+        <li><span>Wallet Balance</span><strong>{_escape(wallet_balance_text)} THB</strong></li>
+        <li><span>Total Topup (Paid)</span><strong>{_escape(_fmt_money(total_topup_amount))} THB</strong></li>
+        <li><span>Pending Sessions</span><strong>{_escape(str(pending_topup_count))}</strong></li>
+        <li><span>Last Paid Topup</span><strong>{_escape(last_topup_at_text)}</strong></li>
+      </ul>
+      <div class="auth-actions" style="justify-content:flex-start; margin-top:10px;">
+        <a class="ghost-btn" href="{_escape(topup_page_url)}"><i class="fa-solid fa-wallet"></i> Wallet / เติมเงิน</a>
+        <a class="ghost-btn" href="{_escape(premium_page_url)}"><i class="fa-solid fa-crown"></i> ตารางแพ็กเกจ</a>
+      </div>
+    </article>
+  </div>
+
+  <section class="profile-history-section" id="profile-history-links">
+    <div class="profile-section-head">
+      <h2><i class="fa-solid fa-history"></i> ประวัติการทำรายการ</h2>
+      <span class="mini-stat">ประวัติการทำรายการ กดเพื่อดูรายละเอียด</span>
+    </div>
+    <div class="profile-history-link-grid">
+      <a class="profile-history-link-card" href="{_escape(profile_topup_history_url)}">
+        <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
+        <div>
+          <strong>ประวัติการเติมเงิน</strong>
+          <span>{_escape(str(topup_history_count))} รายการ</span>
+        </div>
+      </a>
+      <a class="profile-history-link-card" href="{_escape(profile_premium_history_url)}">
+        <i class="fa-solid fa-gem" aria-hidden="true"></i>
+        <div>
+          <strong>ประวัติฟรีเมียม</strong>
+          <span>{_escape(str(premium_history_count))} รายการ</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <section class="profile-history-section" id="profile-plan-manager">
+    <div class="profile-section-head">
+      <h2><i class="fa-solid fa-sliders"></i> จัดการแพ็กเกจจากโปรไฟล์</h2>
+      <span class="mini-stat">เปลี่ยนแผน / เปิดปิดต่ออายุ / ยกเลิกได้จากหน้านี้</span>
+    </div>
+    <div class="profile-plan-grid">
+      {profile_plan_cards_markup}
+    </div>
+  </section>
+
+  <div class="auth-actions" style="justify-content:flex-start; margin-top:14px;">
+    <a class="ghost-btn" href="/dashboard">Back to Dashboard</a>
+    <a class="top-cta danger" href="/dashboard/logout">Logout</a>
+  </div>
+
+  <script>
+    (() => {{
+      const accountMenu = document.querySelector('.profile-account-menu');
+      if (!accountMenu) return;
+      const closeMenu = () => accountMenu.removeAttribute('open');
+      accountMenu.querySelectorAll('a').forEach((node) => {{
+        node.addEventListener('click', closeMenu);
+      }});
+      document.addEventListener('click', (event) => {{
+        if (!accountMenu.contains(event.target)) {{
+          closeMenu();
+        }}
+      }});
+      document.addEventListener('keydown', (event) => {{
+        if (event.key === 'Escape') {{
+          closeMenu();
+        }}
+      }});
+    }})();
+  </script>
+</section>

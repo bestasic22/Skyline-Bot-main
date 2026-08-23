@@ -1,0 +1,128 @@
+
+    <div class="section-stack dashboard-detail-shell page-security-shell page-security-mode-{_escape(active_tab_slug)}">
+        <section class="panel dashboard-first-panel">
+            <div class="panel-header detail-page-hero detail-page-hero-security">
+                <div class="panel-title detail-page-hero-copy">
+                    <h1 data-i18n="tab_security" data-icon-key="{_escape(security_tab_icon_key)}">{_escape(title_text)}</h1>
+                    <p>{_escape(desc_text)}</p>
+                </div>
+                <div class="detail-page-metrics security-hero-metrics">
+                    {security_hero_badges_html}
+                    <span class="plugin-premium-pill">Plan: {_escape(plan_name)}</span>
+                </div>
+            </div>
+            {premium_notice}
+            <form method="post" action="/dashboard/guild/{current_guild['id']}/security" id="securitySettingsForm" data-plan="{_escape(plan_tier)}" class="security-form" {security_form_inline_style}>
+                <input type="hidden" name="redirect_tab" value="{_escape(active_tab_slug)}">
+
+                <section class="panel-sub detail-page-section security-core-settings">
+                    <h2 style="margin-top:0;" data-icon-key="security">Protection Mode & Bypass</h2>
+                    <div class="field-group detail-page-grid">
+                        <div class="field-item">
+                            <label>Protection mode</label>
+                            <select name="type" id="antinukeModeSelect">
+                                <option value="normal" {"selected" if selected_type == "normal" else ""}>Normal</option>
+                                <option value="extreme" {"selected" if selected_type == "extreme" else ""}>Extreme</option>
+                                {custom_option}
+                            </select>
+                        </div>
+                        <div class="field-item">
+                            <label>Bypass roles</label>
+                            {_render_multi_role_select("bypass_role_ids", bot_guild, bypass_ids)}
+                            <span class="muted" style="font-size:12px;">Supports multiple roles</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel-sub detail-page-section security-toggle-settings">
+                    <h2 style="margin-top:0;" data-icon-key="automation">Protection Toggles</h2>
+                    <div class="ux-toggle-group detail-page-toggle-grid">
+                        <label class="ux-toggle"><span class="ux-toggle-label">Enable Anti-Nuke</span><input type="checkbox" name="enabled" {"checked" if data.get("enabled") else ""}><span class="ux-switch"></span></label>
+                        <label class="ux-toggle"><span class="ux-toggle-label">Block unauthorized bot add</span><input type="checkbox" name="anti_bot_add" {"checked" if data.get("anti_bot_add") else ""}><span class="ux-switch"></span></label>
+                        <label class="ux-toggle"><span class="ux-toggle-label">Protect channel delete</span><input type="checkbox" name="anti_channel_delete" {"checked" if data.get("anti_channel_delete") else ""}><span class="ux-switch"></span></label>
+                        <label class="ux-toggle"><span class="ux-toggle-label">Protect role delete</span><input type="checkbox" name="anti_role_delete" {"checked" if data.get("anti_role_delete") else ""}><span class="ux-switch"></span></label>
+                        <label class="ux-toggle"><span class="ux-toggle-label">Protect webhook create</span><input type="checkbox" name="anti_webhook_create" {"checked" if data.get("anti_webhook_create") else ""}><span class="ux-switch"></span></label>
+                        <label class="ux-toggle"><span class="ux-toggle-label">Protect @everyone mention</span><input type="checkbox" name="anti_everyone_mention" {"checked" if data.get("anti_everyone_mention") else ""}><span class="ux-switch"></span></label>
+                    </div>
+                </section>
+
+                <section class="panel-sub detail-page-section security-rule-settings">
+                    <h2 style="margin-top:0;" data-icon-key="moderation">Punishments & Limits</h2>
+                    <div class="field-group detail-page-grid">
+                        <div class="field-item"><label>Punishment (Anti Bot Add)</label>{punishment_select("anti_bot_add_punishment", data.get("anti_bot_add_punishment"))}</div>
+                        <div class="field-item"><label>Limit (bot add)</label><input type="number" min="1" max="20" name="anti_bot_add_limit" value="{_escape(data.get('anti_bot_add_limit', 1))}"></div>
+                        <div class="field-item"><label>Punishment (Channel Delete)</label>{punishment_select("anti_channel_delete_punishment", data.get("anti_channel_delete_punishment"))}</div>
+                        <div class="field-item"><label>Limit (channel delete)</label><input type="number" min="1" max="20" name="anti_channel_delete_limit" value="{_escape(data.get('anti_channel_delete_limit', 1))}"></div>
+                        <div class="field-item"><label>Punishment (Role Delete)</label>{punishment_select("anti_role_delete_punishment", data.get("anti_role_delete_punishment"))}</div>
+                        <div class="field-item"><label>Limit (role delete)</label><input type="number" min="1" max="20" name="anti_role_delete_limit" value="{_escape(data.get('anti_role_delete_limit', 1))}"></div>
+                        <div class="field-item"><label>Punishment (Webhook Create)</label>{punishment_select("anti_webhook_create_punishment", data.get("anti_webhook_create_punishment"))}</div>
+                        <div class="field-item"><label>Limit (webhook create)</label><input type="number" min="1" max="20" name="anti_webhook_create_limit" value="{_escape(data.get('anti_webhook_create_limit', 1))}"></div>
+                        <div class="field-item"><label>Punishment (@everyone Mention)</label>{punishment_select("anti_everyone_mention_punishment", data.get("anti_everyone_mention_punishment"))}</div>
+                        <div class="field-item"><label>Limit (@everyone)</label><input type="number" min="1" max="20" name="anti_everyone_mention_limit" value="{_escape(data.get('anti_everyone_mention_limit', 1))}"></div>
+                    </div>
+                </section>
+
+                <section class="panel-sub detail-page-section security-honeypot-settings">
+                    <h2 style="margin-top:0;" data-icon-key="security">Honeypot (Gole+)</h2>
+                    {honeypot_plan_notice}
+                    <div class="ux-toggle-group detail-page-toggle-grid">
+                        <label class="ux-toggle"><span class="ux-toggle-label">Enable honeypot</span><input type="checkbox" name="honeypot_enabled" {"checked" if honeypot_data.get("enabled") else ""} {honeypot_disabled_attr}><span class="ux-switch"></span></label>
+                        <label class="ux-toggle"><span class="ux-toggle-label">Delete trapped message</span><input type="checkbox" name="honeypot_delete_message" {"checked" if honeypot_data.get("delete_message", True) else ""} {honeypot_disabled_attr}><span class="ux-switch"></span></label>
+                    </div>
+                    <div class="field-group detail-page-grid" style="margin-top:12px;">
+                        <div class="field-item">
+                            <label>Honeypot channel</label>
+                            {honeypot_channel_select}
+                            <span class="muted" style="font-size:12px;">Bot will post/update status embed in this channel automatically.</span>
+                        </div>
+                        <div class="field-item">
+                            <label>Timeout days</label>
+                            <input type="number" min="1" max="28" name="honeypot_timeout_days" value="{_escape(honeypot_timeout_days)}" {honeypot_disabled_attr}>
+                            <span class="muted" style="font-size:12px;">Punishment when user sends message in honeypot channel.</span>
+                        </div>
+                        <div class="field-item">
+                            <label>Embed edit cooldown (minutes)</label>
+                            <input type="number" min="2" max="5" name="honeypot_edit_cooldown_minutes" value="{_escape(honeypot_cooldown_minutes)}" {honeypot_disabled_attr}>
+                            <span class="muted" style="font-size:12px;">Locked at 2-5 minutes to prevent heavy load during spam attacks.</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel-sub detail-page-section security-preview-section">
+                    <h2 style="margin-top:0;" data-icon-key="security_preview">Security Action Preview</h2>
+                    <div class="mock-switch-row" style="margin-bottom:8px;">
+                        <div class="mock-switch-group">
+                            <span class="mock-switch-title">Mock User</span>
+                            <div id="securityMockUserButtons" class="mock-switch-buttons"></div>
+                        </div>
+                        <div class="mock-switch-group">
+                            <span class="mock-switch-title">Mock Server</span>
+                            <div id="securityMockServerButtons" class="mock-switch-buttons"></div>
+                        </div>
+                    </div>
+                    <div id="securityPreviewMeta" class="muted" style="margin-bottom:8px;">Preview mode: -</div>
+                    <div class="security-preview-shell">
+                        <div class="security-preview-head">
+                            <img src="{preview_member_avatar}" id="securityPreviewAvatar" alt="{preview_member_name}" class="security-preview-avatar">
+                            <div class="security-preview-copy">
+                                <strong id="securityPreviewName">{preview_member_name}</strong>
+                                <span id="securityPreviewServer" class="muted">{current_guild['name']}</span>
+                            </div>
+                            <span id="securityPreviewMode" class="pill security-preview-pill">{security_mode_label}</span>
+                        </div>
+                        <div id="securityPreviewText" class="security-preview-text muted">Security monitor is active in this guild.</div>
+                        <div id="securityPreviewEnabledModules" class="security-preview-tags"></div>
+                    </div>
+                </section>
+
+                <p class="muted" id="securityPlanHint" style="margin:4px 0 12px;display:none;">Current plan does not support this punishment level.</p>
+                <div class="form-actions-inline security-submit-row">
+                    <button class="primary-btn" type="submit" data-save-btn="security">Save settings</button>
+                </div>
+            </form>
+        </section>
+
+        {security_extra_sections}
+        {general_settings_block}
+    </div>
+    <script>{_render_dashboard_f_template("scripts/security.js", __ctx)}</script>

@@ -1,0 +1,35 @@
+
+    <div class="section-stack dashboard-detail-shell page-media-shell">
+        <section class="panel">
+            <div class="panel-header detail-page-hero detail-page-hero-media">
+                <div class="panel-title detail-page-hero-copy">
+                    <h1 data-i18n="tab_media" data-icon-key="media">สื่อเท่านั้น (Media Only)</h1>
+                    <p>จำกัดให้ส่งได้เฉพาะรูปภาพ/วิดีโอในช่องที่กำหนด บอทจะลบข้อความเปล่าอัตโนมัติ</p>
+                </div>
+            </div>
+            
+            <form method="post" action="/dashboard/guild/{current_guild['id']}/media/add" style="margin-bottom:32px;">
+                <div class="field-item" style="margin-bottom:16px;">
+                    <label>เลือกช่องแชต</label>
+                    {_render_channel_select("channel_id", bot_guild)}
+                </div>
+                <button class="primary-btn" type="submit" style="width:fit-content; padding:0 24px;">+ ตั้งค่าช่อง</button>
+            </form>
+
+            <div class="panel-sub detail-page-section" style="padding:0; overflow:hidden;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ชื่อช่อง</th>
+                            <th>ไอดีช่อง</th>
+                            <th style="width:80px;">จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {rows if rows else '<tr><td colspan="3" class="muted" style="text-align:center; padding:40px;">ยังไม่มีช่องที่ถูกจำกัด</td></tr>'}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+    

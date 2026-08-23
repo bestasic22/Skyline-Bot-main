@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Status Center - {{APP_NAME}}</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" type="image/png" href="/favicon.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="/dashboard/static/dashboard/public-pages.css">
+  <style>
+    .hero-status::after {
+      inset: auto -22% -72% auto;
+      width: 340px;
+      background: radial-gradient(circle, rgba(88, 198, 255, 0.30), transparent 68%);
+    }
+
+    .status-pill {
+      width: fit-content;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(119, 173, 255, 0.42);
+      background: rgba(12, 24, 45, 0.8);
+      color: #d9ecff;
+      font-weight: 700;
+      font-size: 0.88rem;
+      text-transform: uppercase;
+      letter-spacing: 0.01em;
+    }
+
+    .status-pill.gateway {
+      border-color: rgba(255, 188, 103, 0.5);
+      color: #ffdbad;
+      background: rgba(40, 23, 2, 0.45);
+    }
+
+    .status-pill.http {
+      border-color: rgba(106, 228, 189, 0.48);
+      color: #c7ffe8;
+      background: rgba(11, 38, 30, 0.46);
+    }
+
+    .hero-actions {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+
+    .status-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 0 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(112, 170, 255, 0.56);
+      font-weight: 800;
+      text-decoration: none;
+      transition: transform .15s ease, filter .15s ease;
+    }
+
+    .status-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.06);
+      text-decoration: none;
+    }
+
+    .status-btn.primary {
+      color: #07192a;
+      background: linear-gradient(140deg, #3c7dff, #39b9e8);
+    }
+
+    .status-btn.ghost {
+      background: rgba(14, 24, 46, 0.72);
+      color: #d3e8ff;
+      border-color: rgba(112, 170, 255, 0.38);
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .status-card {
+      border: 1px solid var(--public-line);
+      border-radius: 12px;
+      padding: 12px;
+      background: rgba(11, 18, 34, 0.52);
+    }
+
+    .status-card h3 {
+      margin: 0;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-card p {
+      margin: 8px 0 0;
+      line-height: 1.58;
+      color: var(--public-text-soft);
+    }
+
+    .status-text-ok {
+      color: #7be8b8;
+      font-weight: 700;
+    }
+
+    .status-text-warn {
+      color: #ffd08a;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body class="public-doc">
+  <main class="public-shell">
+    <section class="public-card hero-card hero-status">
+      <h1 class="title-row"><span class="title-icon"><i class="bi bi-activity"></i></span>System Status Center</h1>
+      <p class="hero-sub">หน้านี้เป็นหน้าสถานะการทำงานของระบบคำสั่ง {{APP_NAME}} สำหรับผู้ใช้ทั่วไป ใช้เช็กว่าระบบตอบสนองปกติหรือไม่ โดยไม่ต้องตั้งค่าอะไรเพิ่ม</p>
+      <span class="status-pill {{INTERACTIONS_TRANSPORT_MODE}}" id="modePill"><i class="bi bi-diagram-3"></i>Mode: {{INTERACTIONS_TRANSPORT_MODE}}</span>
+      <div class="hero-actions">
+        <a class="status-btn primary" href="{{INVITE_PAGE_URL}}"><i class="bi bi-discord"></i>Invite Bot</a>
+        <a class="status-btn ghost" href="{{DASHBOARD_URL}}"><i class="bi bi-grid-1x2"></i>Open Dashboard</a>
+      </div>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-check2-circle"></i></span>สถานะล่าสุด</h2>
+      <div class="status-grid">
+        <article class="status-card">
+          <h3><i class="bi bi-command"></i>Command Transport</h3>
+          <p id="modeSummary">กำลังตรวจสอบ...</p>
+        </article>
+        <article class="status-card">
+          <h3><i class="bi bi-link-45deg"></i>Live Endpoint Check</h3>
+          <p>ตรวจสถานะแบบเรียลไทม์ได้ที่ลิงก์นี้: <a href="{{SUGGESTED_INTERACTION_ENDPOINT_URL}}" target="_blank" rel="noopener noreferrer">{{SUGGESTED_INTERACTION_ENDPOINT_URL}}</a></p>
+        </article>
+        <article class="status-card">
+          <h3><i class="bi bi-life-preserver"></i>ถ้าเจอปัญหา</h3>
+          <p>หากคำสั่งยังไม่ขึ้นหรือไม่ตอบสนอง ให้รีเฟรช Discord รอ 1-2 นาที แล้วลองใหม่อีกครั้ง หรือแจ้งแอดมินเซิร์ฟเวอร์</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-link-45deg"></i></span>ลิงก์ที่เกี่ยวข้อง</h2>
+      <div class="public-grid">
+        <div class="public-link-box"><strong><i class="bi bi-discord"></i>InviteBot</strong><br><a href="{{INVITE_PAGE_URL}}">{{INVITE_PAGE_URL}}</a></div>
+        <div class="public-link-box"><strong><i class="bi bi-braces-asterisk"></i>Tags Variables</strong><br><a href="{{TAGS_URL}}">{{TAGS_URL}}</a></div>
+        <div class="public-link-box"><strong><i class="bi bi-patch-check"></i>Linked Role Verify</strong><br><a href="{{LINKED_ROLE_VERIFY_URL}}">{{LINKED_ROLE_VERIFY_URL}}</a></div>
+        <div class="public-link-box"><strong><i class="bi bi-file-text"></i>Terms</strong><br><a href="{{TERMS_URL}}">{{TERMS_URL}}</a></div>
+        <div class="public-link-box"><strong><i class="bi bi-shield-lock"></i>Privacy</strong><br><a href="{{PRIVACY_URL}}">{{PRIVACY_URL}}</a></div>
+      </div>
+    </section>
+
+    <section class="public-footer">© {{CURRENT_YEAR}} {{APP_NAME}} · Dashboard: <a href="{{DASHBOARD_URL}}">{{DASHBOARD_URL}}</a></section>
+  </main>
+  <script>
+    const mode = String("{{INTERACTIONS_TRANSPORT_MODE}}" || "").trim().toLowerCase();
+    const summary = document.getElementById("modeSummary");
+
+    if (summary) {
+      if (mode === "http") {
+        summary.innerHTML = '<span class="status-text-ok">พร้อมใช้งานผ่าน HTTP interactions</span> ระบบรับคำสั่งและตอบกลับตามการตั้งค่าปัจจุบัน';
+      } else if (mode === "gateway") {
+        summary.innerHTML = '<span class="status-text-ok">พร้อมใช้งานผ่าน Gateway mode</span> ระบบรับคำสั่งจาก Discord client ตามปกติ';
+      } else {
+        summary.innerHTML = '<span class="status-text-warn">กำลังทำงาน</span> ไม่สามารถระบุโหมดได้ชั่วคราว';
+      }
+    }
+  </script>
+</body>
+</html>

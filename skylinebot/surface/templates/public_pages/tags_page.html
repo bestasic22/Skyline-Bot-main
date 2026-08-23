@@ -1,0 +1,291 @@
+﻿<!DOCTYPE html>
+<html lang="{{PUBLIC_LANG}}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tags & Variables - {{APP_NAME}}</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" type="image/png" href="/favicon.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="/dashboard/static/dashboard/public-pages.css">
+  <style>
+    .hero-tags::after { inset: auto -26% -84% auto; width: 360px; background: radial-gradient(circle, rgba(117, 204, 255, 0.34), transparent 70%); }
+    .hero-actions { margin-top: 14px; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+    .hero-link { min-height: 44px; border-radius: 12px; border: 1px solid rgba(120, 173, 255, 0.5); display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 800; text-decoration: none; transition: transform .15s ease, filter .15s ease; }
+    .hero-link:hover { transform: translateY(-1px); filter: brightness(1.05); text-decoration: none; }
+    .hero-link.primary { color: #07182b; background: linear-gradient(140deg, #4ca8ff, #35d0e8); }
+    .hero-link.ghost { color: #d8edff; background: rgba(12, 24, 45, 0.82); border-color: rgba(120, 173, 255, 0.36); }
+    .chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 11px; }
+    .chip { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; border: 1px solid var(--public-line); padding: 6px 10px; color: #c3d8f7; background: rgba(11, 18, 34, 0.5); font-size: .86rem; font-weight: 650; }
+    .tools-row { margin-top: 10px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: center; }
+    .count-pill { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 7px 10px; border: 1px solid rgba(123, 173, 255, 0.4); background: rgba(11, 19, 35, 0.62); color: #cde1ff; font-size: .88rem; font-weight: 700; white-space: nowrap; }
+    .table-wrap { margin-top: 10px; border: 1px solid var(--public-line); border-radius: 12px; overflow: hidden; background: rgba(10, 17, 32, 0.66); }
+    .tag-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    .tag-table th, .tag-table td { border-bottom: 1px solid rgba(121, 160, 228, 0.2); padding: 10px; vertical-align: top; text-align: left; }
+    .tag-table th { color: #d7e9ff; font-size: .89rem; background: rgba(15, 27, 50, 0.76); }
+    .tag-table td { color: #b6c9ea; font-size: .93rem; word-break: break-word; }
+    .tag-table tr:last-child td { border-bottom: none; }
+    .tag-col-token { width: 28%; }
+    .tag-col-group { width: 16%; }
+    .group-pill { display: inline-flex; align-items: center; justify-content: center; min-width: 74px; padding: 4px 9px; border-radius: 999px; border: 1px solid rgba(125, 173, 255, 0.34); background: rgba(17, 33, 61, 0.64); color: #d6e8ff; font-size: .8rem; font-weight: 700; text-transform: uppercase; }
+    .group-pill.user { border-color: rgba(131, 184, 255, 0.5); color: #d7ecff; }
+    .group-pill.server { border-color: rgba(121, 231, 193, 0.46); color: #cafaea; background: rgba(8, 42, 33, 0.46); }
+    .group-pill.channel { border-color: rgba(255, 201, 127, 0.5); color: #ffe1b8; background: rgba(43, 31, 9, 0.42); }
+    .group-pill.system { border-color: rgba(205, 166, 255, 0.54); color: #eddcff; background: rgba(33, 18, 51, 0.45); }
+    .empty-state { display: none; margin-top: 10px; padding: 11px; border: 1px dashed var(--public-line); border-radius: 12px; color: #b8caea; background: rgba(12, 21, 39, 0.6); }
+    .usage-grid { margin-top: 10px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+    .usage-card { border: 1px solid var(--public-line); border-radius: 13px; padding: 12px; background: rgba(11, 18, 34, 0.52); }
+    .usage-card h3 { margin: 0; font-size: 1rem; display: inline-flex; align-items: center; gap: 8px; }
+    .usage-meta { margin-top: 8px; display: grid; gap: 6px; }
+    .usage-meta p { margin: 0; color: var(--public-text-soft); line-height: 1.56; font-size: .92rem; }
+    .snippet { margin-top: 10px; border: 1px dashed var(--public-line); border-radius: 12px; padding: 10px; background: rgba(12, 22, 42, 0.62); }
+    .snippet pre { margin: 0; font-family: "Consolas", "Menlo", monospace; font-size: .88rem; line-height: 1.55; white-space: pre-wrap; color: #d8ebff; }
+    @media (max-width: 760px) { .tools-row { grid-template-columns: minmax(0, 1fr); } .tag-col-token { width: 38%; } .tag-col-group { width: 24%; } }
+  </style>
+</head>
+<body class="public-doc">
+  <main class="public-shell">
+    <section class="public-card hero-card hero-tags">
+      <h1 class="title-row"><span class="title-icon"><i class="bi bi-braces-asterisk"></i></span><span id="i18nHeroTitle">Tags / Variables of {{APP_NAME}}</span></h1>
+      <p class="hero-sub" id="i18nHeroSub">This page lists all supported variables, their meanings, and where to use them in dashboard and Discord commands.</p>
+      <div class="hero-actions">
+        <a class="hero-link primary" href="{{DASHBOARD_URL}}"><i class="bi bi-grid-1x2"></i><span id="i18nOpenDashboard">Open Dashboard</span></a>
+        <a class="hero-link ghost" href="{{INVITE_PAGE_URL}}"><i class="bi bi-discord"></i><span id="i18nInviteBot">Invite Bot</span></a>
+        <a class="hero-link ghost" href="/commands"><i class="bi bi-journal-code"></i><span id="i18nCommandsHelp">Commands Help</span></a>
+      </div>
+      <div class="chip-row">
+        <span class="chip"><i class="bi bi-lightning-charge"></i><span id="i18nChip1">Use in message/embed fields across multiple modules</span></span>
+        <span class="chip"><i class="bi bi-shield-check"></i><span id="i18nChip2">Auto-updated from bot runtime variables</span></span>
+      </div>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-list-check"></i></span><span id="i18nAllVars">All Variables</span></h2>
+      <div class="tools-row">
+        <input id="tagSearchInput" class="public-input" type="search" placeholder="Search tags like {user.mention}, {server}, {time}">
+        <span class="count-pill" id="tagCountPill"><i class="bi bi-hash"></i>0 tags</span>
+      </div>
+      <div class="table-wrap">
+        <table class="tag-table">
+          <thead>
+            <tr>
+              <th class="tag-col-token">Tag</th>
+              <th id="i18nMeaning">Meaning</th>
+              <th class="tag-col-group" id="i18nGroup">Group</th>
+            </tr>
+          </thead>
+          <tbody id="tagsTableBody"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="tagEmptyState">No variables found. Try: <code>user</code>, <code>server</code>, <code>channel</code>, <code>time</code></div>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-geo-alt"></i></span><span id="i18nUseWhere">Where You Can Use Variables</span></h2>
+      <p style="margin-top:8px;" id="i18nUseWhereDesc">Quick map of common places and how to find each setting in dashboard/Discord.</p>
+      <div class="usage-grid" id="usageGrid"></div>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-code-slash"></i></span><span id="i18nExampleTitle">Usage Example</span></h2>
+      <div class="snippet">
+        <pre id="i18nSnippet">Welcome {user.mention} to {server}
+We now have {member.count} members
+Send this in {channel} at {time}</pre>
+      </div>
+      <p style="margin-top:10px;" id="i18nNote">Note: some variables only work when context data exists (for example channel variables need a target channel).</p>
+    </section>
+
+    <section class="public-footer">© {{CURRENT_YEAR}} {{APP_NAME}} • <span id="i18nFooterLabel">Tags URL</span>: <a href="{{TAGS_URL}}">{{TAGS_URL}}</a></section>
+  </main>
+
+  <script id="tagsPayload" type="text/plain">{{TAGS_PAYLOAD_B64}}</script>
+  <script>
+    function escapeHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function decodePayload(base64Text) {
+      const fallback = { variables: [], usages: [] };
+      const raw = String(base64Text || "").trim();
+      if (!raw) return fallback;
+      try {
+        const bytes = Uint8Array.from(atob(raw), (ch) => ch.charCodeAt(0));
+        const jsonText = new TextDecoder().decode(bytes);
+        const payload = JSON.parse(jsonText);
+        if (!payload || typeof payload !== "object") return fallback;
+        payload.variables = Array.isArray(payload.variables) ? payload.variables : [];
+        payload.usages = Array.isArray(payload.usages) ? payload.usages : [];
+        return payload;
+      } catch (_) {
+        return fallback;
+      }
+    }
+
+    function groupClassName(groupValue) {
+      const key = String(groupValue || "").trim().toLowerCase();
+      if (key === "user") return "user";
+      if (key === "server") return "server";
+      if (key === "channel") return "channel";
+      if (key === "system") return "system";
+      return "other";
+    }
+
+    const activeLang = String((document.documentElement && document.documentElement.lang) || "th").toLowerCase().startsWith("en") ? "en" : "th";
+    const i18n = {
+      th: {
+        heroTitle: "Tags / Variables ของ {{APP_NAME}}",
+        heroSub: "หน้านี้รวมตัวแปรทั้งหมดที่ระบบรองรับ ความหมายของแต่ละตัวแปร และตำแหน่งที่ใช้ได้ทั้งในแดชบอร์ดและคำสั่งใน Discord",
+        openDashboard: "เปิดแดชบอร์ด",
+        inviteBot: "เชิญบอท",
+        commandsHelp: "คู่มือคำสั่ง",
+        chip1: "ใช้ได้ในข้อความ/Embed หลายโมดูล",
+        chip2: "อัปเดตจาก runtime ของบอทอัตโนมัติ",
+        allVars: "รายการตัวแปรทั้งหมด",
+        searchPlaceholder: "ค้นหา tag เช่น {user.mention}, {server}, {time}",
+        meaning: "ความหมาย",
+        group: "กลุ่ม",
+        empty: "ไม่พบตัวแปรที่ค้นหา ลองพิมพ์ <code>user</code>, <code>server</code>, <code>channel</code> หรือ <code>time</code>",
+        useWhere: "ตัวแปรใช้ที่ไหนได้บ้าง",
+        useWhereDesc: "สรุปจุดที่ใช้งานบ่อย พร้อมวิธีหาเมนูนั้นในเว็บ/Discord",
+        exampleTitle: "ตัวอย่างการใช้งาน",
+        snippet: "ยินดีต้อนรับ {user.mention} เข้าสู่ {server}\nตอนนี้มีสมาชิกทั้งหมด {member.count} คน\nส่งข้อความที่ห้อง {channel} เวลา {time}",
+        note: "หมายเหตุ: ตัวแปรบางตัวจะทำงานเมื่อระบบมีข้อมูลบริบทนั้น เช่นตัวแปรห้องต้องมี channel เป้าหมาย",
+        footerLabel: "Tags URL",
+        tagsWord: "แท็ก",
+        where: "ตำแหน่ง",
+        howToFind: "วิธีหา",
+        supports: "รองรับ",
+      },
+      en: {
+        heroTitle: "Tags / Variables of {{APP_NAME}}",
+        heroSub: "This page lists all supported variables, their meanings, and where to use them in dashboard and Discord commands.",
+        openDashboard: "Open Dashboard",
+        inviteBot: "Invite Bot",
+        commandsHelp: "Commands Help",
+        chip1: "Use in message/embed fields across multiple modules",
+        chip2: "Auto-updated from bot runtime variables",
+        allVars: "All Variables",
+        searchPlaceholder: "Search tags like {user.mention}, {server}, {time}",
+        meaning: "Meaning",
+        group: "Group",
+        empty: "No variables found. Try: <code>user</code>, <code>server</code>, <code>channel</code>, <code>time</code>",
+        useWhere: "Where You Can Use Variables",
+        useWhereDesc: "Quick map of common places and how to find each setting in dashboard/Discord.",
+        exampleTitle: "Usage Example",
+        snippet: "Welcome {user.mention} to {server}\nWe now have {member.count} members\nSend this in {channel} at {time}",
+        note: "Note: some variables only work when context data exists (for example channel variables need a target channel).",
+        footerLabel: "Tags URL",
+        tagsWord: "tags",
+        where: "Where",
+        howToFind: "How to find",
+        supports: "Supports",
+      }
+    };
+    const t = i18n[activeLang];
+
+    const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
+    const setHtml = (id, value) => { const el = document.getElementById(id); if (el) el.innerHTML = value; };
+
+    setText("i18nHeroTitle", t.heroTitle);
+    setText("i18nHeroSub", t.heroSub);
+    setText("i18nOpenDashboard", t.openDashboard);
+    setText("i18nInviteBot", t.inviteBot);
+    setText("i18nCommandsHelp", t.commandsHelp);
+    setText("i18nChip1", t.chip1);
+    setText("i18nChip2", t.chip2);
+    setText("i18nAllVars", t.allVars);
+    setText("i18nMeaning", t.meaning);
+    setText("i18nGroup", t.group);
+    setHtml("tagEmptyState", t.empty);
+    setText("i18nUseWhere", t.useWhere);
+    setText("i18nUseWhereDesc", t.useWhereDesc);
+    setText("i18nExampleTitle", t.exampleTitle);
+    setText("i18nSnippet", t.snippet);
+    setText("i18nNote", t.note);
+    setText("i18nFooterLabel", t.footerLabel);
+
+    const searchInput = document.getElementById("tagSearchInput");
+    if (searchInput) searchInput.placeholder = t.searchPlaceholder;
+
+    const payloadNode = document.getElementById("tagsPayload");
+    const payload = decodePayload(payloadNode ? payloadNode.textContent : "");
+    const allTags = Array.isArray(payload.variables) ? payload.variables.slice() : [];
+    const allUsages = Array.isArray(payload.usages) ? payload.usages.slice() : [];
+
+    const tagsBody = document.getElementById("tagsTableBody");
+    const countPill = document.getElementById("tagCountPill");
+    const emptyState = document.getElementById("tagEmptyState");
+    const usageGrid = document.getElementById("usageGrid");
+
+    function renderTagRows(keyword) {
+      const q = String(keyword || "").trim().toLowerCase();
+      const filtered = allTags.filter((row) => {
+        const token = String(row.token || "").toLowerCase();
+        const desc = String(row.description || "").toLowerCase();
+        const group = String(row.group || "").toLowerCase();
+        return !q || token.includes(q) || desc.includes(q) || group.includes(q);
+      });
+
+      if (tagsBody) {
+        tagsBody.innerHTML = filtered.map((row) => {
+          const token = escapeHtml(row.token || "");
+          const desc = escapeHtml(row.description || "");
+          const group = escapeHtml(row.group || "Other");
+          const groupClass = groupClassName(group);
+          return (
+            "<tr>" +
+            "<td><code>" + token + "</code></td>" +
+            "<td>" + desc + "</td>" +
+            "<td><span class=\"group-pill " + groupClass + "\">" + group + "</span></td>" +
+            "</tr>"
+          );
+        }).join("");
+      }
+
+      if (countPill) {
+        countPill.innerHTML = "<i class=\"bi bi-hash\"></i>" + filtered.length + " / " + allTags.length + " " + t.tagsWord;
+      }
+      if (emptyState) {
+        emptyState.style.display = filtered.length ? "none" : "block";
+      }
+    }
+
+    function renderUsageCards() {
+      if (!usageGrid) return;
+      usageGrid.innerHTML = allUsages.map((item) => {
+        const title = escapeHtml(item.title || "Usage");
+        const where = escapeHtml(item.where || "-");
+        const howToFind = escapeHtml(item.how_to_find || "-");
+        const supports = escapeHtml(item.supports || "-");
+        return (
+          "<article class=\"usage-card\">" +
+          "<h3><i class=\"bi bi-bookmark-check\"></i>" + title + "</h3>" +
+          "<div class=\"usage-meta\">" +
+          "<p><strong>" + escapeHtml(t.where) + ":</strong> " + where + "</p>" +
+          "<p><strong>" + escapeHtml(t.howToFind) + ":</strong> " + howToFind + "</p>" +
+          "<p><strong>" + escapeHtml(t.supports) + ":</strong> " + supports + "</p>" +
+          "</div>" +
+          "</article>"
+        );
+      }).join("");
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener("input", () => renderTagRows(searchInput.value));
+    }
+
+    renderTagRows("");
+    renderUsageCards();
+  </script>
+</body>
+</html>

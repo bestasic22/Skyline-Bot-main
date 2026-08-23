@@ -1,0 +1,313 @@
+<div class="section-stack dashboard-detail-shell page-shop-shell">
+    <section class="panel dashboard-first-panel">
+        <div class="panel-header detail-page-hero detail-page-hero-economy">
+            <div class="panel-title detail-page-hero-copy">
+                <h1 data-icon-key="economy">Guild Shop</h1>
+                <p>Manage products, role permissions, payment options, and automatic delivery from one page.</p>
+            </div>
+            <div class="detail-page-metrics">
+                <span class="pill"><i class="bi bi-gem" aria-hidden="true"></i> Plan {plan_label}</span>
+                <span class="pill"><i class="bi bi-bag-check" aria-hidden="true"></i> Products {total_products}</span>
+                <span class="pill"><i class="bi bi-grid-3x3-gap" aria-hidden="true"></i> Cap {product_limit}</span>
+                <span class="pill"><i class="bi bi-check2-circle" aria-hidden="true"></i> Enabled {enabled_products}</span>
+                <span class="pill"><i class="bi bi-exclamation-triangle" aria-hidden="true"></i> Out Of Stock {out_of_stock_products}</span>
+            </div>
+        </div>
+        <section class="panel-sub detail-page-section" style="margin-top: 12px;">
+            <p class="muted" style="margin:0 0 8px 0;">
+                Current plan limit: <strong>{product_limit}</strong> products, remaining slots: <strong>{product_slots_left}</strong>
+            </p>
+            <p class="muted" style="margin:0;">
+                Product caps by plan: {plan_product_caps_text}
+            </p>
+            <p class="muted" style="margin:8px 0 0 0;">
+                Premium features: TrueMoney verify (Silver+), SHIPOK/SlipOK (Gole+), auto delivery (Gole+), role auto delivery and auto failed-delivery ticket (Diamond/Permanent)
+            </p>
+        </section>
+
+        <form method="post" action="/dashboard/guild/{current_guild['id']}/shop" class="shop-settings-form">
+            <input type="hidden" name="shop_action" value="save_settings">
+            <section class="panel-sub detail-page-section">
+                <h2 style="margin-top:0;" data-icon-key="settings">Shop Settings</h2>
+
+                <div class="ux-toggle-group" style="margin-bottom: 10px;">
+                    <label class="ux-toggle">
+                        <span class="ux-toggle-label">Enable Shop</span>
+                        <input type="checkbox" name="enabled" {"checked" if settings.get("enabled") else ""}>
+                        <span class="ux-switch"></span>
+                    </label>
+                    <label class="ux-toggle">
+                        <span class="ux-toggle-label">Allow Wallet Payment</span>
+                        <input type="checkbox" name="allow_wallet_payment" {"checked" if settings.get("allow_wallet_payment") else ""}>
+                        <span class="ux-switch"></span>
+                    </label>
+                    <label class="ux-toggle">
+                        <span class="ux-toggle-label">Auto Verify</span>
+                        <input type="checkbox" name="auto_verify" {"checked" if settings.get("auto_verify") else ""} {"disabled" if not can_auto_verify else ""}>
+                        <span class="ux-switch"></span>
+                    </label>
+                    <label class="ux-toggle">
+                        <span class="ux-toggle-label">Auto Delivery</span>
+                        <input type="checkbox" name="auto_delivery" {"checked" if settings.get("auto_delivery") else ""} {"disabled" if not can_auto_delivery else ""}>
+                        <span class="ux-switch"></span>
+                    </label>
+                    <label class="ux-toggle">
+                        <span class="ux-toggle-label">Auto open support ticket on failed delivery</span>
+                        <input type="checkbox" name="auto_open_ticket_on_failed_delivery" {"checked" if settings.get("auto_open_ticket_on_failed_delivery") else ""} {"disabled" if not can_auto_failed_ticket else ""}>
+                        <span class="ux-switch"></span>
+                    </label>
+                </div>
+
+                <div class="field-group detail-page-grid">
+                    <div class="field-item">
+                        <label>Currency Symbol</label>
+                        <input type="text" name="currency_symbol" value="{_escape(settings.get('currency_symbol') or 'THB')}" maxlength="12">
+                    </div>
+                    <div class="field-item">
+                        <label>Payment Mode</label>
+                        <select name="payment_mode">
+                            <option value="manual" {pm_manual_selected}>Manual Review</option>
+                            <option value="truemoney_gift" {pm_truemoney_selected} {"disabled" if not can_truemoney else ""}>TrueMoney Gift Link (Silver+)</option>
+                            <option value="shipok" {pm_shipok_selected} {"disabled" if not can_shipok else ""}>SHIPOK / SlipOK (Gole+)</option>
+                            <option value="wallet" {pm_wallet_selected}>Wallet Only</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field-group detail-page-grid">
+                    <div class="field-item">
+                        <label>PromptPay Number</label>
+                        <input type="text" name="promptpay_number" value="{_escape(settings.get('promptpay_number') or '')}" maxlength="20" placeholder="0881234567">
+                    </div>
+                    <div class="field-item">
+                        <label>TrueMoney Phone</label>
+                        <input type="text" name="truemoney_phone" value="{_escape(settings.get('truemoney_phone') or '')}" maxlength="20" placeholder="0881234567">
+                    </div>
+                </div>
+
+                <div class="ux-toggle-group" style="margin-bottom:10px;">
+                    <label class="ux-toggle">
+                        <span class="ux-toggle-label">TrueMoney Gift Verify</span>
+                        <input type="checkbox" name="truemoney_gift_enabled" {"checked" if settings.get("truemoney_gift_enabled") else ""} {"disabled" if not can_truemoney else ""}>
+                        <span class="ux-switch"></span>
+                    </label>
+                    <label class="ux-toggle">
+                        <span class="ux-toggle-label">Enable SHIPOK/SlipOK</span>
+                        <input type="checkbox" name="shipok_enabled" {"checked" if settings.get("shipok_enabled") else ""} {"disabled" if not can_shipok else ""}>
+                        <span class="ux-switch"></span>
+                    </label>
+                </div>
+
+                <div class="field-group detail-page-grid">
+                    <div class="field-item">
+                        <label>Slip Verification Engine</label>
+                        <select name="slipcheck_verify_engine">
+                            <option value="skylinebotslip" {"selected" if (settings.get("slipcheck_verify_engine") or "slipok") == "skylinebotslip" else ""}>SkylineBotSlip (Internal OCR + Rule Match)</option>
+                            <option value="slipok" {"selected" if (settings.get("slipcheck_verify_engine") or "slipok") == "slipok" else ""}>SlipOK (API Verify + Rule Match)</option>
+                        </select>
+                    </div>
+                    <div class="field-item">
+                        <label>SlipOK API URL</label>
+                        <input type="url" name="slipok_api_url" value="{_escape(settings.get('slipok_api_url') or '')}" placeholder="https://api.slipok.com/api/line/apikey/...">
+                    </div>
+                    <div class="field-item">
+                        <label>SlipOK API Key</label>
+                        <input type="text" name="slipok_key" value="{_escape(settings.get('slipok_key') or '')}" maxlength="240">
+                    </div>
+                </div>
+
+                <div class="field-group detail-page-grid">
+                    <div class="field-item">
+                        <label>Receiver Full Name (fallback)</label>
+                        <input type="text" name="slipcheck_expected_receiver_name" value="{_escape(settings.get('slipcheck_expected_receiver_name') or '')}" placeholder="ชื่อบัญชีผู้รับ">
+                    </div>
+                    <div class="field-item">
+                        <label>Receiver First Name (TH)</label>
+                        <input type="text" name="slipcheck_expected_receiver_first_name_th" value="{_escape(settings.get('slipcheck_expected_receiver_first_name_th') or '')}" placeholder="ชื่อจริงภาษาไทย">
+                    </div>
+                    <div class="field-item">
+                        <label>Receiver Last Name (TH)</label>
+                        <input type="text" name="slipcheck_expected_receiver_last_name_th" value="{_escape(settings.get('slipcheck_expected_receiver_last_name_th') or '')}" placeholder="นามสกุลภาษาไทย">
+                    </div>
+                    <div class="field-item">
+                        <label>Receiver First Name (EN)</label>
+                        <input type="text" name="slipcheck_expected_receiver_first_name_en" value="{_escape(settings.get('slipcheck_expected_receiver_first_name_en') or '')}" placeholder="First name">
+                    </div>
+                    <div class="field-item">
+                        <label>Receiver Last Name (EN)</label>
+                        <input type="text" name="slipcheck_expected_receiver_last_name_en" value="{_escape(settings.get('slipcheck_expected_receiver_last_name_en') or '')}" placeholder="Last name">
+                    </div>
+                </div>
+
+                <div class="field-group detail-page-grid">
+                    <div class="field-item">
+                        <label>Sender Full Name (optional fallback)</label>
+                        <input type="text" name="slipcheck_expected_sender_name" value="{_escape(settings.get('slipcheck_expected_sender_name') or '')}" placeholder="ชื่อผู้โอน">
+                    </div>
+                    <div class="field-item">
+                        <label>Sender First Name (TH)</label>
+                        <input type="text" name="slipcheck_expected_sender_first_name_th" value="{_escape(settings.get('slipcheck_expected_sender_first_name_th') or '')}" placeholder="ชื่อจริงผู้โอน">
+                    </div>
+                    <div class="field-item">
+                        <label>Sender Last Name (TH)</label>
+                        <input type="text" name="slipcheck_expected_sender_last_name_th" value="{_escape(settings.get('slipcheck_expected_sender_last_name_th') or '')}" placeholder="นามสกุลผู้โอน">
+                    </div>
+                    <div class="field-item">
+                        <label>Sender First Name (EN)</label>
+                        <input type="text" name="slipcheck_expected_sender_first_name_en" value="{_escape(settings.get('slipcheck_expected_sender_first_name_en') or '')}" placeholder="First name">
+                    </div>
+                    <div class="field-item">
+                        <label>Sender Last Name (EN)</label>
+                        <input type="text" name="slipcheck_expected_sender_last_name_en" value="{_escape(settings.get('slipcheck_expected_sender_last_name_en') or '')}" placeholder="Last name">
+                    </div>
+                </div>
+
+                <div class="field-group detail-page-grid">
+                    <div class="field-item">
+                        <label>Receiver Bank</label>
+                        <input type="text" name="slipcheck_expected_receiver_bank" value="{_escape(settings.get('slipcheck_expected_receiver_bank') or '')}" placeholder="KTB / BBL / BAY">
+                    </div>
+                    <div class="field-item">
+                        <label>Receiver Account</label>
+                        <input type="text" name="slipcheck_expected_receiver_account" value="{_escape(settings.get('slipcheck_expected_receiver_account') or '')}" placeholder="เลขบัญชีผู้รับ">
+                    </div>
+                    <div class="field-item">
+                        <label>Sender Bank (optional)</label>
+                        <input type="text" name="slipcheck_expected_sender_bank" value="{_escape(settings.get('slipcheck_expected_sender_bank') or '')}" placeholder="ธนาคารผู้โอน">
+                    </div>
+                    <div class="field-item">
+                        <label>Sender Account (optional)</label>
+                        <input type="text" name="slipcheck_expected_sender_account" value="{_escape(settings.get('slipcheck_expected_sender_account') or '')}" placeholder="เลขบัญชีผู้โอน">
+                    </div>
+                    <div class="field-item">
+                        <label>Expected Reference (optional)</label>
+                        <input type="text" name="slipcheck_expected_reference" value="{_escape(settings.get('slipcheck_expected_reference') or '')}" placeholder="เลขอ้างอิง">
+                    </div>
+                    <div class="field-item">
+                        <label>Expected QR Reference (optional)</label>
+                        <input type="text" name="slipcheck_expected_qr_reference" value="{_escape(settings.get('slipcheck_expected_qr_reference') or '')}" placeholder="ข้อมูลอ้างอิงจาก QR">
+                    </div>
+                    <div class="field-item">
+                        <label>Max Slip Age (minutes)</label>
+                        <input type="number" name="slipcheck_max_age_minutes" min="0" max="43200" step="1" value="{_escape(settings.get('slipcheck_max_age_minutes') or 1440)}">
+                    </div>
+                    <div class="field-item">
+                        <label>Auto Approve Confidence (%)</label>
+                        <input type="number" name="slipcheck_auto_approve_confidence" min="0" max="100" step="0.01" value="{_escape(settings.get('slipcheck_auto_approve_confidence') or 85)}">
+                    </div>
+                    <div class="field-item">
+                        <label>Manual Review Confidence (%)</label>
+                        <input type="number" name="slipcheck_manual_review_confidence" min="0" max="100" step="0.01" value="{_escape(settings.get('slipcheck_manual_review_confidence') or 55)}">
+                    </div>
+                    <div class="field-item">
+                        <label>Duplicate Window (hours)</label>
+                        <input type="number" name="slipcheck_duplicate_window_hours" min="1" max="2160" step="1" value="{_escape(settings.get('slipcheck_duplicate_window_hours') or 72)}">
+                    </div>
+                    <div class="field-item">
+                        <label>Review Channel (uncertain case)</label>
+                        {_render_channel_select("slipcheck_review_channel_id", bot_guild, settings.get("slipcheck_review_channel_id"), filter_types=["text", "news", "forum"])}
+                    </div>
+                    <div class="field-item">
+                        <label>Review DM User IDs (comma)</label>
+                        <input type="text" name="slipcheck_review_dm_user_ids" value="{_escape(settings.get('slipcheck_review_dm_user_ids') or '')}" placeholder="123,456">
+                    </div>
+                </div>
+
+                <div class="field-group detail-page-grid">
+                    <div class="field-item">
+                        <label>Shop Channel</label>
+                        {_render_channel_select("shop_channel_id", bot_guild, settings.get("shop_channel_id"), filter_types=["text", "news", "forum"])}
+                    </div>
+                    <div class="field-item">
+                        <label>Order Log Channel</label>
+                        {_render_channel_select("order_log_channel_id", bot_guild, settings.get("order_log_channel_id"), filter_types=["text", "news", "forum"])}
+                    </div>
+                </div>
+
+                <div class="field-group detail-page-grid">
+                    <div class="field-item">
+                        <label>Admin Contact Channel</label>
+                        {_render_channel_select("admin_contact_channel_id", bot_guild, settings.get("admin_contact_channel_id"), filter_types=["text", "news", "forum"])}
+                    </div>
+                    <div class="field-item">
+                        <label>Support Role IDs (comma)</label>
+                        <input type="text" name="support_role_ids" value="{_escape(support_roles_text)}" placeholder="123,456">
+                    </div>
+                </div>
+
+                <div class="ux-toggle-group" style="margin-bottom:10px;">
+                    <label class="ux-toggle">
+                        <span class="ux-toggle-label">Only users with buy roles can view products</span>
+                        <input type="checkbox" name="buyer_view_only_roles" {"checked" if settings.get("buyer_view_only_roles") else ""}>
+                        <span class="ux-switch"></span>
+                    </label>
+                </div>
+
+                <button class="primary-btn" type="submit">Save Shop Settings</button>
+            </section>
+        </form>
+    </section>
+
+    <section class="panel">
+        <div class="panel-header">
+            <div class="panel-title">
+                <h2 data-icon-key="create">Add Product</h2>
+                <p>Create sellable items and set who can view/buy each product.</p>
+                {"<p class='muted' style='margin:0;'>Product cap reached for your current plan. Upgrade to add more.</p>" if product_slots_left <= 0 else ""}
+            </div>
+        </div>
+
+        <form method="post" action="/dashboard/guild/{current_guild['id']}/shop" class="field-group" style="grid-template-columns:1fr;">
+            <input type="hidden" name="shop_action" value="add_product">
+            <div class="field-group detail-page-grid">
+                <div class="field-item"><label>Name</label><input type="text" name="name" maxlength="120" required></div>
+                <div class="field-item"><label>SKU (optional)</label><input type="text" name="sku" maxlength="32" placeholder="vip_30d"></div>
+            </div>
+            <div class="field-item"><label>Description</label><textarea name="description" style="min-height:80px;"></textarea></div>
+            <div class="field-group detail-page-grid">
+                <div class="field-item"><label>Price</label><input type="number" name="price" step="0.01" min="0" value="0" required></div>
+                <div class="field-item"><label>Stock (-1 = unlimited)</label><input type="number" name="stock" min="-1" value="0" required></div>
+            </div>
+            <div class="field-group detail-page-grid">
+                <div class="field-item"><label>Visible role IDs (comma)</label><input type="text" name="visible_role_ids" placeholder="123,456"></div>
+                <div class="field-item"><label>Buy role IDs (comma)</label><input type="text" name="buy_role_ids" placeholder="123,456"></div>
+            </div>
+            <div class="field-item"><label>Image URL</label><input type="url" name="image_url" placeholder="https://..."></div>
+
+            <div class="field-group detail-page-grid">
+                <div class="field-item">
+                    <label>Delivery Type</label>
+                    <select name="delivery_type">
+                        <option value="none">Manual</option>
+                        <option value="role" {"disabled" if not can_delivery_role else ""}>Give Role (Diamond)</option>
+                        <option value="dm" {"disabled" if not can_delivery_dm_text else ""}>DM Code / Message (Silver+)</option>
+                        <option value="text" {"disabled" if not can_delivery_dm_text else ""}>DM Text (Silver+)</option>
+                    </select>
+                </div>
+                <div class="field-item">
+                    <label>Delivery Role</label>
+                    {_render_role_select("delivery_role_id", bot_guild, None, placeholder="No role")}
+                </div>
+            </div>
+
+            <div class="field-item"><label>Delivery Payload (1 line = 1 code)</label><textarea name="delivery_payload" style="min-height:90px;"></textarea></div>
+            <div class="field-item"><label>Delivery Note</label><textarea name="delivery_note" style="min-height:70px;"></textarea></div>
+            <div class="ux-toggle-group" style="margin-bottom: 10px;">
+                <label class="ux-toggle"><span class="ux-toggle-label">Enable product immediately</span><input type="checkbox" name="enabled" checked><span class="ux-switch"></span></label>
+            </div>
+            <button class="primary-btn" type="submit" {add_product_disabled}>Add Product</button>
+        </form>
+    </section>
+
+    <section class="panel">
+        <div class="panel-header">
+            <div class="panel-title">
+                <h2 data-icon-key="economy">Products</h2>
+                <p>Edit products, stock, payment access, and delivery setup.</p>
+            </div>
+        </div>
+        <div class="section-stack">
+            {product_cards_html}
+        </div>
+    </section>
+</div>

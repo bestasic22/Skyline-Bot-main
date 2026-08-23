@@ -1,0 +1,118 @@
+    <div class="section-stack dashboard-detail-shell page-customrole-shell">
+        <section class="panel">
+            <div class="panel-header detail-page-hero detail-page-hero-customrole">
+                <div class="panel-title detail-page-hero-copy">
+                    <h1 data-i18n="tab_customrole" data-icon-key="customrole">Custom Role Automation</h1>
+                    <p>ตั้งค่าคำสั่งลัดเพื่อเพิ่ม/ลบบทบาทให้สมาชิกจากข้อความเดียว พร้อมสิทธิ์คุมการใช้งาน</p>
+                </div>
+                <span class="plugin-premium-pill">Plan: {_escape(plan_name)} | {used_items}/{max_items}</span>
+            </div>
+            {"<div class='notice'>Reached plan limit for this feature.</div>" if limit_reached else ""}
+
+            {orphaned_notice_markup}
+
+            <section class="panel-sub detail-page-section" style="margin-bottom:14px;">
+                <h2 style="margin-top:0;" data-icon-key="customrole_info">Custom Role คืออะไร และทำงานยังไง</h2>
+                <p class="muted" style="margin:8px 0 12px;">เมื่อผู้ใช้พิมพ์คีย์คำสั่ง เช่น <code>vip @member</code> ระบบจะสลับบทบาทที่ผูกไว้ให้สมาชิกคนนั้น (มีอยู่แล้ว = เอาออก, ยังไม่มี = เพิ่มให้)</p>
+                <div class="field-group">
+                    <div class="field-item">
+                        <label>ยศที่ต้องมีในการใช้งานคีย์คำสั่ง</label>
+                        <input type="text" value="{_escape(required_role_name)}" disabled>
+                    </div>
+                    <div class="field-item">
+                        <label>ตัวอย่างการใช้งาน (กดคัดลอกได้)</label>
+                        <ul style="margin:8px 0 0 18px; display:grid; gap:6px;">{command_examples_markup}</ul>
+                    </div>
+                </div>
+            </section>
+
+            <form method="post" action="/dashboard/guild/{current_guild['id']}/customrole/required_role" class="panel-sub detail-page-section" style="margin-bottom:14px;">
+                <h2 style="margin-top:0;" data-icon-key="customrole_permissions">1) ตั้งสิทธิ์ผู้ใช้คำสั่ง</h2>
+                <div class="field-group">
+                    <div class="field-item">
+                        <label>Required Role</label>
+                        {_render_role_select("required_role_id", bot_guild, required_role_id, placeholder="เลือกยศที่สามารถใช้คีย์คำสั่ง...")}
+                    </div>
+                </div>
+                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                    <button class="primary-btn" type="submit" style="width:fit-content; padding:0 24px;">บันทึก Required Role</button>
+                    <button class="ghost-btn" formaction="/dashboard/guild/{current_guild['id']}/customrole/required_role/clear" formmethod="post" type="submit" style="width:fit-content; padding:0 18px;">ล้าง Required Role</button>
+                </div>
+            </form>
+
+            <form method="post" action="/dashboard/guild/{current_guild['id']}/customrole/add" class="panel-sub detail-page-section" style="margin-bottom:14px;">
+                <h2 style="margin-top:0;" data-icon-key="customrole_setup">2) เพิ่มคีย์คำสั่งบทบาท</h2>
+                <div class="field-group">
+                    <div class="field-item">
+                        <label>คีย์คำสั่ง</label>
+                        <input type="text" name="name" placeholder="vip, booster, legend" maxlength="32" pattern="[a-z0-9_-]+" required {"disabled" if limit_reached else ""}>
+                    </div>
+                    <div class="field-item">
+                        <label>บทบาทเป้าหมาย</label>
+                        {_render_role_select("role_id", bot_guild, placeholder="เลือกยศ...")}
+                    </div>
+                </div>
+                <div class="muted" style="margin-bottom:12px;">คีย์คำสั่งต้องเป็นตัวพิมพ์เล็ก a-z, 0-9, _ หรือ - และห้ามชนกับคำสั่งบอทหลัก</div>
+                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                    <button class="primary-btn" type="submit" style="width:fit-content; padding:0 24px;" {"disabled" if limit_reached else ""}>+ เพิ่มคีย์คำสั่ง</button>
+                    {"<a class='ghost-btn' href='" + SUBSCRIBE_PLAN_PATH + "'>Upgrade Plan</a>" if limit_reached else ""}
+                </div>
+            </form>
+
+            <section class="panel-sub detail-page-section" style="padding:0; overflow:hidden;">
+                <div class="panel-header" style="padding:14px 16px 0;">
+                    <div class="panel-title">
+                        <h2 style="margin:0;" data-icon-key="customrole_catalog">3) รายการคีย์คำสั่งที่ตั้งไว้</h2>
+                    </div>
+                </div>
+                <div style="padding:14px 16px 16px;">
+                    {rows_markup if rows_markup else '<div class="muted" style="text-align:center; padding:30px;">ยังไม่มีคีย์คำสั่ง Custom Role</div>'}
+                </div>
+            </section>
+        </section>
+    </div>
+
+    <script>
+      (function () {{
+        const buttons = document.querySelectorAll('[data-copy-command]');
+        if (!buttons.length) return;
+
+        const copyText = async (value) => {{
+          const text = String(value || '').trim();
+          if (!text) return false;
+          try {{
+            if (navigator.clipboard && navigator.clipboard.writeText) {{
+              await navigator.clipboard.writeText(text);
+              return true;
+            }}
+          }} catch (error) {{}}
+
+          try {{
+            const area = document.createElement('textarea');
+            area.value = text;
+            area.style.position = 'fixed';
+            area.style.opacity = '0';
+            document.body.appendChild(area);
+            area.focus();
+            area.select();
+            const ok = document.execCommand('copy');
+            area.remove();
+            return !!ok;
+          }} catch (error) {{
+            return false;
+          }}
+        }};
+
+        buttons.forEach((button) => {{
+          button.addEventListener('click', async () => {{
+            const value = button.getAttribute('data-copy-command') || '';
+            const oldText = button.textContent || 'คัดลอก';
+            const ok = await copyText(value);
+            button.textContent = ok ? 'คัดลอกแล้ว' : 'คัดลอกไม่สำเร็จ';
+            window.setTimeout(() => {{
+              button.textContent = oldText;
+            }}, 1200);
+          }});
+        }});
+      }})();
+    </script>

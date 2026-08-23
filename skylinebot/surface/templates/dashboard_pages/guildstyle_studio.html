@@ -1,0 +1,499 @@
+    <section class="panel section-stack dashboard-detail-shell page-guildstyle-studio">
+      <div class="panel-header detail-page-hero detail-page-hero-roleplay">
+        <div class="panel-title detail-page-hero-copy">
+          <h1>Theme guildstyle</h1>
+          <p>Decorate your server theme: layout, role colors, naming engine, visibility rules, and category/channel management.</p>
+          <small class="muted">{_escape(guildstyle_access_summary)}</small>
+        </div>
+        <div class="rp-hero-metrics">
+          <span class="pill">Theme: <strong>{_escape(guildstyle_selected_theme)}</strong></span>
+          <span class="pill">Font: <strong>{_escape(guildstyle_selected_font_style)}</strong></span>
+          <span class="pill">Rooms: <strong>{guildstyle_room_count}</strong></span>
+          <span class="pill">Roles: <strong>{guildstyle_role_count}</strong></span>
+        </div>
+      </div>
+
+      <div class="panel-sub gs-studio-toolbar">
+        <span class="muted">Studio workflow:</span>
+        <a class="ghost-btn" href="#gsLayoutBuilder">1) Layout Builder</a>
+        <a class="ghost-btn" href="#gsThemePreview">2) Live Preview</a>
+        <a class="ghost-btn" href="#gsThemeEngine">3) Theme Engine</a>
+        <a class="ghost-btn" href="#gsCategoryManager">4) Category Manager</a>
+        <a class="ghost-btn" href="#gsChannelManager">5) Channel Manager</a>
+        <a class="ghost-btn" href="#gsEasyVisibility">6) Easy Visibility</a>
+      </div>
+
+      <section class="panel-sub detail-page-section" id="gsLayoutBuilder">
+        <h2>General Studio Actions</h2>
+        <p class="muted">Use this tab for theme and layout work only. Roleplay gameplay is managed separately with <code>/guildstyle roplay</code>.</p>
+        <form method="post" action="{guildstyle_post_target}" class="panel-sub gs-create-layout-form" id="guildstyleCreateForm" style="margin-bottom:10px;">
+          <input type="hidden" name="action" value="guildstyle_create_layout">
+          <div class="field-group">
+            <div class="field-item">
+              <label>Theme</label>
+              <select name="guildstyle_create_theme" id="gsThemeSelect" {'disabled' if not can_apply_preset else ''}>
+                <option value="community" {'selected' if guildstyle_selected_theme == 'community' else ''}>Community</option>
+                <option value="shop" {'selected' if guildstyle_selected_theme == 'shop' else ''}>Shop</option>
+                <option value="gaming" {'selected' if guildstyle_selected_theme == 'gaming' else ''}>Gaming</option>
+                <option value="roleplay" {'selected' if guildstyle_selected_theme == 'roleplay' else ''}>Roleplay</option>
+              </select>
+            </div>
+            <div class="field-item">
+              <label>Font Style</label>
+              <select name="guildstyle_create_font_style" id="gsFontStyleSelect" {'disabled' if not can_apply_preset else ''}>
+                {guildstyle_font_style_option_html}
+              </select>
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="ux-toggle">
+              <span class="ux-toggle-label">Setup Autorole</span>
+              <input type="checkbox" name="guildstyle_setup_autorole" checked {'disabled' if not can_apply_preset else ''}>
+              <span class="ux-switch"></span>
+            </label>
+            <label class="ux-toggle">
+              <span class="ux-toggle-label">Setup Default Permissions</span>
+              <input type="checkbox" name="guildstyle_setup_permissions" checked {'disabled' if not can_apply_preset else ''}>
+              <span class="ux-switch"></span>
+            </label>
+          </div>
+          <div class="rp-inline-actions">
+            <button type="submit" class="primary-btn" {'disabled' if not can_apply_preset else ''}>Create GuildStyle Layout</button>
+            <small class="muted">Creates channels + roles + default room access like <code>/guildstyle theme</code>.</small>
+          </div>
+          <div class="gs-live-selection">
+            <span class="pill">Theme: <strong id="gsLiveThemeLabel">{_escape(guildstyle_selected_theme)}</strong></span>
+            <span class="pill">Font: <strong id="gsLiveFontLabel">{_escape(guildstyle_selected_font_style)}</strong></span>
+            <span class="pill">Preview Mode: <strong>Realtime</strong></span>
+          </div>
+        </form>
+        <div class="rp-inline-actions">
+          <span class="pill">Theme workflow is isolated from RP gameplay setup and command flow.</span>
+          <a class="ghost-btn" href="{_escape(roleplay_tab_url)}">Open Roleplay Tab</a>
+        </div>
+      </section>
+
+      <section class="panel-sub detail-page-section" id="gsThemePreview">
+        <h2>GuildStyle Theme Preview</h2>
+        <p class="muted">Preview cards below mirror the actual room/category naming style used during real creation.</p>
+        <div class="gs-preview-toolbar" id="gsThemePreviewToolbar">
+          <div class="gs-preview-font-pills">
+            {guildstyle_preview_font_pills_html}
+          </div>
+        </div>
+        <p class="muted" id="gsThemePreviewLiveHint">Live preview: {_escape(guildstyle_selected_theme)} theme, {_escape(guildstyle_selected_font_style)} font</p>
+        {'<p class="muted">' + _escape(guildstyle_preview_notice) + '</p>' if guildstyle_preview_notice else ''}
+        <div class="gs-preview-grid" id="gsThemePreviewGrid" data-gs-selected-theme="{_escape(guildstyle_selected_theme)}" data-gs-selected-font-style="{_escape(guildstyle_selected_font_style)}" data-gs-font-style-options="{_escape(guildstyle_font_style_allowed_csv)}">
+          {guildstyle_theme_preview_cards_html}
+        </div>
+      </section>
+
+      <section class="panel-sub detail-page-section" id="gsThemeEngine">
+        <h2>GuildStyle Theme Engine</h2>
+        <p class="muted">Apply selected naming style to all categories, channels, and roles. Support custom token format: <code>{{emoji}}</code> + <code>{{name}}</code>.</p>
+        <div class="rp-two-col">
+          <form method="post" action="{guildstyle_post_target}" id="gsThemeEngineForm">
+            <input type="hidden" name="action" value="guildstyle_apply_theme_engine">
+            <input type="hidden" name="guildstyle_theme" id="gsThemeEngineThemeHidden" value="">
+            <fieldset class="rp-fieldset" {'disabled' if not can_manage_channels else ''}>
+              <div class="field-group">
+                <div class="field-item">
+                  <label>Theme</label>
+                  <input type="text" id="gsThemeEngineThemeDisplay" value="not set (custom guild decorate mode)" readonly>
+                </div>
+                <div class="field-item">
+                  <label>Font Style</label>
+                  <select name="guildstyle_font_style">
+                    {guildstyle_font_style_option_html}
+                  </select>
+                </div>
+              </div>
+              <div class="field-group">
+                <div class="field-item">
+                  <label>Name Mode</label>
+                  <select name="guildstyle_name_mode" id="gsNameModeSelect">
+                    {guildstyle_name_mode_option_html}
+                  </select>
+                </div>
+                <div class="field-item">
+                  <label>Template ({{emoji}} / {{name}})</label>
+                  <input type="text" name="guildstyle_name_template" id="gsNameTemplateInput" maxlength="180" value="{_escape(guildstyle_selected_name_template)}" placeholder="{{emoji}} {{name}}">
+                </div>
+              </div>
+              <div class="field-group">
+                <label class="ux-toggle">
+                  <span class="ux-toggle-label">Apply Categories</span>
+                  <input type="checkbox" name="guildstyle_apply_categories" checked {'disabled' if not can_manage_channels else ''}>
+                  <span class="ux-switch"></span>
+                </label>
+                <label class="ux-toggle">
+                  <span class="ux-toggle-label">Apply Channels</span>
+                  <input type="checkbox" name="guildstyle_apply_channels" checked {'disabled' if not can_manage_channels else ''}>
+                  <span class="ux-switch"></span>
+                </label>
+                <label class="ux-toggle">
+                  <span class="ux-toggle-label">Apply Roles</span>
+                  <input type="checkbox" name="guildstyle_apply_roles" checked {'disabled' if not can_manage_channels else ''}>
+                  <span class="ux-switch"></span>
+                </label>
+                <label class="ux-toggle">
+                  <span class="ux-toggle-label">Ignore Exclude List (rename all)</span>
+                  <input type="checkbox" name="guildstyle_force_all_rename" checked {'disabled' if not can_manage_channels else ''}>
+                  <span class="ux-switch"></span>
+                </label>
+              </div>
+              <small class="muted">Choose a preset Name Mode (dropdown shows live preview cards) or switch to Custom Template mode for full control.</small>
+              <small class="muted">When Ignore Exclude List is ON, previously excluded rooms/categories/roles will also be renamed in this run.</small>
+              <small class="muted">Roles only: disable Categories + Channels. Entire guild: enable all three toggles.</small>
+            </fieldset>
+            <button type="submit" class="primary-btn" {'disabled' if not can_manage_channels else ''}>Apply Theme to Entire Guild</button>
+            <div class="table-wrap" style="margin-top:12px;">
+              <label>Engine Preview (Current -> New)</label>
+              <table class="table-like">
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Current</th>
+                    <th>New Preview</th>
+                  </tr>
+                </thead>
+                <tbody id="gsEngineCompareBody">{guildstyle_engine_compare_rows_html}</tbody>
+              </table>
+              <small class="muted">Left is current guild naming. Right updates by selected Font Style + Name Mode before you apply.</small>
+            </div>
+          </form>
+
+          <section class="gs-category-theme-panel">
+            <h3>Category Mapping</h3>
+            <small class="muted">Current category mapping list.</small>
+            <div class="table-wrap gs-category-theme-map-wrap">
+              <table class="table-like gs-category-theme-map-table" id="gsCategoryThemeMapTable">
+                <thead>
+                  <tr>
+                    <th>Category</th>
+                    <th>Mapped</th>
+                    <th>Effective</th>
+                  </tr>
+                </thead>
+                <tbody id="gsCategoryThemeMapBody">{guildstyle_category_theme_rows_html}</tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+        <form method="post" action="{guildstyle_post_target}" id="gsRenameExclusionForm" style="margin-top:12px;">
+          <input type="hidden" name="action" value="guildstyle_set_rename_excludes">
+          <fieldset class="rp-fieldset" {'disabled' if not can_manage_permissions else ''}>
+            <div class="field-group">
+              <div class="field-item">
+                <label>Exclude Role Rename (multi-select)</label>
+                <select name="guildstyle_exclude_role_ids" multiple size="8">
+                  {guildstyle_role_exclude_option_html}
+                </select>
+                <small class="muted">Selected roles will keep current name when Apply Theme runs. Color update still works. Click selected item again to unselect.</small>
+              </div>
+              <div class="field-item">
+                <label>Exclude Room/Category Rename (multi-select)</label>
+                <select name="guildstyle_exclude_channel_ids" multiple size="8">
+                  {guildstyle_channel_exclude_option_html}
+                </select>
+                <small class="muted">Selected categories/channels will keep current name when Apply Theme runs. Click selected item again to unselect.</small>
+              </div>
+            </div>
+          </fieldset>
+          <button type="submit" class="primary-btn" {'disabled' if not can_manage_permissions else ''}>Save Rename Exclusions</button>
+        </form>
+      </section>
+
+      <section class="panel-sub detail-page-section" id="gsCategoryManager">
+        <h2>Category Manager</h2>
+        <p class="muted">Create, rename, and delete categories directly from dashboard.</p>
+        <div class="rp-two-col">
+          <form method="post" action="{guildstyle_post_target}" id="gsCategoryCreateForm">
+            <input type="hidden" name="action" value="guildstyle_create_category">
+            <fieldset class="rp-fieldset" {'disabled' if not can_manage_channels else ''}>
+              <div class="field-item">
+                <label>Category Name</label>
+                <input type="text" name="guildstyle_category_name" maxlength="100" placeholder="e.g. roleplay-zone">
+              </div>
+            </fieldset>
+            <button type="submit" class="primary-btn" {'disabled' if not can_manage_channels else ''}>Create Category</button>
+          </form>
+
+          <form method="post" action="{guildstyle_post_target}" id="gsCategoryEditForm">
+            <input type="hidden" name="action" value="guildstyle_edit_category">
+            <fieldset class="rp-fieldset" {'disabled' if not can_manage_channels else ''}>
+              <div class="field-item">
+                <label>Category</label>
+                <select name="guildstyle_category_id" id="gsCategoryEditSelect">{guildstyle_category_option_html}</select>
+              </div>
+              <div class="field-item">
+                <label>New Category Name</label>
+                <input type="text" name="guildstyle_new_category_name" maxlength="100" placeholder="leave blank to keep current name">
+              </div>
+            </fieldset>
+            <button type="submit" class="primary-btn" {'disabled' if not can_manage_channels else ''}>Rename Category</button>
+          </form>
+        </div>
+        <form method="post" action="{guildstyle_post_target}" id="gsCategoryReorderForm">
+          <input type="hidden" name="action" value="guildstyle_reorder_category">
+          <input type="hidden" name="guildstyle_category_order_ids" id="gsCategoryOrderIdsInput" value="">
+          <fieldset class="rp-fieldset" {'disabled' if not can_manage_channels else ''}>
+            <div class="field-item">
+              <label>Drag Categories To Reorder</label>
+              <ul class="gs-dnd-list" id="gsCategoryDndList">
+                {guildstyle_category_drag_items_html}
+              </ul>
+              <small class="muted" id="gsCategoryDndSummary">Drag and drop categories, then click apply.</small>
+            </div>
+          </fieldset>
+          <button type="submit" class="primary-btn" {'disabled' if not can_manage_channels else ''}>Apply Category Order</button>
+        </form>
+        <form method="post" action="{guildstyle_post_target}" id="gsCategoryDeleteForm">
+          <input type="hidden" name="action" value="guildstyle_delete_category">
+          <fieldset class="rp-fieldset" {'disabled' if not can_manage_channels else ''}>
+            <div class="field-group">
+              <div class="field-item">
+                <label>Category</label>
+                <select name="guildstyle_category_id" id="gsCategoryDeleteSelect">{guildstyle_category_option_html}</select>
+              </div>
+              <label class="ux-toggle">
+                <span class="ux-toggle-label">Delete Child Channels Too</span>
+                <input type="checkbox" name="guildstyle_delete_children">
+                <span class="ux-switch"></span>
+              </label>
+            </div>
+          </fieldset>
+          <button type="submit" class="primary-btn danger" {'disabled' if not can_manage_channels else ''}>Delete Category</button>
+        </form>
+      </section>
+
+      <section class="panel-sub detail-page-section" id="gsChannelManager">
+        <h2>Channel Manager</h2>
+        <p class="muted">Create, edit, move, and delete text/voice channels.</p>
+        <div class="rp-two-col">
+          <form method="post" action="{guildstyle_post_target}" id="gsChannelCreateForm">
+            <input type="hidden" name="action" value="guildstyle_create_channel">
+            <fieldset class="rp-fieldset" {'disabled' if not can_manage_channels else ''}>
+              <div class="field-group">
+                <div class="field-item">
+                  <label>Channel Type</label>
+                  <select name="guildstyle_channel_type">
+                    <option value="text">text</option>
+                    <option value="voice">voice</option>
+                  </select>
+                </div>
+                <div class="field-item">
+                  <label>Parent Category</label>
+                  <select name="guildstyle_category_id">{guildstyle_channel_parent_option_html}</select>
+                </div>
+              </div>
+              <div class="field-item">
+                <label>Channel Name</label>
+                <input type="text" name="guildstyle_channel_name" maxlength="100" placeholder="e.g. city-chat">
+              </div>
+            </fieldset>
+            <button type="submit" class="primary-btn" {'disabled' if not can_manage_channels else ''}>Create Channel</button>
+          </form>
+
+          <form method="post" action="{guildstyle_post_target}" id="gsChannelEditForm">
+            <input type="hidden" name="action" value="guildstyle_edit_channel">
+            <fieldset class="rp-fieldset" {'disabled' if not can_manage_channels else ''}>
+              <div class="field-item">
+                <label>Channel</label>
+                <select name="guildstyle_channel_id" id="gsChannelManageSelect">{guildstyle_channel_manage_option_html}</select>
+              </div>
+              <div class="field-item">
+                <label>New Name</label>
+                <input type="text" name="guildstyle_new_channel_name" maxlength="100" placeholder="leave blank to keep current name">
+              </div>
+              <div class="field-item">
+                <label>New Parent Category</label>
+                <select name="guildstyle_new_category_id" id="gsChannelNewParentSelect">
+                  <option value="__keep__">Keep current category</option>
+                  <option value="__none__">No category (uncategorized)</option>
+                  {guildstyle_category_option_html}
+                </select>
+              </div>
+            </fieldset>
+            <button type="submit" class="primary-btn" {'disabled' if not can_manage_channels else ''}>Update Channel</button>
+          </form>
+        </div>
+        <form method="post" action="{guildstyle_post_target}" id="gsChannelReorderForm">
+          <input type="hidden" name="action" value="guildstyle_reorder_channel">
+          <input type="hidden" name="guildstyle_channel_group" id="gsChannelOrderGroupInput" value="">
+          <input type="hidden" name="guildstyle_channel_order_ids" id="gsChannelOrderIdsInput" value="">
+          <fieldset class="rp-fieldset" {'disabled' if not can_manage_channels else ''}>
+            <div class="field-item">
+              <label>Channel Group</label>
+              <select id="gsChannelDndGroupSelect">
+                {guildstyle_channel_reorder_group_option_html}
+              </select>
+              <small class="muted">Reorder works within the selected group only.</small>
+            </div>
+            <div class="field-item">
+              <label>Drag Channels To Reorder</label>
+              <ul class="gs-dnd-list" id="gsChannelDndList">
+                {guildstyle_channel_drag_items_html}
+              </ul>
+              <small class="muted" id="gsChannelDndSummary">Drag and drop channels, then click apply.</small>
+            </div>
+          </fieldset>
+          <button type="submit" class="primary-btn" {'disabled' if not can_manage_channels else ''}>Apply Channel Order</button>
+        </form>
+        <form method="post" action="{guildstyle_post_target}" id="gsChannelDeleteForm">
+          <input type="hidden" name="action" value="guildstyle_delete_channel">
+          <fieldset class="rp-fieldset" {'disabled' if not can_manage_channels else ''}>
+              <div class="field-item">
+                <label>Channel</label>
+                <select name="guildstyle_channel_id" id="gsChannelDeleteSelect">{guildstyle_channel_manage_option_html}</select>
+              </div>
+          </fieldset>
+          <button type="submit" class="primary-btn danger" {'disabled' if not can_manage_channels else ''}>Delete Channel</button>
+        </form>
+      </section>
+
+      <section class="panel-sub detail-page-section" id="gsEasyVisibility">
+        <h2>Easy Visibility Manager</h2>
+        <p class="muted">Quickly set which roles can see each category or channel. Keep it simple: choose role, choose target, choose visible/hidden.</p>
+        <div class="rp-two-col">
+          <form method="post" action="{guildstyle_post_target}" id="gsVisibilityCategoryForm">
+            <input type="hidden" name="action" value="guildstyle_visibility_category_simple">
+            <fieldset class="rp-fieldset" {'disabled' if not can_manage_permissions else ''}>
+              <div class="field-item">
+                <label>Role</label>
+                <select name="guildstyle_role_id">{guildstyle_role_option_html}</select>
+              </div>
+              <div class="field-item">
+                <label>Category</label>
+                <select name="guildstyle_category_id">{guildstyle_category_option_html}</select>
+              </div>
+              <div class="field-item">
+                <label>Visibility</label>
+                <select name="guildstyle_visibility_state">
+                  <option value="allow">Visible</option>
+                  <option value="deny">Hidden</option>
+                  <option value="inherit">Inherit</option>
+                </select>
+              </div>
+              <label class="ux-toggle">
+                <span class="ux-toggle-label">Apply To All Channels In This Category</span>
+                <input type="checkbox" name="guildstyle_apply_children" checked {'disabled' if not can_manage_permissions else ''}>
+                <span class="ux-switch"></span>
+              </label>
+            </fieldset>
+            <button type="submit" class="primary-btn" {'disabled' if not can_manage_permissions else ''}>Apply Category Visibility</button>
+          </form>
+
+          <form method="post" action="{guildstyle_post_target}" id="gsVisibilityChannelForm">
+            <input type="hidden" name="action" value="guildstyle_visibility_channel_simple">
+            <fieldset class="rp-fieldset" {'disabled' if not can_manage_permissions else ''}>
+              <div class="field-item">
+                <label>Role</label>
+                <select name="guildstyle_role_id">{guildstyle_role_option_html}</select>
+              </div>
+              <div class="field-item">
+                <label>Channel</label>
+                <select name="guildstyle_channel_id" id="gsVisibilityChannelSelect">{guildstyle_channel_manage_option_html}</select>
+              </div>
+              <div class="field-item">
+                <label>Visibility</label>
+                <select name="guildstyle_visibility_state">
+                  <option value="allow">Visible</option>
+                  <option value="deny">Hidden</option>
+                  <option value="inherit">Inherit</option>
+                </select>
+              </div>
+            </fieldset>
+            <button type="submit" class="primary-btn" {'disabled' if not can_manage_permissions else ''}>Apply Channel Visibility</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="panel-sub detail-page-section">
+        <h2>Role Color Manager</h2>
+        <p class="muted">Manage role color, rename existing roles, and create new roles without slash commands.</p>
+        <div class="rp-two-col">
+          <div class="gs-role-manager-forms">
+            <form method="post" action="{guildstyle_post_target}" id="gsRoleColorForm">
+              <input type="hidden" name="action" value="guildstyle_set_role_color">
+              <fieldset class="rp-fieldset" {'disabled' if not can_manage_permissions else ''}>
+                <div class="field-item">
+                  <label>Role</label>
+                  <select name="guildstyle_role_id" id="gsRoleColorSelect">{guildstyle_role_option_html}</select>
+                </div>
+                <div class="field-item">
+                  <label>Color Picker</label>
+                  <input type="color" name="guildstyle_role_color" value="#5865F2">
+                </div>
+              </fieldset>
+              <div class="gs-role-color-live" id="gsRoleColorLive">
+                <span class="gs-color-dot" id="gsRoleColorLiveDot" style="--gs-color:#5865F2"></span>
+                <strong id="gsRoleColorLiveName">Select a role</strong>
+                <code id="gsRoleColorLiveHex">#5865F2</code>
+              </div>
+              <button type="submit" class="primary-btn" {'disabled' if not can_manage_permissions else ''}>Update Role Color</button>
+            </form>
+
+            <form method="post" action="{guildstyle_post_target}" id="gsRoleRenameForm">
+              <input type="hidden" name="action" value="guildstyle_rename_role">
+              <fieldset class="rp-fieldset" {'disabled' if not can_manage_permissions else ''}>
+                <div class="field-item">
+                  <label>Role</label>
+                  <select name="guildstyle_role_id" id="gsRoleRenameSelect">{guildstyle_role_option_html}</select>
+                </div>
+                <div class="field-item">
+                  <label>New Role Name</label>
+                  <input type="text" name="guildstyle_role_name" maxlength="100" placeholder="Enter new role name">
+                </div>
+              </fieldset>
+              <button type="submit" class="primary-btn" {'disabled' if not can_manage_permissions else ''}>Rename Role</button>
+            </form>
+
+            <form method="post" action="{guildstyle_post_target}" id="gsRoleCreateForm">
+              <input type="hidden" name="action" value="guildstyle_create_role">
+              <fieldset class="rp-fieldset" {'disabled' if not can_manage_permissions else ''}>
+                <div class="field-item">
+                  <label>Role Name</label>
+                  <input type="text" name="guildstyle_new_role_name" maxlength="100" placeholder="Enter role name">
+                </div>
+                <div class="field-item">
+                  <label>Color Picker</label>
+                  <input type="color" name="guildstyle_new_role_color" value="#5865F2">
+                </div>
+              </fieldset>
+              <button type="submit" class="primary-btn" {'disabled' if not can_manage_permissions else ''}>Create Role</button>
+            </form>
+          </div>
+
+          <div class="table-wrap">
+            <table class="table-like">
+              <thead>
+                <tr>
+                  <th>Role</th>
+                  <th>Hex</th>
+                  <th>Raw</th>
+                </tr>
+              </thead>
+              <tbody id="gsRolePaletteBody">{guildstyle_role_palette_rows_html}</tbody>
+            </table>
+          </div>
+        </div>
+        <form method="post" action="{guildstyle_post_target}" id="gsRoleReorderForm">
+          <input type="hidden" name="action" value="guildstyle_reorder_role">
+          <input type="hidden" name="guildstyle_role_order_ids" id="gsRoleOrderIdsInput" value="">
+          <fieldset class="rp-fieldset" {'disabled' if not can_manage_permissions else ''}>
+            <div class="field-item">
+              <label>Drag Roles To Reorder</label>
+              <ul class="gs-dnd-list" id="gsRoleDndList">
+                {guildstyle_role_drag_items_html}
+              </ul>
+              <small class="muted" id="gsRoleDndSummary">Drag and drop roles, then click apply.</small>
+            </div>
+          </fieldset>
+          <button type="submit" class="primary-btn" {'disabled' if not can_manage_permissions else ''}>Apply Role Order</button>
+        </form>
+      </section>
+
+    </section>
+    <link rel="stylesheet" href="/dashboard/static/dashboard/pages/guildstyle_studio.css">
+    <script>{_render_dashboard_f_template("scripts/guildstyle_studio.js", __ctx)}</script>

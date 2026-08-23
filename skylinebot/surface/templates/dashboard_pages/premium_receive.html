@@ -1,0 +1,88 @@
+<section class="section-stack dashboard-detail-shell page-premium-receive-shell">
+  <section class="panel">
+    <div class="panel-header detail-page-hero detail-page-hero-premium-receive">
+      <div class="panel-title detail-page-hero-copy">
+        <h1 data-i18n="tab_premium_receive"><i class="fa-solid fa-crown"></i> เลือกแพ็กเกจพรีเมียม</h1>
+        <p>จัดการแพ็กเกจของกิลด์จากหน้านี้ได้ทันที สมัคร เปลี่ยนแผน หรือยกเลิกการต่ออายุอัตโนมัติ</p>
+      </div>
+      <div class="detail-page-metrics premium-receive-hero-metrics">
+        <span class="pill">
+          <i class="fa-solid fa-gem" aria-hidden="true"></i>
+          Plan:
+          <strong>{_escape(plan_label)}</strong>
+        </span>
+        <span class="pill">
+          <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
+          หมดอายุ:
+          <strong>{_escape(period_end_text)}</strong>
+        </span>
+        <span class="pill {'is-online' if auto_renew else 'is-offline'}">
+          <i class="fa-solid {'fa-rotate' if auto_renew else 'fa-ban'}" aria-hidden="true"></i>
+          {'Auto Renew ON' if auto_renew else 'Auto Renew OFF'}
+        </span>
+      </div>
+    </div>
+
+    <section class="panel-sub detail-page-section premium-receive-status">
+      <div class="premium-status-grid">
+        <article class="premium-status-card {'active' if premium_active else ''}">
+          <span class="premium-status-icon"><i class="fa-solid fa-shield-heart" aria-hidden="true"></i></span>
+          <div>
+            <h3>สถานะแพ็กเกจของกิลด์</h3>
+            <p class="muted">{'กิลด์นี้เปิดใช้งานพรีเมียมแล้ว' if premium_active else 'กิลด์นี้อยู่ในแพ็กเกจ Free'}</p>
+            <p class="muted">เริ่มรอบ: {_escape(period_start_text)} | สิ้นสุดรอบ: {_escape(period_end_text)}</p>
+            <p class="muted">แพ็กเกจถัดไป: <strong>{_escape(pending_plan_label)}</strong></p>
+          </div>
+        </article>
+        <article class="premium-status-card">
+          <span class="premium-status-icon"><i class="fa-solid fa-wallet" aria-hidden="true"></i></span>
+          <div>
+            <h3>เติมเงินและประวัติ</h3>
+            <p class="muted">เมื่อยอดเงินใน Wallet พอ ระบบจะตัดเงินตามแพ็กเกจที่เลือกให้อัตโนมัติ</p>
+          </div>
+          <div class="premium-quick-links">
+            <a class="ghost-btn" href="{_escape(wallet_url)}"><i class="fa-solid fa-wallet" aria-hidden="true"></i> ไปหน้า Wallet</a>
+            <a class="ghost-btn" href="{_escape(profile_url)}"><i class="fa-solid fa-user" aria-hidden="true"></i> ไปหน้าโปรไฟล์</a>
+            <a class="ghost-btn" href="{_escape(support_url)}" target="_blank" rel="noopener"><i class="fa-solid fa-headset" aria-hidden="true"></i> ติดต่อซัพพอร์ต</a>
+          </div>
+        </article>
+      </div>
+      {cancel_plan_form}
+    </section>
+
+    <section class="panel-sub detail-page-section premium-plan-selector">
+      <div class="premium-section-head">
+        <h2><i class="fa-solid fa-layer-group" aria-hidden="true"></i> เลือกแพ็กเกจที่ต้องการ</h2>
+        <span class="mini-stat">หากยังไม่หมดรอบ ระบบจะคิวเปลี่ยนแผนให้อัตโนมัติในรอบถัดไป</span>
+      </div>
+      <div class="premium-plan-grid">
+        {plan_cards_markup}
+      </div>
+    </section>
+
+    <section class="panel-sub detail-page-section premium-receive-steps">
+      <div class="premium-section-head">
+        <h2><i class="fa-solid fa-list-check" aria-hidden="true"></i> ขั้นตอนใช้งาน</h2>
+        <a class="ghost-btn" href="{_escape(premium_doc_url)}">
+          <i class="fa-solid fa-book-open" aria-hidden="true"></i>
+          ดูรายละเอียดแพ็กเกจ
+        </a>
+      </div>
+      <ol class="premium-step-list">
+        <li>
+          <strong>เติมเงินเข้า Wallet</strong>
+          <p>เข้าเมนู Wallet แล้วสร้างรายการเติมเงินผ่าน QR / PromptPay / ช่องทางที่เปิดใช้งาน</p>
+        </li>
+        <li>
+          <strong>เลือกแพ็กเกจจากหน้านี้</strong>
+          <p>กดเลือกแพ็กเกจที่ต้องการ หากยังไม่หมดรอบ ระบบจะตั้งคิวเปลี่ยนแพ็กเกจในรอบถัดไป</p>
+        </li>
+        <li>
+          <strong>ติดตามสถานะจากโปรไฟล์</strong>
+          <p>ดูประวัติเติมเงิน ประวัติพรีเมียม และจัดการแผนต่อได้จากหน้าโปรไฟล์ผู้ใช้</p>
+        </li>
+      </ol>
+    </section>
+  </section>
+</section>
+<link rel="stylesheet" href="/dashboard/static/dashboard/pages/premium_receive.css">

@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>กฎเซิร์ฟเวอร์ซัพพอร์ต - {{APP_NAME}}</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" type="image/png" href="/favicon.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="/dashboard/static/dashboard/public-pages.css">
+  <style>
+    .hero-rule::after {
+      inset: auto -28% -84% auto;
+      width: 360px;
+      background: radial-gradient(circle, rgba(116, 211, 255, 0.34), transparent 70%);
+    }
+
+    .hero-actions {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+    }
+
+    .hero-link {
+      min-height: 46px;
+      border-radius: 12px;
+      border: 1px solid rgba(120, 173, 255, 0.5);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 800;
+      text-decoration: none;
+      transition: transform 0.16s ease, filter 0.16s ease;
+    }
+
+    .hero-link:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+      text-decoration: none;
+    }
+
+    .hero-link.primary {
+      color: #07182b;
+      background: linear-gradient(140deg, #48a8ff, #35d3ea);
+    }
+
+    .hero-link.ghost {
+      color: #d8edff;
+      background: rgba(12, 24, 45, 0.82);
+      border-color: rgba(120, 173, 255, 0.36);
+    }
+
+    .rules-list {
+      margin-top: 10px;
+      padding-left: 20px;
+    }
+
+    .rules-list li {
+      margin-bottom: 8px;
+    }
+
+    .rule-note {
+      margin-top: 10px;
+      border: 1px dashed var(--public-line);
+      border-radius: 12px;
+      padding: 10px;
+      background: rgba(12, 24, 45, 0.58);
+    }
+
+    .rule-grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+    }
+
+    .rule-card {
+      border: 1px solid var(--public-line);
+      border-radius: 14px;
+      padding: 12px;
+      background: rgba(11, 18, 34, 0.52);
+    }
+
+    .rule-card h3 {
+      margin: 0;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .rule-card p {
+      margin: 8px 0 0;
+      font-size: 0.93rem;
+      line-height: 1.58;
+    }
+  </style>
+</head>
+<body class="public-doc">
+  <main class="public-shell">
+    <section class="public-card hero-card hero-rule">
+      <h1 class="title-row"><span class="title-icon"><i class="bi bi-headset"></i></span>กฎเซิร์ฟเวอร์ซัพพอร์ต</h1>
+      <p class="hero-sub">แนวทางการใช้งานเซิร์ฟเวอร์ซัพพอร์ตของ {{APP_NAME}} เพื่อให้ทุกคนคุยกันอย่างสุภาพ ปลอดภัย และช่วยให้ทีมงานแก้ปัญหาได้ไวขึ้น</p>
+      <div class="hero-actions">
+        <a class="hero-link primary" href="{{SUPPORT_SERVER_URL}}" target="_blank" rel="noopener noreferrer"><i class="bi bi-discord"></i>เข้าร่วมเซิร์ฟเวอร์ซัพพอร์ต</a>
+        <a class="hero-link ghost" href="/rule"><i class="bi bi-arrow-left-circle"></i>กลับหน้ารวมกฎ</a>
+      </div>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-list-check"></i></span>กฎหลักในการใช้งาน</h2>
+      <ol class="rules-list">
+        <li>เคารพสมาชิกทุกคน ห้ามด่าทอ เหยียดเพศ เชื้อชาติ ศาสนา หรือยั่วยุให้เกิดความขัดแย้ง</li>
+        <li>ห้ามสแปมข้อความ ส่งข้อความซ้ำ ปั่นแชท หรือแท็กสมาชิกจำนวนมากโดยไม่จำเป็น</li>
+        <li>ห้ามโฆษณา ฝากร้าน ชวนลงทุน ชวนพนัน หรือโปรโมตเซิร์ฟเวอร์/บริการอื่นโดยไม่ได้รับอนุญาต</li>
+        <li>ห้ามส่งลิงก์อันตราย ไฟล์เสี่ยง มัลแวร์ ฟิชชิง หรือเนื้อหาที่ไม่ปลอดภัยทุกประเภท</li>
+        <li>ห้ามส่งเนื้อหาล่อแหลมทางเพศ ความรุนแรงเกินสมควร หรือเนื้อหาที่ผิดกฎหมาย</li>
+        <li>ห้ามปลอมตัวเป็นทีมงาน แอบอ้างสิทธิ์ผู้ดูแล หรือหลอกขอข้อมูลส่วนตัวของผู้อื่น</li>
+        <li>ห้ามเปิดหลายเคสซ้ำเรื่องเดียวกัน ให้คุยต่อในห้อง/เธรดเดิมจนกว่าปัญหาจะจบ</li>
+        <li>การถามปัญหาต้องชัดเจน: บอกคำสั่งที่ใช้ ข้อความผิดพลาด และขั้นตอนที่ทำก่อนหน้า</li>
+        <li>ห้ามเร่งทีมงานด้วยการแท็กซ้ำหลายครั้ง หากเป็นเรื่องด่วนให้ระบุเหตุผลให้ครบถ้วน</li>
+        <li>ต้องปฏิบัติตามข้อกำหนดการใช้งานและแนวทางชุมชนของ Discord เสมอ</li>
+      </ol>
+      <div class="rule-note">
+        ทีมงานสามารถพิจารณาเตือน จำกัดสิทธิ์ ปิดการพิมพ์ นำออกจากเซิร์ฟเวอร์ หรือระงับการเข้าใช้งานตามความเหมาะสม โดยไม่ต้องแจ้งล่วงหน้าในกรณีร้ายแรง
+      </div>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-lightning-charge"></i></span>วิธีขอความช่วยเหลือให้ได้คำตอบไว</h2>
+      <div class="rule-grid">
+        <article class="rule-card">
+          <h3><i class="bi bi-1-circle"></i>ระบุปัญหาให้ตรง</h3>
+          <p>บอกว่าปัญหาเกิดที่คำสั่งไหน ห้องไหน และเกิดเวลาใด เพื่อให้ทีมงานตรวจสอบได้เร็ว</p>
+        </article>
+        <article class="rule-card">
+          <h3><i class="bi bi-2-circle"></i>แนบหลักฐานที่จำเป็น</h3>
+          <p>แนบภาพหน้าจอ ข้อความผิดพลาด หรือรหัสที่เกี่ยวข้อง โดยปกปิดข้อมูลลับก่อนส่งทุกครั้ง</p>
+        </article>
+        <article class="rule-card">
+          <h3><i class="bi bi-3-circle"></i>คุยต่อเนื่องในเธรดเดิม</h3>
+          <p>อัปเดตผลการทดสอบในหัวข้อเดิม ไม่เปิดเรื่องใหม่ซ้ำ เพื่อไม่ให้ข้อมูลกระจัดกระจาย</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-link-45deg"></i></span>ลิงก์ที่เกี่ยวข้อง</h2>
+      <p><a href="/rule/bot">กฎการใช้งานบอท</a> • <a href="{{CONTACT_URL}}">ติดต่อทีมงานผ่านเว็บ</a></p>
+    </section>
+
+    <section class="public-footer">© {{CURRENT_YEAR}} {{APP_NAME}} • กฎเซิร์ฟเวอร์ซัพพอร์ต</section>
+  </main>
+</body>
+</html>

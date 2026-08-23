@@ -1,0 +1,247 @@
+
+    <div class="section-stack dashboard-detail-shell page-tickets-shell">
+        <section class="panel dashboard-first-panel">
+            <div class="panel-header detail-page-hero detail-page-hero-tickets">
+                <div class="panel-title detail-page-hero-copy">
+                    <h1 data-i18n="tab_tickets" data-icon-key="tickets">Tickets Support</h1>
+                    <p>Manage your support workflow with one clean panel for config, preview, and history.</p>
+                </div>
+                <div class="detail-page-metrics tickets-hero-metrics">
+                    <span class="pill tickets-status-pill {tickets_status_class}"><i class="bi bi-toggle-on" aria-hidden="true"></i> {tickets_status_label}</span>
+                    <span class="pill"><i class="bi bi-life-preserver" aria-hidden="true"></i> Open {open_tickets}</span>
+                    <span class="pill"><i class="bi bi-check2-circle" aria-hidden="true"></i> Closed {closed_tickets}</span>
+                    <span class="pill"><i class="bi bi-collection" aria-hidden="true"></i> Total {total_tickets}</span>
+                </div>
+            </div>
+
+            <form method="post" action="/dashboard/guild/{current_guild['id']}/tickets" class="tickets-form" enctype="multipart/form-data">
+                <section class="panel-sub detail-page-section tickets-core-settings">
+                    <h2 style="margin-top:0;" data-icon-key="tickets">Ticket System</h2>
+                    <div class="ux-toggle-group tickets-enable-toggle">
+                        <label class="ux-toggle">
+                            <span class="ux-toggle-label">Enable ticket system</span>
+                            <input type="checkbox" name="enabled" {"checked" if module.get("enabled") else ""}>
+                            <span class="ux-switch"></span>
+                        </label>
+                    </div>
+
+                    <div class="field-group detail-page-grid">
+                        <div class="field-item">
+                            <label>Support roles</label>
+                            {_render_multi_role_select("support_roles", bot_guild, module.get('support_roles'))}
+                        </div>
+                        <div class="field-item">
+                            <label>Ticket limit per user</label>
+                            <input type="number" min="1" max="10" name="ticket_limit" value="{_escape(module.get('ticket_limit', 1))}">
+                        </div>
+                    </div>
+
+                    <div class="field-group detail-page-grid">
+                        <div class="field-item">
+                            <label>Open category</label>
+                            {_render_channel_select("open_ticket_category_id", bot_guild, module.get('open_ticket_category_id'), filter_types=['category'])}
+                        </div>
+                        <div class="field-item">
+                            <label>Closed category</label>
+                            {_render_channel_select("closed_ticket_category_id", bot_guild, module.get('closed_ticket_category_id'), filter_types=['category'])}
+                        </div>
+                    </div>
+
+                    <div class="field-item">
+                        <label>Panel channel</label>
+                        {_render_channel_select("ticket_panel_channel_id", bot_guild, module.get('ticket_panel_channel_id'))}
+                    </div>
+                    <div class="field-group detail-page-grid" style="margin-top:10px;">
+                        <div class="field-item">
+                            <label>Panel button label</label>
+                            <input
+                                type="text"
+                                name="ticket_panel_button_label"
+                                id="ticketPanelButtonLabelInput"
+                                maxlength="45"
+                                value="{_escape(panel_button_text)}"
+                                placeholder="Open Ticket"
+                            >
+                        </div>
+                        <div class="field-item">
+                            <label>Panel button color</label>
+                            <select name="ticket_panel_button_color" id="ticketPanelButtonColorSelect">
+                                <option value="green" {"selected" if panel_button_color == "green" else ""}>Green</option>
+                                <option value="blurple" {"selected" if panel_button_color == "blurple" else ""}>Blurple</option>
+                                <option value="red" {"selected" if panel_button_color == "red" else ""}>Red</option>
+                                <option value="gray" {"selected" if panel_button_color == "gray" else ""}>Gray</option>
+                            </select>
+                        </div>
+                        <div class="field-item">
+                            <label>Panel button emoji</label>
+                            <input
+                                type="text"
+                                name="ticket_panel_button_emoji"
+                                id="ticketPanelButtonEmojiInput"
+                                maxlength="64"
+                                value="{_escape(panel_button_emoji)}"
+                                placeholder="🎫 or <:emoji:123>"
+                            >
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel-sub detail-page-section tickets-content-settings">
+                    <h2 style="margin-top:0;" data-icon-key="embed_messages">Panel Messages</h2>
+                    <div class="field-item">
+                        <label>Panel embed title</label>
+                        <input
+                            type="text"
+                            name="ticket_panel_embed_title"
+                            id="ticketPanelTitleInput"
+                            maxlength="120"
+                            value="{_escape(panel_title)}"
+                            placeholder="Open a support ticket"
+                        >
+                    </div>
+
+                    <div class="field-group detail-page-grid">
+                        <div class="field-item">
+                            <label>Panel message body</label>
+                            <textarea name="ticket_panel_message_content" id="ticketPanelTextInput" style="min-height:100px;">{_escape(panel_content)}</textarea>
+                        </div>
+                        <div class="field-item">
+                            <label>Close message body</label>
+                            <textarea name="close_ticket_message_content" id="ticketCloseTextInput" style="min-height:100px;">{_escape(module.get('close_ticket_message_content', ''))}</textarea>
+                        </div>
+                    </div>
+                    <div class="field-item">
+                        <label>Panel image URL</label>
+                        <input
+                            type="url"
+                            name="ticket_panel_embed_image_url"
+                            id="ticketPanelImageUrlInput"
+                            value="{_escape(panel_image_url)}"
+                            placeholder="https://.../ticket-image.png"
+                        >
+                        <span class="muted" style="font-size:12px;">สามารถวาง URL โดยตรง หรืออัปโหลดเพื่อแปลงเป็น URL อัตโนมัติ</span>
+                    </div>
+                </section>
+
+                <section class="panel-sub detail-page-section tickets-preview-section">
+                    <h2 style="margin-top:0;" data-icon-key="tickets_preview">Embed Preview (Ticket Panel)</h2>
+                    <div class="mock-switch-row" style="margin-bottom:8px;">
+                        <div class="mock-switch-group">
+                            <span class="mock-switch-title">Mock User</span>
+                            <div id="ticketMockUserButtons" class="mock-switch-buttons"></div>
+                        </div>
+                        <div class="mock-switch-group">
+                            <span class="mock-switch-title">Mock Server</span>
+                            <div id="ticketMockServerButtons" class="mock-switch-buttons"></div>
+                        </div>
+                    </div>
+                    <div id="ticketPreviewMeta" class="muted" style="margin-bottom:8px;">Preview mode: -</div>
+                    <div class="tickets-preview-grid">
+                        <div class="tickets-message-shell">
+                            <div class="tickets-message-head">
+                                <img src="{preview_bot_avatar}" alt="{preview_bot_name}" class="tickets-message-avatar">
+                                <strong>{preview_bot_name}</strong>
+                                <span class="muted tickets-message-app">{preview_bot_name} APP</span>
+                            </div>
+                            <div id="ticketPanelPreviewCard" class="tickets-preview-card is-open">
+                                <div id="ticketPanelPreviewTitle" class="tickets-preview-title">{_escape(panel_title)}</div>
+                                <div id="ticketPanelPreviewContext" class="muted tickets-preview-context">{preview_member_name} in {current_guild['name']}</div>
+                                <div id="ticketPanelPreviewText" class="muted">{_escape(panel_content)}</div>
+                                <img id="ticketPanelPreviewImage" src="{_escape(panel_image_url)}" alt="panel-image" class="tickets-preview-image" style="{'display:none;' if not panel_image_url else ''}">
+                                <button type="button" id="ticketPanelPreviewButton" class="tickets-preview-btn" tabindex="-1" aria-hidden="true" style="background:{_escape(panel_button_bg)}; color:#fff;">{_escape(panel_button_preview_text)}</button>
+                            </div>
+                        </div>
+
+                        <div class="tickets-message-shell">
+                            <div class="tickets-message-head">
+                                <img src="{preview_bot_avatar}" alt="{preview_bot_name}" class="tickets-message-avatar">
+                                <strong>{preview_bot_name}</strong>
+                                <span class="muted tickets-message-app">{preview_bot_name} APP</span>
+                            </div>
+                            <div class="tickets-preview-card is-close">
+                                <div class="tickets-preview-title">Ticket #0001</div>
+                                <div id="ticketClosePreviewContext" class="muted tickets-preview-context">{preview_member_name} in {current_guild['name']}</div>
+                                <div id="ticketClosePreviewText" class="muted">{_escape(close_preview)}</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="form-actions-fixed tickets-submit-row">
+                    <button class="primary-btn" type="submit">Save ticket settings</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <h2 data-icon-key="tickets_overview">Ticket Overview</h2>
+                </div>
+            </div>
+            <div class="stats-grid tickets-stats-grid">
+                <article class="stat-card">
+                    <span class="stat-card-icon"><i class="bi bi-life-preserver" aria-hidden="true"></i></span>
+                    <span class="stat-card-value">{open_tickets}</span>
+                    <span class="stat-card-label">Open tickets</span>
+                </article>
+                <article class="stat-card">
+                    <span class="stat-card-icon"><i class="bi bi-check2-circle" aria-hidden="true"></i></span>
+                    <span class="stat-card-value">{closed_tickets}</span>
+                    <span class="stat-card-label">Closed tickets</span>
+                </article>
+                <article class="stat-card">
+                    <span class="stat-card-icon"><i class="bi bi-123" aria-hidden="true"></i></span>
+                    <span class="stat-card-value">{module.get('ticket_limit', 1)}</span>
+                    <span class="stat-card-label">Limit per user</span>
+                </article>
+                <article class="stat-card">
+                    <span class="stat-card-icon"><i class="bi bi-collection" aria-hidden="true"></i></span>
+                    <span class="stat-card-value">{total_tickets}</span>
+                    <span class="stat-card-label">Total tickets</span>
+                </article>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <h2 data-icon-key="tickets_history">History / Transcript</h2>
+                    <p>Filter by status and search ticket ID to find transcript links quickly.</p>
+                </div>
+            </div>
+            <div class="field-group detail-page-grid tickets-history-filter-row">
+                <div class="field-item">
+                    <label>Status filter</label>
+                    <select id="ticketHistoryStatusFilter">
+                        <option value="all">All</option>
+                        <option value="open">Open only</option>
+                        <option value="closed">Closed only</option>
+                    </select>
+                </div>
+                <div class="field-item">
+                    <label>Search Ticket ID</label>
+                    <input type="text" id="ticketHistorySearchInput" placeholder="#0001 or 12">
+                </div>
+            </div>
+            <div class="table-wrap tickets-history-table-wrap">
+                <table class="tickets-history-table">
+                    <thead>
+                        <tr>
+                            <th>Ticket</th>
+                            <th>Status</th>
+                            <th>Channel</th>
+                            <th>Creator</th>
+                            <th>Opened At</th>
+                            <th>Closed At</th>
+                            <th>Transcript</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {"".join(history_rows)}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+    <script>{_render_dashboard_f_template("scripts/tickets.js", __ctx)}</script>

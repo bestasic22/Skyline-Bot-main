@@ -1,0 +1,170 @@
+<link rel="stylesheet" href="/dashboard/static/dashboard/pages/donatebot_hub.css">
+
+<section class="section-stack dashboard-detail-shell page-donatebot-hub-shell">
+  <section class="panel" id="donatebot-overview">
+    <div class="panel-header detail-page-hero detail-page-hero-donatebot">
+      <div class="panel-title detail-page-hero-copy">
+        <p class="donatebot-hero-kicker">DonateBOT Center</p>
+        <h1><i class="fa-solid fa-hand-holding-heart" aria-hidden="true"></i> Smart Donate Verification</h1>
+        <p>Auto verify for TrueMoney Gift Link with safer flow, cleaner review, and faster admin handoff.</p>
+      </div>
+      <div class="detail-page-metrics donatebot-hero-metrics">
+        <span class="pill"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Auto Verify</span>
+        <span class="pill"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Safe Flow</span>
+        <span class="pill"><i class="fa-solid fa-wave-square" aria-hidden="true"></i> Realtime Log</span>
+      </div>
+    </div>
+    {verify_block}
+    <div class="auth-actions donatebot-top-actions">
+      <a class="ghost-btn" href="/dashboard">
+        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+        Back to Dashboard
+      </a>
+      {support_button}
+      {admin_logs_button}
+    </div>
+  </section>
+
+  <section class="panel panel-sub detail-page-section" id="donatebot-accounts">
+    <div class="donatebot-section-head">
+      <h2><i class="fa-solid fa-wallet" aria-hidden="true"></i> Payment Accounts</h2>
+      <span class="mini-stat">Admins can review historical checks in Verify Logs</span>
+    </div>
+    <div class="donatebot-account-grid">
+      <article class="donatebot-account-card tone-truemoney">
+        <div class="donatebot-account-icon"><i class="fa-solid fa-mobile-screen-button" aria-hidden="true"></i></div>
+        <h3>TrueMoney Wallet</h3>
+        <p class="muted">Wallet Number</p>
+        <div class="donatebot-account-value">{truemoney_phone}</div>
+        <div class="auth-actions donatebot-copy-actions">
+          <button type="button" class="ghost-btn donatebot-copy-btn" data-copy="{truemoney_phone}">Copy</button>
+        </div>
+      </article>
+
+      <article class="donatebot-account-card tone-promptpay">
+        <div class="donatebot-account-icon"><i class="fa-solid fa-qrcode" aria-hidden="true"></i></div>
+        <h3>PromptPay</h3>
+        <p class="muted">PromptPay Number</p>
+        <div class="donatebot-account-value">{promptpay_number}</div>
+        <div class="auth-actions donatebot-copy-actions">
+          <button type="button" class="ghost-btn donatebot-copy-btn" data-copy="{promptpay_number}">Copy</button>
+        </div>
+      </article>
+
+      <article class="donatebot-account-card tone-bank">
+        <div class="donatebot-account-icon"><i class="fa-solid fa-building-columns" aria-hidden="true"></i></div>
+        <h3>Bank Transfer</h3>
+        <p class="muted">Bank Name</p>
+        <div class="donatebot-account-value">{bank_name}</div>
+        <p class="muted">Account Number</p>
+        <div class="donatebot-account-value">{bank_account_number}</div>
+        <p class="muted">Account Name</p>
+        <div class="donatebot-account-value">{bank_account_name}</div>
+        <div class="auth-actions donatebot-copy-actions">
+          <button type="button" class="ghost-btn donatebot-copy-btn" data-copy="{bank_account_number}">Copy Account</button>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel panel-sub detail-page-section donatebot-verify-section" id="donatebot-verify">
+    <div class="donatebot-section-head">
+      <h2><i class="fa-solid fa-receipt" aria-hidden="true"></i> Smart Donate Verification</h2>
+      <span class="mini-stat">Submit Gift Link or Slip for review</span>
+    </div>
+
+    <div class="donatebot-profile-context" data-mode="{donor_profile_mode}">
+      <img src="{session_user_avatar_url}" alt="Donor profile">
+      <div class="donatebot-profile-copy">
+        <strong>{session_user_display}</strong>
+        <p class="muted">{donor_profile_label_html}</p>
+        <code>ID: {session_user_id_html or '-'}</code>
+      </div>
+    </div>
+
+    <form method="post" action="/dashboard/donatebot/verify" class="donatebot-verify-form" enctype="multipart/form-data">
+      {donor_session_hidden_fields_html}
+      {donor_manual_fields_html}
+
+      <div class="field-group donatebot-verify-grid">
+        <div class="field-item">
+          <label>Amount (Optional)</label>
+          <input type="number" min="1" max="100000000" name="amount" placeholder="e.g. 50">
+        </div>
+        {donor_avatar_upload_field_html}
+      </div>
+
+      <div class="field-item">
+        <label>Evidence Type</label>
+        <select name="evidence_type">
+          <option value="auto">Auto (Gift Link or Slip)</option>
+          <option value="gift">TrueMoney Gift Link</option>
+          <option value="slip">Slip File</option>
+        </select>
+      </div>
+
+      <div class="field-item">
+        <label>TrueMoney Gift Link (Optional)</label>
+        <input type="url" name="gift_link" placeholder="https://gift.truemoney.com/campaign/?v=...">
+      </div>
+
+      <div class="field-item">
+        <label>Message to Owner (Optional)</label>
+        <textarea name="message" rows="3" maxlength="500" placeholder="e.g. Great system"></textarea>
+      </div>
+
+      <div class="field-item">
+        <label>Slip File (Optional)</label>
+        <input type="file" name="slip_file" accept=".png,.jpg,.jpeg,.webp">
+      </div>
+
+      <p class="donatebot-upload-note muted">
+        {donor_avatar_upload_note_html} Also provide at least one evidence: Gift Link or Slip file.
+      </p>
+
+      <div class="auth-actions donatebot-verify-actions">
+        <button type="submit" class="primary-btn">
+          <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+          Run Auto Verify
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <section class="panel panel-sub detail-page-section top-donate-section" id="donatebot-top-donate">
+    <div class="donatebot-section-head">
+      <h2><i class="fa-solid fa-ranking-star" aria-hidden="true"></i> Top Donate</h2>
+      <span class="mini-stat">Ranked donors: {top_donate_total_count}</span>
+    </div>
+
+    <div class="top-donate-podium" aria-label="Top 3 donors in 2-1-3 order">
+      {top_donate_podium_html}
+    </div>
+
+    <div class="top-donate-list" aria-label="Top donors rank 4 and below">
+      {top_donate_list_html}
+    </div>
+  </section>
+
+  {guild_section}
+</section>
+
+<script>
+(() => {{
+  document.querySelectorAll('.donatebot-copy-btn[data-copy]').forEach((btn) => {{
+    const original = btn.textContent || 'Copy';
+    btn.addEventListener('click', async () => {{
+      const value = String(btn.getAttribute('data-copy') || '').trim();
+      if (!value || value === '-') return;
+      try {{
+        await navigator.clipboard.writeText(value);
+        btn.textContent = 'Copied';
+        window.setTimeout(() => {{
+          btn.textContent = original;
+        }}, 1000);
+      }} catch (_error) {{
+      }}
+    }});
+  }});
+}})();
+</script>

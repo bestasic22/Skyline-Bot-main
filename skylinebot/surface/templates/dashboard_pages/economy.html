@@ -1,0 +1,337 @@
+
+    <section class="panel section-stack dashboard-detail-shell page-economy-shell">
+      <div class="panel-header detail-page-hero detail-page-hero-economy">
+        <div class="panel-title detail-page-hero-copy">
+          <h1 data-i18n="tab_economy" data-icon-key="economy">Economy</h1>
+          <p>ตั้งค่าระบบเศรษฐกิจทั้งเซิร์ฟเวอร์: สกุลเงิน, รายได้, คูลดาวน์, ห้องคำสั่ง และร้านค้าในหน้าเดียว</p>
+        </div>
+        <div class="econ-hero-metrics">
+          <span class="pill"><i class="fa-solid fa-hashtag" aria-hidden="true"></i> สกุลเงิน: <strong>{_escape(str(settings.get('currency_symbol') or '฿'))}</strong></span>
+          <span class="pill"><i class="fa-solid fa-bolt" aria-hidden="true"></i> คำสั่งรายได้เปิดใช้: <strong>{int(bool(settings.get('command_work_enabled'))) + int(bool(settings.get('command_slut_enabled'))) + int(bool(settings.get('command_crime_enabled'))) + int(bool(settings.get('command_rob_enabled')))}</strong></span>
+          <span class="pill"><i class="fa-solid fa-scroll" aria-hidden="true"></i> Audit Logs: <strong>{len(audit_rows)}</strong></span>
+        </div>
+      </div>
+      <form method="post" action="/dashboard/guild/{current_guild['id']}/economy" id="economySettingsForm">
+        <section class="panel-sub detail-page-section econ-kpi-grid">
+          <article class="econ-kpi-card">
+            <span class="econ-kpi-label">Starting Balance</span>
+            <strong>{int(settings.get('start_cash') or 0) + int(settings.get('start_bank') or 0):,}</strong>
+            <small class="muted">Cash + Bank เริ่มต้น</small>
+          </article>
+          <article class="econ-kpi-card">
+            <span class="econ-kpi-label">Command Channels</span>
+            <strong>{"ALL" if settings.get('economy_allow_all_channels') else len(econ_cmd_channel_ids)}</strong>
+            <small class="muted">ห้องที่อนุญาตคำสั่ง Economy</small>
+          </article>
+          <article class="econ-kpi-card">
+            <span class="econ-kpi-label">Role Income Slots</span>
+            <strong>{len(role_income_rows)}</strong>
+            <small class="muted">รายการรายได้ตามยศ</small>
+          </article>
+          <article class="econ-kpi-card">
+            <span class="econ-kpi-label">Chat Money Channels</span>
+            <strong>{"ALL" if not chat_channel_ids else len(chat_channel_ids)}</strong>
+            <small class="muted">ห้องที่ได้ Chat Money</small>
+          </article>
+        </section>
+        <section class="panel-sub detail-page-section econ-workspace-toolbar">
+          <div class="econ-workspace-head">
+            <span class="econ-workspace-icon" aria-hidden="true">
+              <i class="fa-solid fa-coins"></i>
+            </span>
+            <div class="econ-workspace-copy">
+              <strong>Economy Workspace</strong>
+              <span class="muted">เลือกหมวดแล้วตั้งค่าได้ทันทีในหน้าเดียว</span>
+            </div>
+            <div class="econ-workspace-meta">
+              <span class="econ-active-pill"><i class="fa-solid fa-location-dot" aria-hidden="true"></i><span id="econActiveSectionLabel">Currency Symbol</span></span>
+              <label class="econ-inline-search" data-no-auto-field="1">
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                <input id="econSectionSearch" type="search" placeholder="Search section...">
+              </label>
+              <small id="econSectionSearchMeta" class="muted">11 sections</small>
+            </div>
+          </div>
+          <div class="econ-jumpbar" id="econJumpbar">
+            <button type="button" class="econ-jump-chip active" data-econ-target="currency_symbol"><i class="fa-solid fa-coins" aria-hidden="true"></i><span>Currency</span></button>
+            <button type="button" class="econ-jump-chip" data-econ-target="starting_balance"><i class="fa-solid fa-wallet" aria-hidden="true"></i><span>Balance</span></button>
+            <button type="button" class="econ-jump-chip" data-econ-target="money_audit_log"><i class="fa-solid fa-scroll" aria-hidden="true"></i><span>Audit</span></button>
+            <button type="button" class="econ-jump-chip" data-econ-target="command_channels"><i class="fa-solid fa-hashtag" aria-hidden="true"></i><span>Channels</span></button>
+            <button type="button" class="econ-jump-chip" data-econ-target="work"><i class="fa-solid fa-briefcase" aria-hidden="true"></i><span>Work</span></button>
+            <button type="button" class="econ-jump-chip" data-econ-target="slut"><i class="fa-solid fa-bolt" aria-hidden="true"></i><span>Slut</span></button>
+            <button type="button" class="econ-jump-chip" data-econ-target="crime"><i class="fa-solid fa-mask" aria-hidden="true"></i><span>Crime</span></button>
+            <button type="button" class="econ-jump-chip" data-econ-target="rob"><i class="fa-solid fa-user-secret" aria-hidden="true"></i><span>Rob</span></button>
+            <button type="button" class="econ-jump-chip" data-econ-target="role_income"><i class="fa-solid fa-user-tag" aria-hidden="true"></i><span>Role Income</span></button>
+            <button type="button" class="econ-jump-chip" data-econ-target="chat_money"><i class="fa-solid fa-comments-dollar" aria-hidden="true"></i><span>Chat Money</span></button>
+            <button type="button" class="econ-jump-chip" data-econ-target="store"><i class="fa-solid fa-store" aria-hidden="true"></i><span>Store</span></button>
+          </div>
+        </section>
+        <div class="econ-wrap">
+          <div class="econ-content" data-econ-ready="1">
+            <section class="econ-page panel-sub detail-page-section active" data-econ-page="currency_symbol">
+              <h3>CURRENCY SYMBOL</h3>
+              <p class="muted">This symbol is the text that comes before all balances and currency amounts.</p>
+              <div class="field-item">
+                <label>Currency Symbol</label>
+                <div class="econ-emoji-input-wrap">
+                  <input id="currencySymbolInput" name="currency_symbol" maxlength="64" value="{_escape(str(settings.get('currency_symbol') or '฿'))}">
+                  <button type="button" id="toggleEmojiPicker" class="ghost-btn econ-emoji-toggle" title="เลือกอีโมจิ" aria-label="เลือกอีโมจิ" aria-controls="economyEmojiPicker" aria-expanded="false"><i class="fa-regular fa-face-smile" aria-hidden="true"></i></button>
+                  <div id="economyEmojiPicker" class="econ-emoji-picker">
+                    <input type="text" id="economyEmojiSearch" placeholder="Search emojis...">
+                    <div class="econ-emoji-title">{_escape(server_emoji_title)}</div>
+                    <div id="economyServerEmojiGrid" class="econ-emoji-server-list">
+                      {server_emoji_html}
+                    </div>
+                    <div class="econ-emoji-title">DISCORD EMOJIS</div>
+                    <div id="economyUnicodeEmojiGrid" class="econ-emoji-grid unicode">
+                      {unicode_buttons}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="econ-preview-box">
+                <div class="econ-preview-head">PREVIEW</div>
+                <div class="econ-preview-card">
+                  <div class="econ-preview-brand">
+                    <div class="econ-preview-bot">UnbelievaBoat Style</div>
+                    <div class="econ-preview-user">@{_escape(str(session.get('user', {}).get('global_name') or session.get('user', {}).get('username') or 'member'))}</div>
+                  </div>
+                  <div class="econ-preview-col"><span>Cash</span><strong id="econPreviewCash">฿1,000</strong></div>
+                  <div class="econ-preview-col"><span>Bank</span><strong id="econPreviewBank">฿5,000</strong></div>
+                  <div class="econ-preview-col"><span>Total</span><strong id="econPreviewTotal">฿6,000</strong></div>
+                </div>
+              </div>
+            </section>
+
+            <section class="econ-page panel-sub detail-page-section" data-econ-page="starting_balance">
+              <h3>STARTING BALANCE</h3>
+              <p class="muted">Set balance for new members.</p>
+              <div class="field-group">
+                <div class="field-item"><label>Starting Cash</label><input type="number" name="start_cash" min="0" max="1000000000000" value="{int(settings.get('start_cash') or 0)}"></div>
+                <div class="field-item"><label>Starting Bank</label><input type="number" name="start_bank" min="0" max="1000000000000" value="{int(settings.get('start_bank') or 0)}"></div>
+                <div class="field-item"><label>Maximum Cash</label><input type="number" name="max_cash" min="0" max="1000000000000" value="{int(settings.get('max_cash') or 0)}"></div>
+                <div class="field-item"><label>Maximum Bank</label><input type="number" name="max_bank" min="0" max="1000000000000" value="{int(settings.get('max_bank') or 0)}"></div>
+              </div>
+            </section>
+
+            <section class="econ-page panel-sub detail-page-section" data-econ-page="money_audit_log">
+              <h3>MONEY AUDIT LOG</h3>
+              <p class="muted">Log all money transactions to a channel.</p>
+              <div class="field-item">
+                <label>Money Audit Log Channel</label>
+                {audit_channel_select}
+              </div>
+              <div class="table-wrap" style="margin-top:10px;">
+                <table class="table-like">
+                  <thead><tr><th>Action</th><th>User</th><th>Actor</th><th>Amount</th><th>Location</th><th>วลา</th></tr></thead>
+                  <tbody>{audit_logs_html}</tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="econ-page panel-sub detail-page-section" data-econ-page="command_channels">
+              <h3>ECONOMY COMMAND CHANNELS</h3>
+              <p class="muted">กำหนดห้องที่อนุญาต Economy ทั้งหมด</p>
+              <div class="field-group">
+                <label class="ux-toggle">
+                  <span class="ux-toggle-label">เปิดใช้งานการจำกัดห้อง</span>
+                  <input type="checkbox" name="economy_channels_enabled" {'checked' if settings.get('economy_channels_enabled') else ''}>
+                  <span class="ux-switch"></span>
+                </label>
+                <label class="ux-toggle">
+                  <span class="ux-toggle-label">อนุญาตทุกห้อง</span>
+                  <input id="economyAllowAllChannels" type="checkbox" name="economy_allow_all_channels" {'checked' if settings.get('economy_allow_all_channels') else ''}>
+                  <span class="ux-switch"></span>
+                </label>
+              </div>
+              <div class="field-item">
+                <label>เลือกห้องสำหรับ Economy</label>
+                <div class="econ-channel-head">
+                  <span class="econ-channel-count-label">Selected</span>
+                  <span id="economyCommandSelectedCount" class="econ-channel-count">{'ALL' if settings.get('economy_allow_all_channels') else len(econ_cmd_channel_set)}</span>
+                </div>
+                <label class="econ-list-search" data-no-auto-field="1">
+                  <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                  <input id="economyCommandSearchInput" type="search" placeholder="Search channel name...">
+                </label>
+                <div id="economyCommandChannelList" class="econ-channel-list">{econ_cmd_channel_checks}</div>
+                <input type="hidden" name="economy_command_channels_csv" id="economyCommandChannelsCsv" value="{_escape(econ_cmd_channel_csv)}">
+                <div class="muted econ-channel-note">ถ้าเปิดการจำกัดห้องและไม่เลือกทุกห้อง ระบบจะรับคำสั่งเฉพาะห้องที่ติ๊กไว้เท่านั้น</div>
+              </div>
+            </section>
+
+            {work_page}
+            {slut_page}
+            {crime_page}
+            {rob_page}
+
+            <section class="econ-page panel-sub detail-page-section" data-econ-page="role_income">
+              <h3>ROLE INCOME</h3>
+              <p class="muted">Role income can be used to give (or take) money from members in a role at the interval you set.</p>
+              <div class="econ-role-layout">
+                <div class="econ-role-left" id="roleIncomeLeftPanel" data-ri-limit="{role_row_limit}" data-ri-rendered="{role_row_count}">
+                  <div class="econ-role-mode-tabs">
+                    <button type="button" class="econ-role-mode active" data-ri-mode="collectable">Collectable <span>{role_income_remaining} remaining</span></button>
+                    <button type="button" class="econ-role-mode" data-ri-mode="automatic">Automatic <span>Coming soon</span></button>
+                  </div>
+                  <div id="roleIncomeModeHint" class="econ-role-mode-hint" hidden></div>
+                  <div class="econ-role-action-row">
+                    <button type="button" class="ghost-btn" id="roleIncomeAddSlotBtn"><i class="fa-solid fa-plus" aria-hidden="true"></i> Add Slot</button>
+                    <span id="roleIncomeSlotCounter" class="muted"></span>
+                  </div>
+                  <div id="roleIncomeAddSlotFeedback" class="econ-role-add-feedback" hidden></div>
+                  <div class="econ-role-list" id="roleIncomeSlotList">
+                    {role_income_list_html}
+                  </div>
+                </div>
+                <div class="econ-role-right" id="roleIncomeEditorRoot">
+                  <div class="field-group">
+                    <label class="ux-toggle"><span class="ux-toggle-label">Enable Role Income</span><input type="checkbox" name="role_income_enabled" {'checked' if settings.get('role_income_enabled') else ''}><span class="ux-switch"></span></label>
+                  </div>
+                  {role_income_editor_html}
+                </div>
+              </div>
+            </section>
+
+            <section class="econ-page panel-sub detail-page-section" data-econ-page="chat_money">
+              <h3>CHAT MONEY</h3>
+              <div class="field-group">
+                <div class="field-item"><label>Amount Min</label><input type="number" name="chat_money_min" min="0" max="5000" value="{int(settings.get('chat_money_min') or 5)}"></div>
+                <div class="field-item"><label>Amount Max</label><input type="number" name="chat_money_max" min="0" max="5000" value="{int(settings.get('chat_money_max') or 15)}"></div>
+                <label class="ux-toggle"><span class="ux-toggle-label">Enable Chat Money</span><input type="checkbox" name="chat_money_enabled" {'checked' if settings.get('chat_money_enabled') else ''}><span class="ux-switch"></span></label>
+              </div>
+              <div class="field-item">
+                <label>Cooldown</label>
+                <input type="hidden" name="chat_money_cooldown" class="cooldown-total" data-prefix="chat_money" value="{int(settings.get('chat_money_cooldown') or 60)}">
+                <div class="econ-cooldown-grid">
+                  <div><input type="number" min="0" max="365" class="cooldown-part" data-prefix="chat_money" data-unit="d" value="{chat_d}"><span>d</span></div>
+                  <div><input type="number" min="0" max="23" class="cooldown-part" data-prefix="chat_money" data-unit="h" value="{chat_h}"><span>h</span></div>
+                  <div><input type="number" min="0" max="59" class="cooldown-part" data-prefix="chat_money" data-unit="m" value="{chat_m}"><span>m</span></div>
+                  <div><input type="number" min="0" max="59" class="cooldown-part" data-prefix="chat_money" data-unit="s" value="{chat_s}"><span>s</span></div>
+                </div>
+              </div>
+              <div class="field-item">
+                <label>Enable All Channels</label>
+                <label class="ux-toggle"><span class="ux-toggle-label">All Channels</span><input id="chatMoneyAllChannels" type="checkbox" {'checked' if not chat_channel_ids else ''}><span class="ux-switch"></span></label>
+              </div>
+              <div class="field-item">
+                <label>Custom Channels</label>
+                <label class="econ-list-search" data-no-auto-field="1">
+                  <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                  <input id="chatMoneyChannelSearchInput" type="search" placeholder="Search channel name...">
+                </label>
+                <div id="chatMoneyChannelList" class="econ-channel-list">{chat_channel_checks}</div>
+                <input type="hidden" name="chat_money_channels_csv" id="chatMoneyChannelsCsv" value="{_escape(chat_channel_csv)}">
+              </div>
+            </section>
+
+            <section class="econ-page panel-sub detail-page-section" data-econ-page="store">
+              <div class="econ-store-head">
+                <h3>STORE ITEMS <span class="econ-badge">V2</span> <span class="econ-badge soft">25 remaining</span> <span class="econ-badge premium">Unlimited with Premium</span></h3>
+                <div class="econ-store-actions">
+                  <input type="search" placeholder="Search Items">
+                  <div style="position:relative;">
+                    <button class="ghost-btn" type="button" id="storeOptionsButton"> OPTIONS</button>
+                    <div id="storeOptionsMenu" class="econ-float-menu">
+                      <button type="button" class="danger">Delete All Items</button>
+                      <button type="button" class="danger">Delete All Inventories</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p class="muted">Manage your store items.</p>
+              <div class="econ-store-grid">
+                <button type="button" id="openStoreCreateModal" class="econ-create-item-card">
+                  <span class="plus">+</span>
+                  <span>CREATE ITEM</span>
+                </button>
+              </div>
+              <div class="econ-store-hidden">
+                <div class="field-group">
+                  <label class="ux-toggle"><span class="ux-toggle-label">Enable Items/Store</span><input type="checkbox" name="items_enabled" {'checked' if settings.get('items_enabled') else ''}><span class="ux-switch"></span></label>
+                  <label class="ux-toggle"><span class="ux-toggle-label">Custom Replies</span><input type="checkbox" name="custom_replies_enabled" {'checked' if settings.get('custom_replies_enabled') else ''}><span class="ux-switch"></span></label>
+                </div>
+                <div class="field-group">
+                  <div class="field-item"><label>Store Sell Rate (%)</label><input type="number" name="store_sell_rate" min="0" max="100" value="{int(settings.get('store_sell_rate') or 50)}"></div>
+                  <div class="field-item"><label>Inventory Max Items</label><input type="number" name="inventory_max_items" min="1" max="5000" value="{int(settings.get('inventory_max_items') or 250)}"></div>
+                  <div class="field-item"><label>Bet Min</label><input type="number" name="bet_min" min="1" max="100000000" value="{int(settings.get('bet_min') or 10)}"></div>
+                  <div class="field-item"><label>Bet Max</label><input type="number" name="bet_max" min="1" max="100000000" value="{int(settings.get('bet_max') or 100000)}"></div>
+                </div>
+                <div class="field-group">
+                  <div class="field-item"><label>Work Replies</label><textarea name="work_replies_preview" rows="5" disabled>{_escape(chr(10).join(settings.get('work_replies') or []))}</textarea></div>
+                  <div class="field-item"><label>Slut Replies</label><textarea name="slut_replies_preview" rows="5" disabled>{_escape(chr(10).join(settings.get('slut_replies') or []))}</textarea></div>
+                  <div class="field-item"><label>Crime Replies</label><textarea name="crime_replies_preview" rows="5" disabled>{_escape(chr(10).join(settings.get('crime_replies') or []))}</textarea></div>
+                  <div class="field-item"><label>Rob Replies</label><textarea name="rob_replies_preview" rows="5" disabled>{_escape(chr(10).join(settings.get('rob_replies') or []))}</textarea></div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <div id="storeCreateModal" class="econ-modal-backdrop">
+          <div class="econ-modal-card">
+            <div class="econ-modal-body">
+              <div class="field-item">
+                <label>NAME</label>
+                <input type="text" maxlength="100" placeholder="Give this item a name (between 3 and 100 characters)">
+              </div>
+              <div class="field-item">
+                <label>PRICE</label>
+                <input type="number" min="0" max="1000000000" value="0">
+              </div>
+              <div class="field-item">
+                <label>DESCRIPTION</label>
+                <textarea rows="6" maxlength="1000" placeholder="Set a description to describe what this item is or does."></textarea>
+              </div>
+              <div class="field-group" style="grid-template-columns:1fr 140px;">
+                <div class="field-item">
+                  <label>ICON</label>
+                  <input type="text" placeholder="Use the emoji picker to select an icon.">
+                </div>
+                <div class="econ-item-preview">?</div>
+              </div>
+              <div class="econ-item-checks">
+                <label><input type="checkbox" checked> UNLIMITED STOCK</label>
+                <label><input type="checkbox" checked> LISTED IN STORE</label>
+                <label><input type="checkbox" checked> INVENTORY ITEM</label>
+                <label><input type="checkbox" checked> USABLE</label>
+                <label><input type="checkbox" checked> SELLABLE</label>
+              </div>
+              <div class="field-group" style="grid-template-columns:1fr auto;">
+                <div class="field-item">
+                  <label>EXPIRY DATE</label>
+                  <input type="text" placeholder="Set a date & time for auto-delete">
+                </div>
+                <button type="button" class="primary-btn">Add Requirement</button>
+              </div>
+              <div class="field-group" style="grid-template-columns:1fr auto;">
+                <div class="field-item">
+                  <label>ACTIONS</label>
+                  <input type="text" placeholder="Actions can be triggered when members buy or use this item.">
+                </div>
+                <button type="button" class="primary-btn">Add Action</button>
+              </div>
+            </div>
+            <div class="econ-modal-footer">
+              <label><input type="checkbox"> UPDATE INVENTORY ITEMS</label>
+              <div class="econ-modal-footer-actions">
+                <button type="button" class="ghost-btn" id="closeStoreCreateModal">Cancel</button>
+                <button type="button" class="primary-btn">Create</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="econFormValidationNotice" class="econ-validation-note" hidden></div>
+        <div id="economySaveBar" class="econ-savebar" hidden>
+          <div id="economySaveBarText">Changes detected!</div>
+          <div style="display:flex;gap:8px;">
+            <a class="ghost-btn" href="/dashboard/guild/{current_guild['id']}/economy">Reset</a>
+            <button class="primary-btn" type="submit">Save Changes</button>
+          </div>
+        </div>
+      </form>
+    </section>
+    <link rel="stylesheet" href="/dashboard/static/dashboard/pages/economy.css">
+    <script>{_render_dashboard_f_template("scripts/economy.js", __ctx)}</script>
+    

@@ -1,0 +1,45 @@
+
+    <section class="panel-sub" id="dashboardRankCardSection">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+        <strong>Rank Card</strong>
+        <small class="muted">View member rank and level progress in this guild.</small>
+      </div>
+      <div class="field-group" style="margin-top:10px;grid-template-columns:minmax(240px,1fr);">
+        <div class="field-item">
+          <label>Select Member</label>
+          <select id="dashboardRankMemberSelect">{rank_select_options}</select>
+        </div>
+      </div>
+      <div id="dashboardRankCard" style="margin-top:10px;border:1px solid rgba(130,150,210,.32);border-radius:14px;background:linear-gradient(140deg,rgba(70,90,150,.28),rgba(22,36,78,.56));padding:14px;">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <img id="dashboardRankAvatar" src="{_escape(str(initial_rank.get('avatar') or 'https://cdn.discordapp.com/embed/avatars/0.png'))}" alt="avatar" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid rgba(120,170,255,.55);">
+          <div style="min-width:180px;">
+            <div id="dashboardRankName" style="font-weight:800;font-size:1.08rem;color:#f4f8ff;">{_escape(str(initial_rank.get('name') or 'No data'))}</div>
+            <div id="dashboardRankTag" class="muted">{_escape(str(initial_rank.get('tag') or '-'))}</div>
+          </div>
+          <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;">
+            <span class="plugin-premium-pill" id="dashboardRankBadge">Rank #{int(initial_rank.get('rank') or 0)}</span>
+            <span class="plugin-premium-pill" id="dashboardLevelBadge">Level {initial_level}</span>
+          </div>
+        </div>
+        <div class="field-group" style="margin-top:12px;grid-template-columns:repeat(3,minmax(140px,1fr));gap:10px;">
+          <div class="panel-sub" style="margin:0;padding:10px;">
+            <small class="muted">Total XP</small>
+            <div id="dashboardRankTotalXp" style="font-weight:700;font-size:1.08rem;">{initial_total_xp:,}</div>
+          </div>
+          <div class="panel-sub" style="margin:0;padding:10px;">
+            <small class="muted">XP to Next Level</small>
+            <div id="dashboardRankNextXp" style="font-weight:700;font-size:1.08rem;">{max(0, next_level_xp - initial_total_xp):,}</div>
+          </div>
+          <div class="panel-sub" style="margin:0;padding:10px;">
+            <small class="muted">Progress</small>
+            <div id="dashboardRankProgressText" style="font-weight:700;font-size:1.08rem;">{progress_percent:.1f}%</div>
+          </div>
+        </div>
+        <div style="margin-top:10px;height:10px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;">
+          <div id="dashboardRankProgressBar" style="width:{progress_percent:.2f}%;height:100%;background:linear-gradient(90deg,#60a5fa,#4f46e5);"></div>
+        </div>
+      </div>
+      <script>{_render_dashboard_f_template("scripts/levels_rank_card.js", __ctx)}</script>
+    </section>
+    

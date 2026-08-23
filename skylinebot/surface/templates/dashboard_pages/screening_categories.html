@@ -1,0 +1,69 @@
+<section class="panel screening-categories-page">
+  <div class="panel-header screening-cat-hero">
+    <div class="panel-title">
+      <h1>หมวดคัดกรอง</h1>
+      <p>จัดการหมวด Log แยกประเภท พร้อมกำหนดช่องและสีรายหมวดแบบละเอียด</p>
+    </div>
+    <span class="plugin-premium-pill">แพ็กเกจปัจจุบัน: {_escape(plan_name)}</span>
+  </div>
+
+  <form method="post" action="/dashboard/guild/{current_guild['id']}/screening_categories" id="screeningCategoriesForm" class="screening-categories-form" data-plan-cap="{plan_cap}" data-plan-tier="{_escape(plan_tier)}">
+    <section class="panel-sub screening-cat-toolbar" id="screeningCategoryToolbar">
+      <div class="screening-cat-stats">
+        <article class="sc-stat-card">
+          <span>หมวดทั้งหมด</span>
+          <strong id="scStatTotal">{total_categories}</strong>
+        </article>
+        <article class="sc-stat-card is-on">
+          <span>เปิดใช้งาน</span>
+          <strong id="scStatEnabled">{enabled_count}</strong>
+        </article>
+        <article class="sc-stat-card is-off">
+          <span>ปิดอยู่</span>
+          <strong id="scStatDisabled">{disabled_count}</strong>
+        </article>
+        <article class="sc-stat-card is-locked">
+          <span>ล็อกแพลน</span>
+          <strong id="scStatLocked">{locked_count}</strong>
+        </article>
+        <article class="sc-stat-card is-cap">
+          <span>โควตาแพลน</span>
+          <strong id="scStatPlanCap">{enabled_count}/{plan_cap}</strong>
+        </article>
+      </div>
+
+      <div class="screening-cat-toolbar-controls">
+        <p class="muted sc-plan-hint" id="scPlanHint">Plan Limits: {plan_limits_text}</p>
+        <div class="notice sc-cap-notice" id="scCapNotice" hidden></div>
+        <div class="sc-search-wrap">
+          <input type="search" id="scSearchInput" placeholder="ค้นหาหมวด เช่น แบนสมาชิก, ลบข้อความ">
+        </div>
+        <div class="sc-toolbar-row">
+          <button type="button" class="ghost-btn sc-filter-btn is-active" data-sc-filter="all">ทั้งหมด</button>
+          <button type="button" class="ghost-btn sc-filter-btn" data-sc-filter="enabled">ที่เปิดใช้งาน</button>
+          <button type="button" class="ghost-btn sc-filter-btn" data-sc-filter="disabled">ที่ปิดอยู่</button>
+          <button type="button" class="ghost-btn sc-filter-btn" data-sc-filter="locked">ล็อกแพลน</button>
+        </div>
+        <div class="sc-toolbar-row sc-toolbar-row-secondary">
+          <button type="button" class="ghost-btn sc-action-btn" data-sc-expand="all">ขยายทั้งหมด</button>
+          <button type="button" class="ghost-btn sc-action-btn" data-sc-expand="close">ย่อทั้งหมด</button>
+          <span class="muted sc-result-count" id="scResultCount"></span>
+        </div>
+      </div>
+    </section>
+
+    <div class="screening-cat-grid" id="screeningCategoryGrid">
+      {"".join(cards)}
+    </div>
+
+    <div class="notice sc-empty-state" id="scEmptyState" hidden>ไม่พบหมวดที่ตรงกับการค้นหา/ตัวกรอง</div>
+
+    <div class="form-actions-fixed">
+      <button class="primary-btn" type="submit">บันทึกหมวด</button>
+      <a class="ghost-btn" href="/dashboard/guild/{current_guild['id']}/logs">เปิดหน้าบันทึกเหตุการณ์</a>
+    </div>
+  </form>
+</section>
+
+<link rel="stylesheet" href="/dashboard/static/dashboard/pages/screening_categories.css">
+<script>{_render_dashboard_f_template("scripts/screening_categories.js", __ctx)}</script>

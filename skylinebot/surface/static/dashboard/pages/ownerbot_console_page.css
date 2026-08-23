@@ -1,0 +1,1410 @@
+.ownerbot-console-wrap {
+  width: min(1760px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: 20px;
+  font-family: "Outfit", "Noto Sans Thai", "Segoe UI", sans-serif;
+}
+
+.ownerbot-hero-panel {
+  display: grid;
+  gap: 14px;
+  border-color: color-mix(in srgb, var(--ux-brand) 42%, var(--line));
+  border-radius: 18px;
+  box-shadow: 0 18px 44px rgba(8, 15, 34, 0.32);
+  background:
+    radial-gradient(circle at 88% 8%, color-mix(in srgb, var(--ux-brand) 34%, transparent), transparent 46%),
+    radial-gradient(circle at 8% 4%, color-mix(in srgb, #44d2ff 24%, transparent), transparent 45%),
+    color-mix(in srgb, var(--ux-surface) 94%, transparent);
+}
+
+.ownerbot-hero-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ownerbot-hero-title-block {
+  display: grid;
+  gap: 4px;
+}
+
+.ownerbot-hero-head h1 {
+  margin: 0;
+  font-size: clamp(1.5rem, 1.9vw, 2.2rem);
+  letter-spacing: 0.01em;
+}
+
+.ownerbot-hero-head p {
+  margin: 6px 0 0;
+}
+
+.ownerbot-hero-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ownerbot-section-tabs {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: thin;
+}
+
+.ownerbot-section-tab {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  white-space: nowrap;
+  width: 100%;
+  text-align: left;
+  min-height: 42px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.ownerbot-section-tab.is-active {
+  border-color: color-mix(in srgb, var(--ux-brand) 60%, var(--line));
+  background: color-mix(in srgb, var(--ux-brand) 28%, transparent);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--ux-brand) 48%, transparent),
+    inset 4px 0 0 color-mix(in srgb, var(--ux-brand) 76%, #ffffff);
+}
+
+.ownerbot-tab-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 1px 8px;
+  font-size: 0.66rem;
+  letter-spacing: 0.03em;
+  border: 1px solid rgba(90, 240, 150, 0.55);
+  background: rgba(90, 240, 150, 0.14);
+  color: #baf9d8;
+}
+
+.ownerbot-system-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.ownerbot-system-card {
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 24%, var(--line));
+  border-radius: 16px;
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+  background: color-mix(in srgb, var(--ux-surface-2) 90%, transparent);
+  box-shadow: 0 8px 22px rgba(6, 13, 30, 0.18);
+}
+
+.ownerbot-system-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.ownerbot-system-card-head h2 {
+  margin: 0;
+  font-size: 0.96rem;
+  letter-spacing: 0.06em;
+}
+
+.ownerbot-system-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 34%, var(--line));
+  background: color-mix(in srgb, var(--ux-brand) 18%, transparent);
+  padding: 3px 10px;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.ownerbot-system-card-bot {
+  border-color: rgba(80, 210, 130, 0.4);
+}
+
+.ownerbot-system-card-web {
+  border-color: rgba(80, 160, 240, 0.42);
+}
+
+.ownerbot-system-card-vps {
+  border-color: rgba(232, 174, 78, 0.44);
+}
+
+.ownerbot-mini-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.ownerbot-mini-kpi-grid .ownerbot-kpi {
+  padding: 10px;
+}
+
+.ownerbot-mini-kpi-grid .ownerbot-kpi strong {
+  font-size: 1.05rem;
+  margin-bottom: 2px;
+}
+
+.ownerbot-subtabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  margin-bottom: 10px;
+  scrollbar-width: thin;
+}
+
+/* Use left navigation as the single control surface. */
+.ownerbot-console-wrap .ownerbot-subtabs {
+  display: none;
+}
+
+.ownerbot-subtab-btn {
+  white-space: nowrap;
+}
+
+.ownerbot-subtab-btn.is-active {
+  border-color: color-mix(in srgb, var(--ux-brand) 60%, var(--line));
+  background: color-mix(in srgb, var(--ux-brand) 24%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ux-brand) 45%, transparent);
+}
+
+.ownerbot-subtab-panel {
+  display: none;
+}
+
+.ownerbot-subtab-panel.is-active {
+  display: grid;
+  gap: 10px;
+}
+
+.ownerbot-runtime-status {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px;
+  display: grid;
+  gap: 8px;
+  background: color-mix(in srgb, var(--ux-surface-2) 92%, transparent);
+}
+
+.ownerbot-runtime-status-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ownerbot-runtime-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #94a3b8;
+  box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.2);
+}
+
+.ownerbot-runtime-status-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.ownerbot-runtime-status-message {
+  margin: 0;
+  font-weight: 600;
+}
+
+.ownerbot-runtime-status-ok {
+  border-color: rgba(74, 222, 128, 0.55);
+  background: rgba(74, 222, 128, 0.12);
+}
+
+.ownerbot-runtime-status-ok .ownerbot-runtime-status-dot {
+  background: #4ade80;
+  box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.24);
+}
+
+.ownerbot-runtime-status-loading {
+  border-color: rgba(96, 165, 250, 0.6);
+  background: rgba(96, 165, 250, 0.12);
+}
+
+.ownerbot-runtime-status-loading .ownerbot-runtime-status-dot {
+  background: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.24);
+}
+
+.ownerbot-runtime-status-err {
+  border-color: rgba(250, 204, 21, 0.65);
+  background: rgba(250, 204, 21, 0.14);
+}
+
+.ownerbot-runtime-status-err .ownerbot-runtime-status-dot {
+  background: #facc15;
+  box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.24);
+}
+
+.ownerbot-runtime-status-off {
+  border-color: rgba(248, 113, 113, 0.65);
+  background: rgba(248, 113, 113, 0.12);
+}
+
+.ownerbot-runtime-status-off .ownerbot-runtime-status-dot {
+  background: #f87171;
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.24);
+}
+
+.ownerbot-runtime-status-off #ownerbotRuntimeStatusLabel,
+.ownerbot-runtime-status-off .ownerbot-runtime-status-message {
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+.ownerbot-runtime-controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ownerbot-runtime-control-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  border: 1px solid var(--line);
+}
+
+.ownerbot-runtime-control-chip.on {
+  border-color: rgba(73, 222, 129, 0.5);
+  background: rgba(73, 222, 129, 0.14);
+  color: #c9ffe0;
+}
+
+.ownerbot-runtime-control-chip.off {
+  border-color: rgba(248, 113, 113, 0.5);
+  background: rgba(248, 113, 113, 0.12);
+  color: #ffd3d3;
+}
+
+.ownerbot-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.ownerbot-kpi {
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 24%, var(--line));
+  background: color-mix(in srgb, var(--ux-surface-2) 88%, transparent);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.ownerbot-kpi strong {
+  font-size: 1.3rem;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.ownerbot-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.ownerbot-info-card {
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 28%, var(--line));
+  background: color-mix(in srgb, var(--ux-surface-2) 90%, transparent);
+  border-radius: 12px;
+  padding: 12px;
+  display: grid;
+  gap: 6px;
+}
+
+.ownerbot-info-card h3 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.ownerbot-plan-chip-wrap {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ownerbot-plan-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  border: 1px solid var(--line);
+}
+
+.ownerbot-plan-chip.free {
+  border-color: rgba(148, 163, 184, 0.45);
+  background: rgba(148, 163, 184, 0.12);
+}
+
+.ownerbot-plan-chip.silver {
+  border-color: rgba(125, 211, 252, 0.55);
+  background: rgba(125, 211, 252, 0.14);
+}
+
+.ownerbot-plan-chip.golden {
+  border-color: rgba(250, 204, 21, 0.55);
+  background: rgba(250, 204, 21, 0.14);
+}
+
+.ownerbot-plan-chip.diamond {
+  border-color: rgba(99, 102, 241, 0.6);
+  background: rgba(99, 102, 241, 0.16);
+}
+
+.ownerbot-plan-chip.permanent {
+  border-color: rgba(244, 114, 182, 0.6);
+  background: rgba(244, 114, 182, 0.16);
+}
+
+.ownerbot-layout {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.ownerbot-side {
+  position: sticky;
+  top: 78px;
+  display: grid;
+  gap: 14px;
+  max-height: calc(100vh - 96px);
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.ownerbot-nav-panel {
+  display: grid;
+  gap: 12px;
+  border-radius: 16px;
+  border-color: color-mix(in srgb, var(--ux-brand) 38%, var(--line));
+  background:
+    radial-gradient(circle at 102% -8%, color-mix(in srgb, var(--ux-brand) 20%, transparent), transparent 46%),
+    color-mix(in srgb, var(--ux-surface-2) 92%, transparent);
+}
+
+.ownerbot-nav-panel h2 {
+  margin: 0;
+}
+
+.ownerbot-nav-group {
+  display: grid;
+  gap: 8px;
+}
+
+.ownerbot-nav-group-main {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ownerbot-nav-note {
+  margin: 0;
+  font-size: 0.78rem;
+  opacity: 0.92;
+}
+
+.ownerbot-nav-title {
+  margin: 0;
+  font-size: 0.73rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.ownerbot-main {
+  display: grid;
+  gap: 14px;
+}
+
+.ownerbot-section-group {
+  display: none;
+  gap: 14px;
+}
+
+.ownerbot-section-group.is-active {
+  display: grid;
+}
+
+.ownerbot-simple-form {
+  display: grid;
+  gap: 12px;
+}
+
+.ownerbot-simple-form label,
+.ownerbot-runtime-grid label {
+  display: grid;
+  gap: 6px;
+}
+
+.ownerbot-runtime-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.ownerbot-sub-box {
+  display: grid;
+  gap: 10px;
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 24%, var(--line));
+  border-radius: 14px;
+  padding: 12px;
+  background: color-mix(in srgb, var(--ux-surface-2) 86%, transparent);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.ownerbot-payment-grid {
+  gap: 12px;
+}
+
+.ownerbot-payment-summary {
+  border-color: color-mix(in srgb, var(--ux-brand) 44%, var(--line));
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--ux-brand) 14%, transparent), transparent 42%),
+    color-mix(in srgb, var(--ux-surface-2) 92%, transparent);
+}
+
+.ownerbot-payment-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 10px;
+  align-items: end;
+}
+
+.ownerbot-payment-summary-chip {
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 22%, var(--line));
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--ux-surface) 88%, transparent);
+  padding: 10px;
+  display: grid;
+  gap: 4px;
+}
+
+.ownerbot-payment-summary-chip span {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.ownerbot-payment-summary-chip strong {
+  font-size: 0.94rem;
+}
+
+.ownerbot-payment-preset-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.ownerbot-payment-preset-row .ghost-btn {
+  padding: 7px 12px;
+  font-size: 0.8rem;
+}
+
+.ownerbot-payment-preset-row .ghost-btn.is-active {
+  border-color: color-mix(in srgb, var(--ux-brand) 68%, #ffffff);
+  background: color-mix(in srgb, var(--ux-brand) 24%, transparent);
+  color: #f8fbff;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--ux-brand) 36%, transparent);
+}
+
+.ownerbot-payment-warning-list {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+}
+
+.ownerbot-payment-warning-list li {
+  font-size: 0.82rem;
+  color: #ffd4dc;
+}
+
+.ownerbot-payment-warning-list li.is-ok {
+  color: #baf9d8;
+}
+
+.ownerbot-payment-hidden {
+  display: none !important;
+}
+
+.ownerbot-toggle-grid {
+  display: grid;
+  gap: 6px;
+}
+
+.ownerbot-tab-policy-grid {
+  display: grid;
+  gap: 8px;
+  max-height: 460px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.ownerbot-tab-policy-block {
+  display: grid;
+  gap: 8px;
+  margin-top: 6px;
+  border-top: 1px dashed color-mix(in srgb, var(--ux-brand) 26%, var(--line));
+  padding-top: 10px;
+}
+
+.ownerbot-tab-policy-headline {
+  font-size: 0.9rem;
+}
+
+.ownerbot-tab-policy-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 430px);
+  gap: 10px;
+  align-items: center;
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 20%, var(--line));
+  border-radius: 12px;
+  padding: 9px 10px;
+  background: color-mix(in srgb, var(--ux-surface-2) 90%, transparent);
+}
+
+.ownerbot-tab-policy-meta {
+  display: grid;
+  gap: 2px;
+}
+
+.ownerbot-tab-policy-meta strong {
+  font-size: 0.88rem;
+}
+
+.ownerbot-tab-policy-meta small {
+  color: var(--muted);
+  font-size: 0.74rem;
+}
+
+.ownerbot-tab-policy-controls {
+  display: grid;
+  grid-template-columns: minmax(140px, 1fr) minmax(140px, 180px);
+  gap: 10px;
+  align-items: center;
+}
+
+.ownerbot-tab-policy-controls label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.ownerbot-upload-summary {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.ownerbot-upload-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.ownerbot-upload-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 320px);
+  gap: 12px;
+  align-items: center;
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 24%, var(--line));
+  border-radius: 12px;
+  padding: 10px;
+  background: color-mix(in srgb, var(--ux-surface-2) 88%, transparent);
+}
+
+.ownerbot-upload-row strong {
+  display: block;
+}
+
+.ownerbot-upload-row small {
+  display: block;
+  margin-top: 4px;
+}
+
+.ownerbot-upload-create {
+  margin-top: 8px;
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+}
+
+.ownerbot-mongo-summary-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ownerbot-mongo-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 30%, var(--line));
+  background: color-mix(in srgb, var(--ux-surface-2) 90%, transparent);
+  padding: 3px 10px;
+  font-size: 0.78rem;
+}
+
+.ownerbot-mongo-status-ok {
+  border-color: rgba(74, 222, 128, 0.5);
+  background: rgba(74, 222, 128, 0.12);
+}
+
+.ownerbot-mongo-status-warn {
+  border-color: rgba(250, 204, 21, 0.6);
+  background: rgba(250, 204, 21, 0.12);
+}
+
+.ownerbot-mongo-status-error {
+  border-color: rgba(248, 113, 113, 0.6);
+  background: rgba(248, 113, 113, 0.13);
+}
+
+.ownerbot-mongo-clusters-wrap {
+  display: grid;
+  gap: 10px;
+}
+
+.ownerbot-mongo-history-toolbar {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+  gap: 8px;
+  align-items: end;
+}
+
+.ownerbot-mongo-history-toolbar label {
+  display: grid;
+  gap: 6px;
+}
+
+.ownerbot-mongo-history-toolbar .auth-actions {
+  justify-content: flex-end;
+}
+
+.ownerbot-mongo-chart-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  align-items: stretch;
+}
+
+.ownerbot-mongo-chart-card {
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 26%, var(--line));
+  background: color-mix(in srgb, var(--ux-surface-2) 90%, transparent);
+  border-radius: 12px;
+  padding: 10px;
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.ownerbot-mongo-chart-card h4 {
+  margin: 0;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+.ownerbot-mongo-chart-canvas-wrap {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  min-height: 220px;
+  overflow: hidden;
+}
+
+.ownerbot-mongo-chart-card canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100%;
+}
+
+.ownerbot-mongo-chart-card-wide {
+  grid-column: 1 / -1;
+}
+
+.ownerbot-mongo-cluster-kpis {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.ownerbot-filter-panel {
+  display: grid;
+  gap: 10px;
+}
+
+.ownerbot-filter-summary {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.ownerbot-scroll {
+  max-height: 58vh;
+  min-height: 420px;
+  overflow: auto;
+  overflow-x: hidden;
+  padding-right: 6px;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.ownerbot-redeem-manager-body {
+  min-height: 62vh;
+  max-height: 74vh;
+}
+
+.ownerbot-subnav {
+  position: sticky;
+  top: 84px;
+  z-index: 9;
+  display: grid;
+  gap: 8px;
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 34%, var(--line));
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 10px;
+  background: color-mix(in srgb, var(--ux-surface) 96%, transparent);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16);
+}
+
+.ownerbot-subnav-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ownerbot-subnav-list {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: thin;
+}
+
+.ownerbot-subnav-btn {
+  white-space: nowrap;
+}
+
+.ownerbot-subnav-btn.is-active {
+  border-color: color-mix(in srgb, var(--ux-brand) 62%, var(--line));
+  background: color-mix(in srgb, var(--ux-brand) 24%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ux-brand) 45%, transparent);
+}
+
+.ownerbot-subnav-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ownerbot-subsection-anchor {
+  scroll-margin-top: 150px;
+}
+
+.ownerbot-subsection-card {
+  scroll-margin-top: 150px;
+}
+
+.ownerbot-subsection-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.ownerbot-subsection-title {
+  font-size: 0.9rem;
+}
+
+.ownerbot-subsection-toggle {
+  justify-self: end;
+}
+
+.ownerbot-icon-btn {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.ownerbot-collapse-icon {
+  font-weight: 700;
+  line-height: 1;
+}
+
+.ownerbot-subsection-card.is-collapsed .ownerbot-subsection-body {
+  display: none;
+}
+
+.ownerbot-subsection-hidden {
+  display: none !important;
+}
+
+.ownerbot-table-wrap {
+  overflow: auto;
+}
+
+.ownerbot-command-matrix {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 10px;
+}
+
+.ownerbot-command-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px;
+  display: grid;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.ownerbot-command-card.disabled {
+  border-color: rgba(255, 90, 120, 0.42);
+  background: rgba(255, 90, 120, 0.08);
+}
+
+.ownerbot-command-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.ownerbot-command-name {
+  font-weight: 700;
+  color: #dfe9ff;
+  font-size: 0.92rem;
+}
+
+.ownerbot-command-status {
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(107, 140, 255, 0.45);
+  background: rgba(107, 140, 255, 0.16);
+  color: #dfe9ff;
+}
+
+.ownerbot-command-status.disabled {
+  border-color: rgba(255, 90, 120, 0.55);
+  background: rgba(255, 90, 120, 0.18);
+  color: #ffdbe3;
+}
+
+.ownerbot-command-toggle {
+  border: 1px solid rgba(107, 140, 255, 0.45);
+  background: rgba(107, 140, 255, 0.14);
+  color: #e6efff;
+  border-radius: 9px;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+
+.ownerbot-command-toggle.enable {
+  border-color: rgba(90, 240, 150, 0.45);
+  background: rgba(90, 240, 150, 0.14);
+  color: #baf9d8;
+}
+
+.ownerbot-empty {
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  color: var(--muted);
+}
+
+.ownerbot-social-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 10px;
+}
+
+.ownerbot-social-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  display: grid;
+  gap: 8px;
+}
+
+.ownerbot-social-card.ready {
+  border-color: rgba(90, 240, 150, 0.45);
+  background: rgba(90, 240, 150, 0.08);
+}
+
+.ownerbot-social-card.error {
+  border-color: rgba(255, 90, 120, 0.55);
+  background: rgba(255, 90, 120, 0.1);
+}
+
+.ownerbot-social-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.ownerbot-social-card-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #dfe9ff;
+}
+
+.ownerbot-social-card-badge {
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(107, 140, 255, 0.45);
+  background: rgba(107, 140, 255, 0.16);
+  color: #dfe9ff;
+}
+
+.ownerbot-social-card-badge.ready {
+  border-color: rgba(90, 240, 150, 0.45);
+  background: rgba(90, 240, 150, 0.14);
+  color: #baf9d8;
+}
+
+.ownerbot-social-card-badge.error {
+  border-color: rgba(255, 90, 120, 0.65);
+  background: rgba(255, 90, 120, 0.18);
+  color: #ffdbe3;
+}
+
+.ownerbot-social-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.ownerbot-social-card-grid label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.ownerbot-social-id-field.is-hidden {
+  display: none;
+}
+
+.ownerbot-social-card-grid .span-all {
+  grid-column: 1 / -1;
+}
+
+.ownerbot-social-card-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ownerbot-social-remove {
+  border: 1px solid rgba(255, 90, 120, 0.65);
+  background: rgba(255, 90, 120, 0.14);
+  color: #ffdbe3;
+  border-radius: 10px;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+
+.ownerbot-social-empty {
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  padding: 10px;
+  color: var(--muted);
+}
+
+.ownerbot-social-icon-reset {
+  border: 1px solid rgba(107, 140, 255, 0.55);
+  background: rgba(107, 140, 255, 0.14);
+  color: #e6efff;
+  border-radius: 10px;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+
+.ownerbot-social-url-status {
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.ownerbot-social-url-status.ok {
+  color: #8ef7b4;
+}
+
+.ownerbot-social-url-status.error {
+  color: #ff9eb1;
+}
+
+#ownerbotGuildCards,
+#ownerbotRedeemUnclaimed,
+#ownerbotRedeemClaimed,
+#ownerbotWalletCards {
+  display: grid;
+  gap: 10px;
+}
+
+.ownerbot-wallet-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 10px;
+}
+
+.ownerbot-wallet-form-grid .span-all {
+  grid-column: 1 / -1;
+}
+
+.ownerbot-web-contact-layout {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ownerbot-web-contact-preview {
+  grid-column: 1 / -1;
+}
+
+.ownerbot-web-contact-head {
+  display: grid;
+  gap: 8px;
+}
+
+.ownerbot-web-contact-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ownerbot-web-contact-filter-btn {
+  min-width: 68px;
+}
+
+.ownerbot-web-contact-filter-btn.is-active {
+  border-color: color-mix(in srgb, var(--ux-brand) 60%, var(--line));
+  background: color-mix(in srgb, var(--ux-brand) 24%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ux-brand) 40%, transparent);
+}
+
+.ownerbot-web-contact-counter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ownerbot-web-contact-counter {
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 26%, var(--line));
+  background: color-mix(in srgb, var(--ux-surface-2) 90%, transparent);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.ownerbot-web-contact-counter b {
+  color: #dfe9ff;
+}
+
+.ownerbot-web-contact-thread-list {
+  display: grid;
+  gap: 8px;
+  max-height: 320px;
+  overflow: auto;
+}
+
+.ownerbot-web-contact-thread-item {
+  display: grid;
+  gap: 4px;
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 22%, var(--line));
+  background: color-mix(in srgb, var(--ux-surface-2) 90%, transparent);
+  border-radius: 12px;
+  padding: 10px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.ownerbot-web-contact-thread-item.is-active {
+  border-color: color-mix(in srgb, var(--ux-brand) 62%, var(--line));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ux-brand) 48%, transparent);
+}
+
+.ownerbot-web-contact-thread-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ownerbot-web-contact-thread-status {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.ownerbot-web-contact-message-list {
+  display: grid;
+  gap: 8px;
+  max-height: 360px;
+  overflow: auto;
+}
+
+.ownerbot-web-contact-msg {
+  display: grid;
+  gap: 6px;
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 20%, var(--line));
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--ux-surface-2) 90%, transparent);
+  padding: 10px;
+}
+
+.ownerbot-web-contact-msg-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+}
+
+.ownerbot-web-contact-msg-head time {
+  margin-left: auto;
+  color: var(--muted);
+}
+
+.ownerbot-web-contact-msg-body {
+  line-height: 1.45;
+}
+
+.ownerbot-web-contact-attachment {
+  font-size: 0.8rem;
+}
+
+.ownerbot-web-contact-reply-form {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.ownerbot-web-contact-reply-form textarea {
+  min-height: 88px;
+  resize: vertical;
+}
+
+.ownerbot-web-contact-reply-form .auth-actions {
+  justify-content: flex-start;
+}
+
+.ownerbot-web-contact-toggle-btn {
+  min-width: 132px;
+}
+
+.ownerbot-web-contact-toggle-btn.is-open {
+  border-color: rgba(96, 165, 250, 0.58);
+  background: rgba(96, 165, 250, 0.16);
+}
+
+.ownerbot-web-contact-toggle-btn.is-close {
+  border-color: rgba(248, 113, 113, 0.58);
+  background: rgba(248, 113, 113, 0.16);
+}
+
+.ownerbot-web-contact-toast-stack {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  display: grid;
+  gap: 8px;
+  width: min(360px, calc(100vw - 24px));
+  z-index: 260;
+  pointer-events: none;
+}
+
+.ownerbot-web-contact-toast {
+  pointer-events: auto;
+  display: grid;
+  gap: 4px;
+  border: 1px solid color-mix(in srgb, var(--ux-brand) 32%, var(--line));
+  border-radius: 12px;
+  padding: 10px 12px;
+  background: color-mix(in srgb, var(--ux-surface-2) 92%, transparent);
+  box-shadow: 0 10px 28px rgba(10, 14, 28, 0.34);
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.ownerbot-web-contact-toast.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.ownerbot-web-contact-toast.is-leaving {
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+}
+
+.ownerbot-web-contact-toast strong {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ownerbot-web-contact-toast span {
+  font-size: 0.84rem;
+  line-height: 1.35;
+}
+
+.ownerbot-web-contact-toast.is-success {
+  border-color: rgba(74, 222, 128, 0.6);
+  background: rgba(74, 222, 128, 0.14);
+}
+
+.ownerbot-web-contact-toast.is-error {
+  border-color: rgba(248, 113, 113, 0.65);
+  background: rgba(248, 113, 113, 0.16);
+}
+
+@media (max-width: 1320px) {
+  .ownerbot-system-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1180px) {
+  .ownerbot-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .ownerbot-side {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .ownerbot-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ownerbot-system-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ownerbot-subnav {
+    top: 8px;
+  }
+
+  .ownerbot-nav-group-main {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .ownerbot-redeem-manager-body {
+    min-height: auto;
+    max-height: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .ownerbot-mini-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ownerbot-web-contact-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .ownerbot-web-contact-toast-stack {
+    right: 10px;
+    left: 10px;
+    bottom: 10px;
+    width: auto;
+  }
+
+  .ownerbot-social-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ownerbot-upload-row {
+    grid-template-columns: 1fr;
+  }
+
+  .ownerbot-mongo-history-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .ownerbot-mongo-history-toolbar .auth-actions {
+    justify-content: flex-start;
+  }
+
+  .ownerbot-mongo-chart-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ownerbot-tab-policy-row,
+  .ownerbot-tab-policy-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .ownerbot-hero-actions {
+    width: 100%;
+  }
+
+  .ownerbot-system-card-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ownerbot-subnav-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ownerbot-nav-group-main {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .ownerbot-nav-group-main {
+    grid-template-columns: 1fr;
+  }
+}

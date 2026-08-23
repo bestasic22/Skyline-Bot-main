@@ -1,0 +1,276 @@
+.reaction-roles-page .rr-main-toggle {
+  margin-bottom: 14px;
+}
+
+.reaction-roles-page .rr-plan-card {
+  margin-bottom: 14px;
+  border: 1px solid rgba(102, 140, 235, 0.28);
+  background: linear-gradient(135deg, rgba(13, 28, 66, 0.86), rgba(10, 20, 48, 0.86));
+}
+
+.reaction-roles-page .rr-plan-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.reaction-roles-page .rr-plan-head h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.reaction-roles-page .rr-plan-head p {
+  margin: 6px 0 0;
+  color: rgba(212, 224, 255, 0.78);
+  font-size: 0.92rem;
+}
+
+.reaction-roles-page .rr-plan-pill {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(109, 143, 239, 0.55);
+  background: rgba(41, 67, 140, 0.35);
+  color: #dce6ff;
+}
+
+.reaction-roles-page .rr-plan-grid {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px;
+  align-items: end;
+}
+
+.reaction-roles-page .rr-plan-metric {
+  border-radius: 12px;
+  border: 1px solid rgba(107, 132, 208, 0.3);
+  background: rgba(10, 21, 53, 0.56);
+  padding: 10px 12px;
+  min-height: 76px;
+}
+
+.reaction-roles-page .rr-metric-label {
+  display: block;
+  color: rgba(198, 212, 247, 0.74);
+  font-size: 0.84rem;
+}
+
+.reaction-roles-page .rr-plan-metric strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 1.2rem;
+  color: #eef4ff;
+}
+
+.reaction-roles-page .rr-inline-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-radius: 12px;
+  border: 1px solid rgba(107, 132, 208, 0.3);
+  background: rgba(10, 21, 53, 0.56);
+  padding: 10px 12px;
+  min-height: 76px;
+}
+
+.reaction-roles-page .rr-inline-field > span {
+  color: rgba(198, 212, 247, 0.74);
+  font-size: 0.84rem;
+}
+
+.reaction-roles-page .rr-inline-field select {
+  width: 100%;
+  min-width: 0;
+}
+
+.reaction-roles-page .rr-plan-note {
+  margin: 10px 0 0;
+  color: rgba(198, 212, 247, 0.76);
+  font-size: 0.86rem;
+}
+
+.reaction-roles-page .rr-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 10px 0;
+}
+
+.reaction-roles-page .rr-toolbar h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.reaction-roles-page .rr-toolbar-tools {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.reaction-roles-page .rr-list {
+  margin-bottom: 14px;
+}
+
+.reaction-roles-page .rr-item {
+  border: 1px solid rgba(92, 124, 212, 0.34);
+  background: rgba(8, 19, 49, 0.82);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.reaction-roles-page .rr-item-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.reaction-roles-page .rr-item-head-main {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.reaction-roles-page .rr-item-actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.reaction-roles-page .rr-icon-btn {
+  width: 34px;
+  min-width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reaction-roles-page .rr-icon-btn i {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.reaction-roles-page .rr-icon-btn.rr-icon-btn-danger {
+  border-color: rgba(248, 113, 113, 0.34);
+  color: #fecaca;
+}
+
+.reaction-roles-page .rr-icon-btn.rr-icon-btn-danger:hover {
+  border-color: rgba(248, 113, 113, 0.55);
+  background: rgba(248, 113, 113, 0.12);
+}
+
+.reaction-roles-page .rr-item-title {
+  font-size: 0.96rem;
+  color: #e6eeff;
+}
+
+.reaction-roles-page .rr-item-meta {
+  font-size: 0.82rem;
+  color: rgba(195, 212, 245, 0.8);
+}
+
+.reaction-roles-page .rr-item-body.is-collapsed,
+.reaction-roles-page .rr-option-body.is-collapsed {
+  display: none;
+}
+
+.reaction-roles-page .rr-item-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.reaction-roles-page .rr-item-row.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.reaction-roles-page .rr-option-wrap {
+  margin-top: 12px;
+  border-top: 1px solid rgba(102, 123, 188, 0.28);
+  padding-top: 12px;
+}
+
+.reaction-roles-page .rr-option-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.reaction-roles-page .rr-option-toolbar strong {
+  font-size: 0.92rem;
+  color: #d7e4ff;
+}
+
+.reaction-roles-page .rr-option-list {
+  display: grid;
+  gap: 10px;
+}
+
+.reaction-roles-page .rr-option-row {
+  border: 1px solid rgba(87, 116, 198, 0.33);
+  background: rgba(11, 24, 58, 0.78);
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.reaction-roles-page .rr-option-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.reaction-roles-page .rr-option-actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.reaction-roles-page .rr-option-row .rr-option-title {
+  font-size: 0.88rem;
+  color: #d2e1ff;
+}
+
+.reaction-roles-page .rr-option-row input,
+.reaction-roles-page .rr-option-row select,
+.reaction-roles-page .rr-option-row textarea {
+  min-width: 0;
+}
+
+.reaction-roles-page .rr-pill-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(89, 125, 229, 0.46);
+  background: rgba(47, 69, 130, 0.34);
+  color: #dce8ff;
+  font-size: 0.82rem;
+}
+
+.reaction-roles-page .rr-hint {
+  color: rgba(190, 208, 245, 0.74);
+  font-size: 0.84rem;
+}
+
+@media (max-width: 900px) {
+  .reaction-roles-page .rr-item-row,
+  .reaction-roles-page .rr-item-row.three {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -1,0 +1,256 @@
+
+    <section class="panel section-stack dashboard-detail-shell page-levels-shell">
+      <div class="panel-header detail-page-hero detail-page-hero-levels">
+        <div class="panel-title detail-page-hero-copy">
+          <h1 data-icon-key="levels">ระบบเลเวล</h1>
+          <p>ตั้งค่าระบบเลเวลของกิลด์: แจ้งเตือน, XP และบทบาทรางวัลในหน้าเดียว</p>
+        </div>
+        <span class="plugin-premium-pill">แพ็กเกจปัจจุบัน: {_escape(plan_name)}</span>
+      </div>
+      {premium_notice_html if lock_free else ""}
+      <form method="post" action="/dashboard/guild/{current_guild['id']}/levels" id="levelsSettingsForm">
+        <section class="panel-sub detail-page-section">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+            <strong data-icon-key="levels_status">สถานะและการแจ้งเตือน</strong>
+            <label class="ux-toggle">
+              <span class="ux-toggle-label">เปิดใช้งานระบบเลเวล</span>
+              <input type="checkbox" name="enabled" {"checked" if settings.get("enabled") else ""} {disabled_attr}>
+              <span class="ux-switch"></span>
+            </label>
+          </div>
+          <div class="field-group" style="margin-top:10px;">
+            <div class="field-item">
+              <label>ห้องที่แจ้งเตือนการอัปเลเวล</label>
+              {notify_channel_select}
+            </div>
+            <div class="field-item">
+              <label>เลเวลสูงสุด</label>
+              <input type="number" name="max_level" min="5" max="{int(caps.get('max_level') or 120)}" value="{int(settings.get('max_level') or 120)}" {disabled_attr}>
+            </div>
+          </div>
+          <div class="field-item" style="margin-top:8px;">
+            <label>ข้อความแจ้งเตือนการอัปเลเวล</label>
+            <textarea name="notify_message" style="min-height:90px;" maxlength="{int(caps.get('max_notify_len') or 160)}" placeholder=" {{user}} เลเวล {{level}} !" {disabled_attr}>{_escape(str(settings.get("notify_message") or ""))}</textarea>
+            <small class="muted">ตัวแปรที่ใช้ได้: <code>{{user}}</code> <code>{{level}}</code> <code>{{xp}}</code> <code>{{guild}}</code></small>
+          </div>
+          <div class="ux-toggle-group" style="margin-top:10px;">
+            <label class="ux-toggle"><span class="ux-toggle-label">ส่งแบบข้อความ</span><input type="checkbox" name="notify_send_text" {"checked" if settings.get("notify_send_text") else ""} {disabled_attr}><span class="ux-switch"></span></label>
+            <label class="ux-toggle"><span class="ux-toggle-label">ส่งแบบ Embed</span><input type="checkbox" name="notify_send_embed" {"checked" if settings.get("notify_send_embed") else ""} {disabled_attr}><span class="ux-switch"></span></label>
+            <label class="ux-toggle"><span class="ux-toggle-label">ส่งแบบรูปภาพ (พรีเมียม)</span><input type="checkbox" name="notify_send_image" {"checked" if settings.get("notify_send_image") else ""} {disabled_attr}><span class="ux-switch"></span></label>
+          </div>
+          <div class="field-group" style="margin-top:10px;">
+            <div class="field-item">
+              <label>หัวข้อ Embed เลเวล</label>
+              <input type="text" name="notify_embed_title" maxlength="200" value="{_escape(str(settings.get('notify_embed_title') or ''))}" {disabled_attr}>
+            </div>
+            <div class="field-item">
+              <label>รายละเอียด Embed เลเวล</label>
+              <input type="text" name="notify_embed_description" maxlength="900" value="{_escape(str(settings.get('notify_embed_description') or ''))}" {disabled_attr}>
+            </div>
+          </div>
+          <div class="field-group" style="margin-top:10px;">
+            <div class="field-item">
+              <label>ธีมรูปเลเวล</label>
+              <select name="notify_image_theme" {disabled_attr}>
+                <option value="music" {"selected" if settings.get("notify_image_theme") == "music" else ""}>Music</option>
+                <option value="security" {"selected" if settings.get("notify_image_theme") == "security" else ""}>Security</option>
+                <option value="giveaway" {"selected" if settings.get("notify_image_theme") == "giveaway" else ""}>Giveaway</option>
+                <option value="user" {"selected" if settings.get("notify_image_theme") == "user" else ""}>User Avatar</option>
+                <option value="guild" {"selected" if settings.get("notify_image_theme") == "guild" else ""}>Guild Icon</option>
+                <option value="custom" {"selected" if settings.get("notify_image_theme") == "custom" else ""}>Custom URL</option>
+              </select>
+            </div>
+            <div class="field-item">
+              <label>ลิงก์รูปธีมเอง (ถ้าเลือก custom)</label>
+              <input type="text" name="notify_image_theme_url" value="{_escape(str(settings.get('notify_image_theme_url') or ''))}" placeholder="https://.../theme.png" {disabled_attr}>
+            </div>
+          </div>
+          <div class="field-group" style="margin-top:10px;">
+            <div class="field-item">
+              <label>โหมดเลย์เอาต์รูป</label>
+              <select name="notify_image_layout_mode" {disabled_attr}>
+                <option value="center_stack" {"selected" if settings.get("notify_image_layout_mode") == "center_stack" else ""}>Avatar กลาง + ข้อความบน/ล่าง</option>
+                <option value="left_avatar" {"selected" if settings.get("notify_image_layout_mode") == "left_avatar" else ""}>Avatar ซ้าย + ข้อความขวา</option>
+                <option value="right_avatar" {"selected" if settings.get("notify_image_layout_mode") == "right_avatar" else ""}>Avatar ขวา + ข้อความซ้าย</option>
+              </select>
+            </div>
+            <div class="field-item">
+              <label>ตำแหน่ง Avatar</label>
+              <select name="notify_image_avatar_position" {disabled_attr}>
+                <option value="left" {"selected" if settings.get("notify_image_avatar_position") == "left" else ""}>ซ้าย</option>
+                <option value="center" {"selected" if settings.get("notify_image_avatar_position") == "center" else ""}>กลาง</option>
+                <option value="right" {"selected" if settings.get("notify_image_avatar_position") == "right" else ""}>ขวา</option>
+              </select>
+            </div>
+            <div class="field-item">
+              <label>จัดแนวข้อความ</label>
+              <select name="notify_image_text_align" {disabled_attr}>
+                <option value="left" {"selected" if settings.get("notify_image_text_align") == "left" else ""}>ซ้าย</option>
+                <option value="center" {"selected" if settings.get("notify_image_text_align") == "center" else ""}>กลาง</option>
+                <option value="right" {"selected" if settings.get("notify_image_text_align") == "right" else ""}>ขวา</option>
+              </select>
+            </div>
+            <div class="field-item">
+              <label>ฟอนต์บนการ์ด</label>
+              <select name="notify_image_font_style" {disabled_attr}>
+                <option value="classic" {"selected" if settings.get("notify_image_font_style", "classic") == "classic" else ""}>Classic</option>
+                <option value="clean" {"selected" if settings.get("notify_image_font_style") == "clean" else ""}>Clean</option>
+                <option value="impact" {"selected" if settings.get("notify_image_font_style") == "impact" else ""}>Impact</option>
+                <option value="soft" {"selected" if settings.get("notify_image_font_style") == "soft" else ""}>Soft</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-group" style="margin-top:10px;">
+            <div class="field-item">
+              <label>ข้อความบนรูป</label>
+              <input type="text" name="notify_image_top_text" maxlength="240" value="{_escape(str(settings.get('notify_image_top_text') or ''))}" placeholder="{{user}}" {disabled_attr}>
+            </div>
+            <div class="field-item">
+              <label>ข้อความล่างรูป</label>
+              <input type="text" name="notify_image_bottom_text" maxlength="260" value="{_escape(str(settings.get('notify_image_bottom_text') or ''))}" placeholder="Level {{level}}" {disabled_attr}>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel-sub detail-page-section" style="margin-bottom:12px;">
+          <h2 style="margin-top:0;" data-icon-key="levels_preview">ตัวอย่างการแจ้งเตือนเลเวล (เรียลไทม์)</h2>
+          <div class="mock-switch-row" style="margin-bottom:8px;">
+            <div class="mock-switch-group">
+              <span class="mock-switch-title">Mock User</span>
+              <div id="levelMockUserButtons" class="mock-switch-buttons"></div>
+            </div>
+            <div class="mock-switch-group">
+              <span class="mock-switch-title">Mock Server</span>
+              <div id="levelMockServerButtons" class="mock-switch-buttons"></div>
+            </div>
+          </div>
+          <div id="levelNotifyPreviewModes" class="muted" style="margin-bottom:8px;">
+            โหมดที่เปิด: -
+          </div>
+          <div style="background:rgba(17,20,30,.8); border:1px solid var(--line); border-radius:14px; padding:12px;">
+            <div style="display:flex; gap:10px; align-items:center; margin-bottom:8px;">
+              <img src="{preview_bot_avatar}" alt="{preview_bot_name}" style="width:34px;height:34px;border-radius:50%;object-fit:cover;">
+              <strong>{preview_bot_name}</strong>
+              <span class="muted" style="font-size:12px;">{preview_bot_name} APP</span>
+            </div>
+            <div id="levelNotifyTextPreview" style="margin-bottom:8px;border-left:4px solid #6da0ff; background:rgba(255,255,255,.03); border-radius:8px; padding:10px;">
+              {_escape(level_preview_message)}
+            </div>
+            <div id="levelNotifyEmbedPreview" style="margin-bottom:8px;border-left:4px solid #7dd3fc; background:rgba(255,255,255,.03); border-radius:8px; padding:10px;">
+              <div id="levelNotifyEmbedTitlePreview" style="font-weight:700;">{_escape(level_preview_embed_title)}</div>
+              <div id="levelNotifyEmbedDescriptionPreview" class="muted" style="margin-top:4px;">{_escape(level_preview_embed_description)}</div>
+            </div>
+            <div id="levelNotifyImagePreview" class="member-notice-preview-card level-notice-preview-card">
+              <div class="member-notice-preview-overlay"></div>
+              <div id="levelNotifyImageLayout" class="member-notice-preview-layout">
+                <img id="levelNotifyImageAvatar" src="{preview_member_avatar}" alt="{preview_member_name}" class="member-notice-preview-avatar">
+                <div id="levelNotifyImageTextWrap" class="member-notice-preview-text">
+                  <div id="levelNotifyImageTopPreview" class="member-notice-preview-top">{_escape(str(settings.get("notify_image_top_text") or "{user}"))}</div>
+                  <div id="levelNotifyImageBottomPreview" class="member-notice-preview-bottom">{_escape(str(settings.get("notify_image_bottom_text") or "Level {level}"))}</div>
+                </div>
+              </div>
+            </div>
+            <div id="levelNotifyImageThemePreview" class="muted" style="font-size:12px;margin-top:6px;">Theme: {_escape(str(settings.get("notify_image_theme") or "music"))}</div>
+          </div>
+        </section>
+
+        <section class="panel-sub detail-page-section">
+          <strong data-icon-key="levels_modules">ระบบเลเวลที่ต้องการเปิด</strong>
+          <div class="field-group" style="margin-top:10px;">
+            {source_toggles_html}
+          </div>
+        </section>
+
+        <section class="panel-sub detail-page-section">
+          <strong data-icon-key="levels_xp">ค่าประสบการณ์ (XP)</strong>
+          <div class="field-group" style="margin-top:10px;">
+            <div class="field-item">
+              <label>ข้อความ: XP ขั้นต่ำ</label>
+              <input type="number" name="text_xp_min" min="0" max="300" value="{int(settings.get('text_xp_min') or 0)}" {'disabled' if (lock_free or not caps.get('text_xp')) else ''}>
+            </div>
+            <div class="field-item">
+              <label>ข้อความ: XP ขั้นสูง</label>
+              <input type="number" name="text_xp_max" min="0" max="600" value="{int(settings.get('text_xp_max') or 0)}" {'disabled' if (lock_free or not caps.get('text_xp')) else ''}>
+            </div>
+            <div class="field-item">
+              <label>คูลดาวน์ข้อความ (วินาที)</label>
+              <input type="number" name="text_cooldown" min="0" max="3600" value="{int(settings.get('text_cooldown') or 0)}" {'disabled' if (lock_free or not caps.get('text_xp')) else ''}>
+            </div>
+
+            <div class="field-item">
+              <label>Voice XP ต่อรอบ</label>
+              <input type="number" name="voice_xp_gain" min="0" max="200" value="{int(settings.get('voice_xp_gain') or 0)}" {'disabled' if (lock_free or not caps.get('voice_xp')) else ''}>
+            </div>
+            <div class="field-item">
+              <label>คูลดาวน์ Voice (วินาที)</label>
+              <input type="number" name="voice_cooldown" min="10" max="3600" value="{int(settings.get('voice_cooldown') or 0)}" {'disabled' if (lock_free or not caps.get('voice_xp')) else ''}>
+            </div>
+            <div class="field-item">
+              <label>XP การใช้งานคำสั่งบอ</label>
+              <input type="number" name="command_xp_gain" min="0" max="300" value="{int(settings.get('command_xp_gain') or 0)}" {'disabled' if (lock_free or not caps.get('command_xp')) else ''}>
+            </div>
+            <div class="field-item">
+              <label>คูลดาวน์ (วินาที)</label>
+              <input type="number" name="command_cooldown" min="10" max="3600" value="{int(settings.get('command_cooldown') or 0)}" {'disabled' if (lock_free or not caps.get('command_xp')) else ''}>
+            </div>
+            <div class="field-item">
+              <label>XP จากรีแอ็กชัน</label>
+              <input type="number" name="reaction_xp_gain" min="0" max="100" value="{int(settings.get('reaction_xp_gain') or 0)}" {'disabled' if (lock_free or not caps.get('reaction_xp')) else ''}>
+            </div>
+            <div class="field-item">
+              <label>คูลดาวน์รีแอ็กชัน (วินาที)</label>
+              <input type="number" name="reaction_cooldown" min="5" max="3600" value="{int(settings.get('reaction_cooldown') or 0)}" {'disabled' if (lock_free or not caps.get('reaction_xp')) else ''}>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel-sub detail-page-section">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+            <strong data-icon-key="levels_rewards">บทบาทรางวัลตามเลเวล</strong>
+            <label class="ux-toggle">
+              <span class="ux-toggle-label">เก็บบทบาทรางวัลเดิม (Stack)</span>
+              <input type="checkbox" name="stack_reward_roles" {"checked" if settings.get("stack_reward_roles") else ""} {disabled_attr}>
+              <span class="ux-switch"></span>
+            </label>
+          </div>
+          <p class="muted" style="margin:.4rem 0 .8rem;">จำนวนรางวัลสูงสุดในแพ็กเกจ: {max_rewards if max_rewards > 0 else 0}</p>
+          {"".join(reward_rows)}
+        </section>
+
+        <div class="form-actions-fixed" style="position:static;justify-content:flex-start;">
+          <button class="primary-btn" type="submit" {disabled_attr}>บันทึกการตั้งค่าระบบเลเวล</button>
+          <a class="ghost-btn" href="/dashboard/guild/{current_guild['id']}/levels">รีโหลด</a>
+        </div>
+      </form>
+      <section class="panel-sub" id="levelResetPanel" style="margin-top:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+          <strong>รีเซ็ตเลเวลสมาชิก</strong>
+          <small class="muted">เฉพาะผู้มีสิทธิ์แอดมินของกิลด์</small>
+        </div>
+        <form method="post" action="/dashboard/guild/{current_guild['id']}/levels" id="levelResetUserForm" style="margin-top:10px;">
+          <input type="hidden" name="action" value="reset_user">
+          <div class="field-group">
+            <div class="field-item">
+              <label>ค้นหาสมาชิก</label>
+              <input type="text" id="levelResetSearchInput" placeholder="ค้นหาชื่อ, แท็ก หรือ ID สมาชิก" {reset_disabled_attr}>
+            </div>
+            <div class="field-item">
+              <label>เลือกสมาชิกเพื่อรีเซ็ต</label>
+              <select name="reset_target_user_id" id="levelResetTargetSelect" {reset_disabled_attr}>
+                {reset_target_options}
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+            <button class="ghost-btn danger" type="submit" {reset_disabled_attr}>รีเซ็ตเลเวลเฉพาะคน</button>
+          </div>
+        </form>
+        <form method="post" action="/dashboard/guild/{current_guild['id']}/levels" id="levelResetAllForm" style="margin-top:8px;">
+          <input type="hidden" name="action" value="reset_all">
+          <button class="ghost-btn danger" type="submit" {reset_disabled_attr}>รีเซ็ตเลเวลสมาชิกทั้งหมด</button>
+        </form>
+      </section>
+      {rank_card_html}
+      <script>{_render_dashboard_f_template("scripts/levels.js", __ctx)}</script>
+    </section>
+    

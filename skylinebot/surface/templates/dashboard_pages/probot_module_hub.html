@@ -1,0 +1,21 @@
+<section class="section-stack dashboard-detail-shell page-module-hub-shell page-module-hub-{_escape(hub_slug)}">
+  <section class="panel module-hub-hero">
+    <div class="hub-head">
+      <div>
+        <h1 data-icon-key="{_escape(hub_slug)}">{_escape(safe_title)}</h1>
+        <p class="muted">{_escape(safe_description)}</p>
+      </div>
+      <div class="hub-side">
+        <div class="hub-badges">{badge_html}</div>
+        <span class="hub-links-count">{link_count} modules</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel module-hub-links-panel">
+    <div class="hub-links">
+      {quick_links_html if quick_links_html else empty_notice_html}
+    </div>
+  </section>
+</section>
+<link rel="stylesheet" href="/dashboard/static/dashboard/pages/probot_module_hub.css">

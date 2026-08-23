@@ -1,0 +1,51 @@
+
+        <section class="panel" style="display:grid; gap:12px;">
+          <div class="panel-header">
+            <div class="panel-title">
+              <h1>Admin: DonateBOT Verify Logs</h1>
+              <p class="muted">Verify history for TrueMoney gift links from DonateBOT pages.</p>
+            </div>
+          </div>
+          <form method="get" action="/dashboard/admin/donatebot/verify-logs" class="field-group" style="grid-template-columns:180px minmax(220px,1fr) auto auto;">
+            <div class="field-item" style="margin-bottom:0;">
+              <label>Status</label>
+              <select name="status">{status_select_html}</select>
+            </div>
+            <div class="field-item" style="margin-bottom:0;">
+              <label>Search</label>
+              <input type="text" name="q" value="{_escape(safe_keyword)}" placeholder="link, donor, requester, note, IP">
+            </div>
+            <div class="auth-actions" style="align-items:flex-end; justify-content:flex-start;">
+              <button class="primary-btn" type="submit">Filter</button>
+            </div>
+            <div class="auth-actions" style="align-items:flex-end; justify-content:flex-start;">
+              <a class="ghost-btn" href="/dashboard/admin/donatebot/verify-logs">Reset</a>
+            </div>
+          </form>
+          <div class="muted">
+            Total {safe_total} rows
+            {" | " + _escape(f" {start_index}-{end_index}") if safe_total else ""}
+          </div>
+          <div style="overflow:auto;">
+            <table class="data-table" style="min-width:1200px;">
+              <thead>
+                <tr>
+                  <th>Checked At</th>
+                  <th>Status</th>
+                  <th>Donor</th>
+                  <th>Amount</th>
+                  <th>Gift Link</th>
+                  <th>Note</th>
+                  <th>Requester</th>
+                  <th>IP</th>
+                </tr>
+              </thead>
+              <tbody>{"".join(table_rows)}</tbody>
+            </table>
+          </div>
+          <div class="auth-actions" style="justify-content:space-between; gap:10px; flex-wrap:wrap;">
+            <div class="mini-stat">Page {safe_page} / {total_pages}</div>
+            <div style="display:flex; gap:8px;">{prev_button_html}{next_button_html}</div>
+          </div>
+        </section>
+        

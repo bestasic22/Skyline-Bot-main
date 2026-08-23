@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ข้อตกลงและเงื่อนไขการใช้งาน (Terms of Service) - {{APP_NAME}}</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" type="image/png" href="/favicon.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="/dashboard/static/dashboard/public-pages.css">
+  <style>
+    .tos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .tos-plan {
+      border: 1px solid var(--public-line);
+      border-radius: 12px;
+      padding: 12px;
+      background: rgba(11, 18, 34, 0.52);
+    }
+
+    .tos-plan h3 {
+      margin: 0;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tos-plan-price {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.92rem;
+    }
+
+    .tos-plan p {
+      margin: 8px 0 0;
+      color: var(--public-text-soft);
+      line-height: 1.58;
+      font-size: 0.95rem;
+    }
+
+    .tos-note {
+      margin-top: 10px;
+      border: 1px dashed var(--public-line);
+      border-radius: 12px;
+      padding: 10px;
+      background: rgba(12, 24, 45, 0.58);
+    }
+
+    .tos-list-tight li {
+      margin-bottom: 6px;
+    }
+  </style>
+</head>
+<body class="public-doc">
+  <main class="public-shell">
+    <section class="public-card hero-card">
+      <h1 class="title-row"><span class="title-icon"><i class="bi bi-file-text"></i></span>ข้อตกลงและเงื่อนไขการใช้งาน (Terms of Service) - {{APP_NAME}}</h1>
+      <p class="hero-sub">ยินดีต้อนรับสู่ {{APP_NAME}} ข้อตกลงการใช้งานฉบับนี้จัดทำขึ้นเพื่อกำหนดเงื่อนไข สิทธิ และข้อจำกัดในการใช้งานบอทและระบบแพ็กเกจสนับสนุน (Donate) การที่คุณดึงบอทเข้าสู่เซิร์ฟเวอร์หรือทำการสนับสนุนแพ็กเกจ ถือว่าคุณได้อ่านและยอมรับข้อตกลงทั้งหมดนี้แล้ว</p>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-gem"></i></span>1. แพ็กเกจและสิทธิ์การใช้งาน (Packages &amp; Features)</h2>
+      <p>{{APP_NAME}} มีแพ็กเกจให้เลือกใช้งานเพื่อให้เหมาะสมกับขนาดและความต้องการของแต่ละเซิร์ฟเวอร์ ดังนี้:</p>
+      <div class="tos-grid">
+        <article class="tos-plan">
+          <h3><i class="bi bi-stars"></i>Free <span class="tos-plan-price">({{{TOS_PRICE_FREE_HTML}}})</span></h3>
+          <p>เหมาะสำหรับชุมชนที่เพิ่งเริ่มต้น ใช้งานคำสั่งพื้นฐานได้</p>
+        </article>
+        <article class="tos-plan">
+          <h3><i class="bi bi-award"></i>Silver <span class="tos-plan-price">({{{TOS_PRICE_SILVER_HTML}}})</span></h3>
+          <p>ปลดล็อกระบบสำคัญ เพิ่มขีดจำกัดหลัก และรับการซัพพอร์ตระดับมาตรฐาน</p>
+        </article>
+        <article class="tos-plan">
+          <h3><i class="bi bi-lightning-charge"></i>Gole <span class="tos-plan-price">({{{TOS_PRICE_GOLE_HTML}}})</span></h3>
+          <p>เหมาะกับเซิร์ฟเวอร์ที่ใช้งานหนักและจริงจัง รับการซัพพอร์ตระดับรวดเร็ว</p>
+        </article>
+        <article class="tos-plan">
+          <h3><i class="bi bi-trophy"></i>Diamond <span class="tos-plan-price">({{{TOS_PRICE_DIAMOND_HTML}}})</span></h3>
+          <p>ขีดจำกัดสูงสุด สิทธิ์ครบทุกระบบ พร้อมการซัพพอร์ตระดับสูงสุดเร่งด่วน</p>
+        </article>
+        <article class="tos-plan">
+          <h3><i class="bi bi-infinity"></i>Permanent <span class="tos-plan-price">({{{TOS_PRICE_PERMANENT_HTML}}})</span></h3>
+          <p>แพ็กเกจจ่ายครั้งเดียว สิทธิ์ครบทุกระบบ รวมถึงสิทธิ์ฟีเจอร์พรีเมียมใหม่ที่จะมาถึงในอนาคต</p>
+        </article>
+      </div>
+      <div class="tos-note">
+        สิทธิ์การใช้งาน ฟีเจอร์ที่รองรับ (เช่น ระบบเพลง, AutoResponder, Anti-Nuke, AutoMod, ระบบเลเวล) และจำนวนโควตาต่างๆ จะถูกจำกัดตามตารางฟีเจอร์ของแต่ละแพ็กเกจที่ระบุไว้บนเว็บไซต์
+      </div>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-arrow-up-right-circle"></i></span>2. ขั้นตอนการสมัครและการอัปเกรด (How to Upgrade)</h2>
+      <ol class="tos-list-tight">
+        <li>เลือกแพ็กเกจที่เหมาะสมกับขนาดเซิร์ฟเวอร์ของคุณ</li>
+        <li>เปิดหน้า Donate ในแดชบอร์ดกิลด์ (Guild Dashboard) ของคุณเพื่อส่งคำขออัปเกรด</li>
+        <li>รองรับการชำระเงินผ่านระบบพร้อมเพย์ (PromptPay) และบัญชีธนาคาร</li>
+        <li>หลังจากยืนยันสิทธิ์เรียบร้อยแล้ว ฟีเจอร์ Premium จะถูกเปิดใช้งานใน Dashboard ของเซิร์ฟเวอร์นั้นทันที</li>
+      </ol>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-cash-coin"></i></span>3. นโยบายการชำระเงินและการคืนเงิน (Payment &amp; Refund Policy)</h2>
+      <p>เพื่อความโปร่งใสในการให้บริการ ทาง {{APP_NAME}} มีนโยบายเกี่ยวกับการสนับสนุนแพ็กเกจดังนี้:</p>
+      <ul>
+        <li><strong>ไม่มีนโยบายการคืนเงิน (No Refund Policy):</strong> ทางเราขอสงวนสิทธิ์ในการไม่คืนเงินสำหรับการสนับสนุนแพ็กเกจ (Donate) ในทุกกรณี</li>
+        <li><strong>ข้อยกเว้นการคืนเงิน:</strong> หากปัญหาเกิดจากระบบของ {{APP_NAME}} ทีมงานจะพิจารณาเป็นรายกรณีเท่านั้น</li>
+      </ul>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-shield-exclamation"></i></span>4. กฎและข้อห้ามในการใช้งาน (Usage Rules)</h2>
+      <ul>
+        <li>ห้ามใช้ {{APP_NAME}} ในการกระทำที่ผิดกฎหมาย ละเมิดสิทธิ์ผู้อื่น หรือขัดต่อข้อตกลงการใช้งานของ Discord (Discord Terms of Service)</li>
+        <li>ห้ามพยายามเจาะระบบ โจมตี บายพาส หรือหาผลประโยชน์จากช่องโหว่ (Bug) ของระบบแพ็กเกจและฟีเจอร์ต่างๆ</li>
+        <li>สิทธิ์ Premium ที่ได้รับจะผูกกับเซิร์ฟเวอร์ที่ทำการสมัครและไม่สามารถโอนย้ายข้ามเซิร์ฟเวอร์ได้ ยกเว้นจะได้รับอนุญาตจากทีมงานเป็นกรณีพิเศษ</li>
+      </ul>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-slash-circle"></i></span>5. การระงับการให้บริการ (Termination)</h2>
+      <p>ทางทีมงาน {{APP_NAME}} ขอสงวนสิทธิ์ในการยกเลิกสิทธิ์ Premium หรือแบนการใช้งานเซิร์ฟเวอร์/ผู้ใช้งานที่ละเมิดข้อตกลงการใช้งาน โดยไม่จำเป็นต้องแจ้งให้ทราบล่วงหน้า และจะไม่มีการคืนเงินในกรณีที่ถูกระงับการใช้งานเนื่องจากการทำผิดกฎ</p>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-envelope"></i></span>ติดต่อทีมงาน</h2>
+      <p>หากมีคำถามเกี่ยวกับข้อตกลงการใช้งาน กรุณาติดต่อทีมงานผ่าน <a href="{{CONTACT_URL}}">หน้าติดต่อ</a></p>
+      <p style="margin-top:8px;">อัปเดตล่าสุด: {{CURRENT_YEAR}} • ดูนโยบายความเป็นส่วนตัวได้ที่ <a href="{{PRIVACY_URL}}">{{PRIVACY_URL}}</a></p>
+    </section>
+  </main>
+</body>
+</html>

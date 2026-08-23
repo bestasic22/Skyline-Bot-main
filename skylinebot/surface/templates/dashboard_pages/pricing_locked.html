@@ -1,0 +1,20 @@
+<section class="panel" style="text-align: center; padding: 60px 20px;">
+  <span style="font-size: 4rem; display: block; margin-bottom: 20px;"></span>
+  <h1 style="font-size: 2rem; margin-bottom: 10px;">ฟีเจอร์สมาชิก Premium</h1>
+  <p class="muted" style="max-width: 600px; margin: 0 auto;">
+    คุณกำลังพยายามเข้าถึงหมวด <strong>{tab_slug.replace('_', ' ').capitalize()}</strong>
+    ซึ่งต้องการระดับสมาชิกที่สูงขึ้นก่อน
+  </p>
+
+  {preview_html}
+  {_pricing_table_html()}
+
+  <div style="margin-top: 40px;">
+    <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+      <a href="{SUBSCRIBE_PLAN_PATH}" class="primary-btn" style="padding: 15px 30px; font-size: 1.05rem;">สมัครพรีเมียมเพื่อปลดล็อก</a>
+      <a href="/wallet" class="ghost-btn" style="padding: 15px 24px; font-size: 1rem;">เติมเงินและชำระแพ็กเกจ</a>
+      <a href="/redeem" class="ghost-btn" style="padding: 15px 24px; font-size: 1rem;">กรอกรหัส Redeem</a>
+    </div>
+    <p style="margin-top: 15px;"><a href="/dashboard/guild/{current_guild['id']}" class="ghost-btn">กลับหน้าหลัก</a></p>
+  </div>
+</section>

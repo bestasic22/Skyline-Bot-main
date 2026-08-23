@@ -1,0 +1,1257 @@
+﻿<link rel="stylesheet" href="/dashboard/static/dashboard/pages/ownerbot_console_page.css">
+<section class="ownerbot-console-wrap" data-ownerbot-root data-ownerbot-initial-section="{_escape(settings_active_section)}">
+  <section class="panel ownerbot-hero-panel">
+    <div class="ownerbot-hero-head">
+      <div class="ownerbot-hero-title-block">
+        <h1>OwnerBOT Settings</h1>
+        <p class="muted">ศูนย์ควบคุมการตั้งค่าระบบทั้งหมด (แยกจากหน้า Overview เพื่อให้หน้า Overview เร็ว)</p>
+      </div>
+      <div class="ownerbot-hero-actions">
+        <a class="ghost-btn" href="/dashboard/admin/ownerbot">ไปหน้า Overview</a>
+        <a class="ghost-btn" href="/dashboard/admin/ownerbot/assets">Image DB</a>
+        <button class="ghost-btn" type="button" id="ownerbotClearFilters">Reset Filters</button>
+      </div>
+    </div>
+
+    {notice_markup}
+
+    <div class="ownerbot-system-grid">
+      <article class="ownerbot-system-card ownerbot-system-card-bot">
+        <div class="ownerbot-system-card-head">
+          <h2>BOT</h2>
+          <span class="ownerbot-system-badge">{_escape(guild_mode_label)}</span>
+        </div>
+        <div
+          class="ownerbot-runtime-status ownerbot-runtime-status-{_escape(runtime_tone)}"
+          id="ownerbotRuntimeStatusShell"
+          data-runtime-level="{_escape(runtime_level)}"
+          data-runtime-message="{_escape(runtime_message)}"
+          data-runtime-updated-at="{_escape(runtime_updated_at)}"
+          data-ownerbot-guild-mode="{_escape(guild_mode_value)}"
+          data-ownerbot-tester-enabled="{"1" if runtime_settings.get("tester_enabled", False) else "0"}"
+          data-ownerbot-status-override-level="{_escape(status_override_level)}"
+          data-ownerbot-status-override-activity="{_escape(status_override_activity)}"
+          data-ownerbot-status-override-display="{_escape(status_override_display)}"
+          data-ownerbot-status-override-message="{_escape(status_override_message)}"
+        >
+          <div class="ownerbot-runtime-status-head">
+            <span class="ownerbot-runtime-status-dot" aria-hidden="true"></span>
+            <strong id="ownerbotRuntimeStatusLabel">{_escape(runtime_label)}</strong>
+            <span class="ownerbot-runtime-status-chip" id="ownerbotRuntimeStatusLevel">{_escape(runtime_level or "unknown")}</span>
+          </div>
+          <p class="ownerbot-runtime-status-message" id="ownerbotRuntimeStatusMessage">{_escape(runtime_message)}</p>
+          <small class="muted" id="ownerbotRuntimeStatusMeta">{_escape(runtime_meta)}</small>
+          <div class="ownerbot-runtime-controls">
+            <div id="ownerbotRuntimeControlChips">{runtime_control_chips_markup}</div>
+          </div>
+        </div>
+        <div class="ownerbot-mini-kpi-grid">
+          <div class="ownerbot-kpi"><strong data-ownerbot-kpi="total_guilds">{total_guilds}</strong><span class="muted">Managed Guilds</span></div>
+          <div class="ownerbot-kpi"><strong data-ownerbot-kpi="disabled_commands_count">{disabled_commands_count}</strong><span class="muted">Global Disabled Commands</span></div>
+          <div class="ownerbot-kpi"><strong data-ownerbot-kpi="hidden_tabs_count">{hidden_tabs_count}</strong><span class="muted">Hidden Dashboard Tabs</span></div>
+        </div>
+        <p class="muted">Whitelist: {whitelist_count} | Blacklist: {blacklist_count} | Tester Guilds: {tester_guild_count}</p>
+        <form method="post" action="/dashboard/admin/ownerbot/status" class="ownerbot-simple-form" style="margin-top:10px;">
+          <strong>Public Bot Status</strong>
+          <small class="muted">ตั้งค่าสถานะและข้อความที่ผู้ใช้เห็นจากหน้าเว็บได้ทันที</small>
+          <label>สถานะที่ต้องการแสดง
+            <select name="dashboard_status_override_level" id="ownerbotStatusOverrideLevel">
+              <option value="auto" {"selected" if status_override_level == "auto" else ""}>Auto (ตามสถานะระบบ)</option>
+              <option value="online" {"selected" if status_override_level == "online" else ""}>online (เขียว)</option>
+              <option value="idle" {"selected" if status_override_level == "idle" else ""}>idle (เหลือง)</option>
+              <option value="dnd" {"selected" if status_override_level == "dnd" else ""}>dnd (แดง)</option>
+              <option value="offline" {"selected" if status_override_level == "offline" else ""}>offline (เทา)</option>
+            </select>
+          </label>
+          <label>กิจกรรมที่ต้องการแสดง
+            <select name="dashboard_status_override_activity" id="ownerbotStatusOverrideActivity">
+              <option value="auto" {"selected" if status_override_activity == "auto" else ""}>Auto (ใช้กิจกรรมระบบ)</option>
+              <option value="playing" {"selected" if status_override_activity == "playing" else ""}>Playing(กำลังเล่น)</option>
+              <option value="streaming" {"selected" if status_override_activity == "streaming" else ""}>Streaming(กำลังไลฟ์/สตรีม)</option>
+              <option value="listening" {"selected" if status_override_activity == "listening" else ""}>Listening(กำลังฟัง)</option>
+              <option value="watching" {"selected" if status_override_activity == "watching" else ""}>Watching(กำลังดู)</option>
+              <option value="competing" {"selected" if status_override_activity == "competing" else ""}>Competing(กำลังแข่งขัน)</option>
+            </select>
+          </label>
+          <label>ข้อความสถานะ
+            <textarea name="dashboard_status_override_message" maxlength="2000" rows="4" placeholder="1 บรรทัด = 1 ข้อความ เช่น&#10;กำลังปรับปรุงระบบ&#10;LIVE support พร้อมให้บริการ">{_escape(status_override_message)}</textarea>
+            <small class="muted">ใส่ได้หลายข้อความ โดยแยกคนละบรรทัด ระบบจะหมุนข้อความให้</small>
+          </label>
+          <div class="auth-actions">
+            <button class="primary-btn" type="submit">บันทึกสถานะ</button>
+            <button class="ghost-btn" type="submit" name="dashboard_status_force_auto" value="1" id="ownerbotStatusAutoResetButton">รีเซ็ตเป็น Auto</button>
+          </div>
+        </form>
+      </article>
+
+      <article class="ownerbot-system-card ownerbot-system-card-web">
+        <div class="ownerbot-system-card-head">
+          <h2>WEB</h2>
+          <span class="ownerbot-system-badge">Contact External</span>
+        </div>
+        <div class="ownerbot-mini-kpi-grid">
+          <div class="ownerbot-kpi"><strong data-ownerbot-kpi="social_link_count">{social_link_count}</strong><span class="muted">Developer Social Links</span></div>
+          <div class="ownerbot-kpi"><strong data-ownerbot-kpi="social_developer_count">{social_developer_count}</strong><span class="muted">Linked Developers</span></div>
+          <div class="ownerbot-kpi"><strong data-ownerbot-kpi="total_unclaimed">{total_unclaimed}</strong><span class="muted">Unused Redeem Codes</span></div>
+          <div class="ownerbot-kpi"><strong data-ownerbot-kpi="total_claimed">{total_claimed}</strong><span class="muted">Claimed Redeem Codes</span></div>
+        </div>
+        <p class="muted">Contact form has been moved to external support page.</p>
+      </article>
+
+      <article class="ownerbot-system-card ownerbot-system-card-vps">
+        <div class="ownerbot-system-card-head">
+          <h2>VPS</h2>
+          <span class="ownerbot-system-badge">Storage {configured_upload_targets}/{len(OWNERBOT_UPLOAD_TARGETS)}</span>
+        </div>
+        <div class="ownerbot-mini-kpi-grid">
+          <div class="ownerbot-kpi"><strong data-ownerbot-kpi="total_codes">{total_codes}</strong><span class="muted">Redeem Codes (Total)</span></div>
+          <div class="ownerbot-kpi"><strong data-ownerbot-kpi="total_wallet_users">{total_wallet_users}</strong><span class="muted">Wallet Users</span></div>
+          <div class="ownerbot-kpi"><strong data-ownerbot-kpi="wallet_balance_total_text">{wallet_balance_total_text}</strong><span class="muted">Wallet Balance (THB)</span></div>
+          <div class="ownerbot-kpi"><strong data-ownerbot-kpi="wallet_positive_users">{wallet_positive_users}</strong><span class="muted">Wallets With Balance</span></div>
+        </div>
+        <p class="muted">Storage Guild: {_escape(selected_storage_guild_name or "-")} (ID: {_escape(storage_guild_id or "-")})</p>
+        <p class="muted" id="ownerbotLiveUpdateStatus">Live update: กำลังเชื่อมต่อ...</p>
+      </article>
+    </div>
+
+    <div class="ownerbot-info-grid">
+      <article class="ownerbot-info-card">
+        <h3>Guild Mode</h3>
+        <strong>{_escape(guild_mode_label)}</strong>
+        <p class="muted">Whitelist: {whitelist_count} | Blacklist: {blacklist_count} | Tester Guilds: {tester_guild_count}</p>
+      </article>
+      <article class="ownerbot-info-card">
+        <h3>Plan Distribution</h3>
+        <div class="ownerbot-plan-chip-wrap" id="ownerbotPlanChipWrap">
+          {plan_distribution_chips_markup}
+        </div>
+        <p class="muted">ภาพรวมแพ็กเกจปัจจุบันของกิลด์ทั้งหมดในระบบ</p>
+      </article>
+    </div>
+  </section>
+
+  <div class="ownerbot-layout">
+    <aside class="ownerbot-side">
+      <section class="panel ownerbot-nav-panel">
+        <h2>Quick Settings</h2>
+        <p class="muted">แท็บหลักแบบชัดเจน: Runtime / Payment / Mongo / Redeem / Wallet / Guild / Promote</p>
+
+        <div class="ownerbot-nav-group ownerbot-nav-group-main" role="tablist" aria-label="OwnerBOT quick settings tabs">
+          <a class="ghost-btn ownerbot-section-tab {"is-active" if settings_active_section == "runtime" else ""}" href="{_escape(settings_section_runtime_url)}" data-ownerbot-section-tab="runtime" data-ownerbot-section-subtab="runtime-overview" data-ownerbot-section-target="#ownerbotRuntimePanel" role="tab" aria-selected="{"true" if settings_active_section == "runtime" else "false"}">Runtime</a>
+          <a class="ghost-btn ownerbot-section-tab {"is-active" if settings_active_section == "payment" else ""}" href="{_escape(settings_section_payment_url)}" data-ownerbot-section-tab="payment" data-ownerbot-section-target="#ownerbotPaymentProviderPanel" role="tab" aria-selected="{"true" if settings_active_section == "payment" else "false"}">Payment</a>
+          <a class="ghost-btn ownerbot-section-tab {"is-active" if settings_active_section == "mongo" else ""}" href="{_escape(settings_section_mongo_url)}" data-ownerbot-section-tab="mongo" data-ownerbot-section-target="#ownerbotMongoPanel" role="tab" aria-selected="{"true" if settings_active_section == "mongo" else "false"}">Mongo</a>
+          <a class="ghost-btn ownerbot-section-tab {"is-active" if settings_active_section == "redeem" else ""}" href="{_escape(settings_section_redeem_url)}" data-ownerbot-section-tab="redeem" data-ownerbot-section-target="#ownerbotPackagePanel" role="tab" aria-selected="{"true" if settings_active_section == "redeem" else "false"}">Redeem</a>
+          <a class="ghost-btn ownerbot-section-tab {"is-active" if settings_active_section == "wallet" else ""}" href="{_escape(settings_section_wallet_url)}" data-ownerbot-section-tab="wallet" data-ownerbot-section-target="#ownerbotWalletPanel" role="tab" aria-selected="{"true" if settings_active_section == "wallet" else "false"}">Wallet</a>
+          <a class="ghost-btn ownerbot-section-tab {"is-active" if settings_active_section == "guild" else ""}" href="{_escape(settings_section_guild_url)}" data-ownerbot-section-tab="guild" data-ownerbot-section-target="#ownerbotGuildPanel" role="tab" aria-selected="{"true" if settings_active_section == "guild" else "false"}">
+            Guild <span class="ownerbot-tab-badge">NEW</span>
+          </a>
+          <a class="ghost-btn ownerbot-section-tab {"is-active" if settings_active_section == "promote" else ""}" href="{_escape(settings_section_promote_url)}" data-ownerbot-section-tab="promote" data-ownerbot-section-target="#ownerbotPromotePanel" role="tab" aria-selected="{"true" if settings_active_section == "promote" else "false"}">
+            Promote
+          </a>
+        </div>
+        <p class="muted ownerbot-nav-note">Contact Chat และ Upload Storage รวมอยู่ในหมวด Runtime</p>
+        {'<div class="ownerbot-nav-group ownerbot-nav-group-runtime">' + runtime_subpage_nav_markup + '</div>' if settings_render_runtime else ''}
+      </section>
+
+      <section class="panel ownerbot-filter-panel">
+        <h2>ตัวกรอง</h2>
+        <div class="ownerbot-filter-summary">
+          {'<span>Guild Visible: <strong id="ownerbotGuildVisibleCount">' + str(default_visible_guild_count) + '</strong></span>' if settings_render_guild else ''}
+          {'<span>Redeem Visible: <strong id="ownerbotRedeemVisibleCount">' + str(total_codes) + '</strong></span>' if settings_render_redeem else ''}
+          {'<span>Wallet Visible: <strong id="ownerbotWalletVisibleCount">' + str(default_visible_wallet_count) + '</strong></span>' if settings_render_wallet else ''}
+          {'<span>Promote Guild Visible: <strong id="ownerbotPromoteGuildVisibleCount">' + str(promote_default_visible_guild_count) + '</strong></span>' if settings_render_promote else ''}
+          {'<span>Promote Suspended Visible: <strong id="ownerbotPromoteSuspendedVisibleCount">' + str(promote_suspension_total) + '</strong></span>' if settings_render_promote else ''}
+          {'<span>No live filters for this section</span>' if not (settings_render_guild or settings_render_redeem or settings_render_wallet or settings_render_promote) else ''}
+        </div>
+        {'<label>ค้นหาโค้ด (Code / แพ็กเกจ / สถานะ)'
+          '<input type="search" id="ownerbotRedeemSearch" placeholder="เช่น ABCD, diamond, ใช้แล้ว">'
+          '</label>' if settings_render_redeem else ''}
+        {'<label>ค้นหากิลด์ (ชื่อ / ID)'
+          '<input type="search" id="ownerbotGuildSearch" placeholder="เช่น skyline, 123456">'
+          '</label>' if settings_render_guild else ''}
+        {'<label>Select Guild Focus'
+          '<select id="ownerbotGuildSelect">'
+          '<option value="">-- เลือกกิลด์ --</option>'
+          + ''.join(guild_select_options) +
+          '</select>'
+          '</label>' if settings_render_guild else ''}
+        {'<label>Search Wallet (User / ID / TX#)'
+          '<input type="search" id="ownerbotWalletSearch" placeholder="e.g. 123456789, username, TX id">'
+          '</label>' if settings_render_wallet else ''}
+        {'<label>ค้นหารายชื่อกิลด์ทั้งหมด (Promote)'
+          '<input type="search" id="ownerbotPromoteGuildSearch" placeholder="เช่น skyline, 123456">'
+          '</label>' if settings_render_promote else ''}
+        {'<label>ค้นหากิลด์ที่โดนระงับ Promote'
+          '<input type="search" id="ownerbotPromoteSuspendedSearch" placeholder="เช่น skyline, 123456">'
+          '</label>' if settings_render_promote else ''}
+        {'<p class="muted">ค่าเริ่มต้นจะแสดงการ์ดกิลด์ชุดแรก เพื่อให้หน้ารวดเร็วและอ่านง่าย</p>' if settings_render_guild else ''}
+        {'<p class="muted">พิมพ์ค้นหาเพื่อกรองข้อมูลเฉพาะหมวดนี้</p>' if settings_render_redeem or settings_render_wallet or settings_render_promote else ''}
+        {'<p class="muted">หมวดนี้ไม่มีตัวกรองแบบฝั่งเว็บ เพิ่มความเร็วโหลดหน้า</p>' if not (settings_render_guild or settings_render_redeem or settings_render_wallet or settings_render_promote) else ''}
+      </section>
+    </aside>
+
+    <div class="ownerbot-main">
+      <div class="ownerbot-section-group {"is-active" if settings_active_section == "runtime" else ""}" data-ownerbot-section="runtime">
+      <section class="panel" id="ownerbotRuntimePanel">
+        <details class="command-category" open>
+          <summary>
+            <span>BOT Runtime Control</span>
+            <span class="public-command-meta">บอทตอบสนอง / AI model / guild access / tab visibility</span>
+          </summary>
+          <div class="command-category-body">
+            <form method="post" action="/dashboard/admin/ownerbot/runtime" class="ownerbot-runtime-grid" id="ownerbotRuntimeForm">
+              <div class="ownerbot-subtab-panel is-active" data-ownerbot-subtab-panel="runtime-overview">
+                <div class="ownerbot-sub-box" data-collapsible="1">
+                  <strong>Runtime Overview</strong>
+                  <label class="ux-toggle">
+                    <span class="ux-toggle-label">เปิดการตอบสนองคำสั่ง (ทุกเซิร์ฟ)</span>
+                    <input type="checkbox" name="global_command_response_enabled" {"checked" if runtime_settings.get("global_command_response_enabled", True) else ""}>
+                    <span class="ux-switch"></span>
+                  </label>
+                  <label class="ux-toggle">
+                    <span class="ux-toggle-label">เปิดการตอบสนองข้อความบอท (AI / Auto Reply / Mention)</span>
+                    <input type="checkbox" name="global_bot_response_enabled" {"checked" if runtime_settings.get("global_bot_response_enabled", True) else ""}>
+                    <span class="ux-switch"></span>
+                  </label>
+                  <label>Guild Mode
+                    <select name="guild_mode">
+                      <option value="all" {"selected" if runtime_settings.get("guild_mode") == "all" else ""}>ตอบทุกเซิร์ฟ</option>
+                      <option value="whitelist" {"selected" if runtime_settings.get("guild_mode") == "whitelist" else ""}>ตอบเฉพาะ Whitelist</option>
+                      <option value="blacklist" {"selected" if runtime_settings.get("guild_mode") == "blacklist" else ""}>ไม่ตอบตาม Blacklist</option>
+                      <option value="tester" {"selected" if runtime_settings.get("guild_mode") == "tester" else ""}>Tester Mode</option>
+                    </select>
+                  </label>
+                  <label>Whitelist Guild IDs (คั่นด้วย ,)
+                    <textarea name="whitelist_guild_ids" placeholder="123,456,789">{_escape(whitelist_text)}</textarea>
+                  </label>
+                  <label>Blacklist Guild IDs (คั่นด้วย ,)
+                    <textarea name="blacklist_guild_ids" placeholder="123,456,789">{_escape(blacklist_text)}</textarea>
+                  </label>
+                  <label class="ux-toggle">
+                    <span class="ux-toggle-label">เปิดใช้ Tester Mode</span>
+                    <input type="checkbox" name="tester_enabled" {"checked" if runtime_settings.get("tester_enabled", False) else ""}>
+                    <span class="ux-switch"></span>
+                  </label>
+                  <label>Tester Guild IDs (คั่นด้วย ,)
+                    <textarea name="tester_guild_ids" placeholder="123,456,789">{_escape(tester_text)}</textarea>
+                  </label>
+                </div>
+              </div>
+
+              <div class="ownerbot-subtab-panel is-active" data-ownerbot-subtab-panel="runtime-ai">
+                <div class="ownerbot-sub-box" data-collapsible="1">
+                  <strong>AI model</strong>
+                  <label>Global AI Provider (ownerbot only)
+                    <select name="global_ai_provider" id="ownerbotGlobalAiProvider">
+                      {ai_provider_options}
+                    </select>
+                  </label>
+                  <label>Global AI Model (ownerbot only)
+                    <select name="global_ai_model" id="ownerbotGlobalAiModel">
+                      {ai_model_options}
+                    </select>
+                  </label>
+                  <small class="muted">ปรับจากหน้านี้ครั้งเดียวแล้วมีผลกับระบบ OwnerBOT ทั้งหมด</small>
+                  <div class="ownerbot-table-wrap">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Provider</th>
+                          <th>Model</th>
+                          <th>Model Size</th>
+                          <th>Recommended RAM</th>
+                        </tr>
+                      </thead>
+                      <tbody id="ownerbotAiModelGuideRows">
+                        {ai_model_ram_rows}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ownerbot-subtab-panel is-active" data-ownerbot-subtab-panel="runtime-vote">
+                <div class="ownerbot-sub-box" data-collapsible="1">
+                  <strong>DiscordBotList Vote Settings</strong>
+                  <small class="muted">ตั้งค่าห้องผลโหวต + ห้องส่ง Embed ปุ่มโหวต และ secret สำหรับ webhook</small>
+                  <label>DiscordBotList Vote Result Channel ID
+                    <input type="text" name="discordbotlist_vote_result_channel_id" value="{_escape(discordbotlist_vote_result_channel_id)}" placeholder="ห้องรับผลโหวตจาก webhook">
+                  </label>
+                  <label>DiscordBotList Vote Embed Channel ID
+                    <input type="text" name="discordbotlist_vote_embed_channel_id" value="{_escape(discordbotlist_vote_embed_channel_id)}" placeholder="ห้องส่ง Embed ปุ่มโหวต">
+                  </label>
+                  <label>DiscordBotList Vote URL
+                    <input type="text" name="discordbotlist_vote_button_url" value="{_escape(discordbotlist_vote_button_url)}" placeholder="https://discordbotlist.com/bots/your-bot/upvote">
+                  </label>
+                  <label>DiscordBotList Webhook Secret (Authorization Header)
+                    <input type="password" name="discordbotlist_vote_webhook_secret" value="{_escape(discordbotlist_vote_webhook_secret)}" placeholder="secret จากหน้า Edit Bot > Vote Webhook">
+                  </label>
+                  <small class="muted">Webhook endpoint: <code>/dashboard/votes/discordbotlist/webhook</code></small>
+                </div>
+              </div>
+
+              <div class="ownerbot-subtab-panel is-active" data-ownerbot-subtab-panel="runtime-dashboard">
+                <div class="ownerbot-sub-box" data-collapsible="1">
+                  <strong>แสดง/ซ่อนหน้า Dashboard</strong>
+                  <small class="muted">ปิดสวิตช์ = ซ่อนหน้าและบล็อกผู้ใช้ทั่วไปทันที (OwnerBOT ยังเข้าถึงได้)</small>
+                  <div class="ownerbot-toggle-grid">
+                    {tab_visibility_toggles}
+                  </div>
+                </div>
+              </div>
+
+              <div class="ownerbot-subtab-panel is-active" data-ownerbot-subtab-panel="runtime-commands">
+                <div class="ownerbot-sub-box" data-collapsible="1">
+                  <strong>คำสั่งที่ปิด Global</strong>
+                  <small class="muted">ค้นหาและกดสลับสถานะได้ทันทีจากตารางคำสั่ง</small>
+                  <input type="search" id="ownerbotCommandSearch" placeholder="ค้นหา เช่น play, ticket close, ban">
+                  <div id="ownerbotCommandSummary" class="muted">กำลังโหลด...</div>
+                  <div id="ownerbotCommandMatrix" class="ownerbot-command-matrix"></div>
+                  <input type="hidden" name="global_disabled_commands" id="ownerbotCommandHidden" value="{_escape(disabled_commands_text)}">
+                </div>
+              </div>
+
+              <div class="ownerbot-subtab-panel is-active" data-ownerbot-subtab-panel="runtime-social">
+                <div class="ownerbot-sub-box" data-collapsible="1">
+                  <strong>ลิงก์โซเชียลผู้พัฒนา</strong>
+                  <small class="muted">รองรับหลายคน หลายแพลตฟอร์ม และ validation domain อัตโนมัติ</small>
+                  <small class="muted">Set Discord User ID per row to separate links for each OwnerBOT person.</small>
+                  <div id="ownerbotSocialRows" class="ownerbot-social-list"></div>
+                  <input type="hidden" id="ownerbotSocialRowsSeed" value="{_escape(social_rows_json)}">
+                  <input type="hidden" id="ownerbotSocialPlatformKeysSeed" value="{_escape(social_platform_keys_json)}">
+                  <input type="hidden" id="ownerbotSocialPlatformLabelsSeed" value="{_escape(social_platform_labels_json)}">
+                  <input type="hidden" id="ownerbotSocialPlatformIconsSeed" value="{_escape(social_platform_icons_json)}">
+                  <div class="auth-actions">
+                    <button class="ghost-btn" type="button" id="ownerbotAddSocialRow">+ เพิ่มลิงก์โซเชียล</button>
+                  </div>
+                  <input type="hidden" name="developer_social_links" id="ownerbotSocialHidden" value="{{}}">
+                </div>
+              </div>
+
+              <div class="auth-actions">
+                <button class="primary-btn" type="submit">บันทึก Runtime Control</button>
+                <button class="ghost-btn" type="submit" formaction="/dashboard/admin/ownerbot/vote/send-embed" formmethod="post">ส่ง Embed ปุ่มโหวตตอนนี้</button>
+              </div>
+            </form>
+          </div>
+        </details>
+      </section>
+      </div>
+
+      <div class="ownerbot-section-group {"is-active" if settings_active_section == "payment" else ""}" data-ownerbot-section="payment">
+      <section class="panel" id="ownerbotPaymentProviderPanel">
+        <details class="command-category" open>
+          <summary>
+            <span>WEB Payment Provider</span>
+            <span class="public-command-meta">ตั้งค่าช่องทางชำระเงินของ topup และ donate จาก Owner Console</span>
+          </summary>
+          <div class="command-category-body">
+            <form method="post" action="/dashboard/admin/ownerbot/payment-provider" class="ownerbot-runtime-grid ownerbot-payment-grid" id="ownerbotPaymentProviderForm">
+              <div class="ownerbot-sub-box ownerbot-payment-summary" data-ownerbot-payment-block="always">
+                <strong>Payment Setup Summary</strong>
+                <small class="muted">สรุปการตั้งค่าที่กำลังใช้งานจริง พร้อมแจ้งการสลับไปช่องทางสำรองให้ตรงกับลำดับการทำงานหลังบ้านก่อนบันทึก</small>
+                <div class="ownerbot-payment-summary-grid">
+                  <label>View Mode
+                    <select id="ownerbotPaymentViewMode" autocomplete="off">
+                      <option value="smart" selected>Smart View (แนะนำ)</option>
+                      <option value="basic">Basic View</option>
+                      <option value="all">Show All Fields</option>
+                    </select>
+                  </label>
+                  <article class="ownerbot-payment-summary-chip">
+                    <span>Topup</span>
+                    <strong id="ownerbotPaymentTopupSummary">-</strong>
+                  </article>
+                  <article class="ownerbot-payment-summary-chip">
+                    <span>Donate</span>
+                    <strong id="ownerbotPaymentDonateSummary">-</strong>
+                  </article>
+                  <article class="ownerbot-payment-summary-chip">
+                    <span>Wallet UI (Topup/Donate)</span>
+                    <strong id="ownerbotPaymentWalletSummary">-</strong>
+                  </article>
+                </div>
+                <div class="ownerbot-payment-preset-row" role="group" aria-label="ปุ่มพรีเซ็ตช่องทางชำระเงิน">
+                  <span class="muted">พรีเซ็ตด่วน:</span>
+                  <button type="button" class="ghost-btn" data-ownerbot-payment-preset="promptpay_only">PromptPay-only</button>
+                  <button type="button" class="ghost-btn" data-ownerbot-payment-preset="truemoney_only">TrueMoney-only</button>
+                  <button type="button" class="ghost-btn" data-ownerbot-payment-preset="webhook_heavy">Webhook-heavy</button>
+                </div>
+                <small id="ownerbotPaymentPresetStatus" class="muted">เลือกพรีเซ็ตได้ทันที ระบบจะตั้งค่าฟอร์มให้โดยอัตโนมัติ (ยังไม่บันทึกจนกว่าจะกดปุ่มบันทึกด้านล่าง)</small>
+                <p id="ownerbotPaymentCompatibilityNote" class="muted">กำลังประเมินความเข้ากันได้...</p>
+                <ul id="ownerbotPaymentWarningList" class="ownerbot-payment-warning-list"></ul>
+              </div>
+
+              <div class="ownerbot-sub-box" data-ownerbot-payment-block="channel" data-collapsible="1">
+                <strong>Primary Channel (Topup / Donate)</strong>
+                <div class="field-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; margin-top:8px;">
+                  <label>Topup Provider
+                    <select name="topup_provider" id="ownerbotPaymentTopupProvider">
+                      <option value="promptpay" {"selected" if topup_provider == "promptpay" else ""}>PromptPay</option>
+                      <option value="bank" {"selected" if topup_provider == "bank" else ""}>Bank Transfer</option>
+                      <option value="gateway" {"selected" if topup_provider == "gateway" else ""}>Payment Gateway</option>
+                      <option value="stripe" {"selected" if topup_provider == "stripe" else ""}>Stripe Checkout</option>
+                      <option value="truemoney" {"selected" if topup_provider == "truemoney" else ""}>TrueMoney QR</option>
+                    </select>
+                    <small class="muted">{_escape(payment_provider_guide_text.get(topup_provider, ""))}</small>
+                  </label>
+                  <label>Donate Provider
+                    <select name="donate_provider" id="ownerbotPaymentDonateProvider">
+                      <option value="promptpay" {"selected" if donate_provider == "promptpay" else ""}>PromptPay</option>
+                      <option value="bank" {"selected" if donate_provider == "bank" else ""}>Bank Transfer</option>
+                      <option value="gateway" {"selected" if donate_provider == "gateway" else ""}>Payment Gateway</option>
+                      <option value="stripe" {"selected" if donate_provider == "stripe" else ""}>Stripe Checkout</option>
+                      <option value="truemoney" {"selected" if donate_provider == "truemoney" else ""}>TrueMoney QR</option>
+                    </select>
+                    <small class="muted">{_escape(payment_provider_guide_text.get(donate_provider, ""))}</small>
+                  </label>
+                </div>
+                <small class="muted">
+                  หมายเหตุ: หน้า <code>/dashboard/wallet</code> รองรับช่องทางจ่ายตรงสำหรับผู้ใช้เฉพาะ PromptPay/TrueMoney ส่วน Bank/Gateway/Stripe ใช้กับลำดับงานเว็บฮุก/ตัวเชื่อมต่อในระบบหลังบ้าน
+                </small>
+              </div>
+
+              <div class="ownerbot-sub-box" data-ownerbot-payment-block="always" data-collapsible="1">
+                <strong>Always ON (ปิดไม่ได้)</strong>
+                <ul class="muted" style="margin:8px 0 0 18px; padding:0; display:grid; gap:4px;">
+                  <li><strong>TrueMoney Gift Link</strong> สำหรับยืนยันผ่านลิงก์ของขวัญ</li>
+                  <li><strong>PromptPay QR + ส่งสลิป/เลขอ้างอิง</strong> สำหรับรับเงินได้ตลอด</li>
+                </ul>
+                <small class="muted">สองช่องทางนี้เป็นช่องทางสำรองหลักของระบบ หากช่องทางเสริมถูกปิด ระบบจะสลับกลับมาใช้อัตโนมัติ</small>
+              </div>
+
+              <div class="ownerbot-sub-box" data-ownerbot-payment-block="always" data-collapsible="1">
+                <strong>Optional Systems (เปิด/ปิดได้)</strong>
+                <div class="field-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; margin-top:8px;">
+                  <label class="ux-toggle">
+                    <span class="ux-toggle-label">Enable Bank Transfer</span>
+                    <input id="ownerbotToggleBankProvider" type="checkbox" name="enable_bank_provider" {"checked" if payment_enable_bank_provider else ""}>
+                    <span class="ux-switch"></span>
+                  </label>
+                  <label class="ux-toggle">
+                    <span class="ux-toggle-label">Enable Payment Gateway</span>
+                    <input id="ownerbotToggleGatewayProvider" type="checkbox" name="enable_gateway_provider" {"checked" if payment_enable_gateway_provider else ""}>
+                    <span class="ux-switch"></span>
+                  </label>
+                  <label class="ux-toggle">
+                    <span class="ux-toggle-label">Enable Stripe Checkout</span>
+                    <input id="ownerbotToggleStripeProvider" type="checkbox" name="enable_stripe_provider" {"checked" if payment_enable_stripe_provider else ""}>
+                    <span class="ux-switch"></span>
+                  </label>
+                  <label class="ux-toggle">
+                    <span class="ux-toggle-label">Enable TrueMoney QR API</span>
+                    <input id="ownerbotToggleTrueMoneyProvider" type="checkbox" name="enable_truemoney_qr_provider" {"checked" if payment_enable_truemoney_qr_provider else ""}>
+                    <span class="ux-switch"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="ownerbot-sub-box" data-ownerbot-payment-block="channel" data-collapsible="1">
+                <strong>PromptPay / TrueMoney Gift</strong>
+                <div class="field-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; margin-top:8px;">
+                  <label>PromptPay Account Name
+                    <input type="text" name="promptpay_account_name" value="{_escape(payment_promptpay_account_name)}" placeholder="ชื่อ-นามสกุลผู้รับเงิน">
+                  </label>
+                  <label>PromptPay Number
+                    <input type="text" name="promptpay_number" value="{_escape(payment_promptpay_number)}" placeholder="0812345678">
+                  </label>
+                  <label>TrueMoney Phone (QR API)
+                    <input type="text" name="truemoney_phone" value="{_escape(payment_truemoney_phone)}" placeholder="0889463459">
+                  </label>
+                  <label>TrueMoney Gift Receiver Phone (เบอร์รับซอง)
+                    <input type="text" name="truemoney_gift_phone" value="{_escape(payment_truemoney_gift_phone)}" placeholder="0889463459">
+                  </label>
+                  <label class="span-all">TrueMoney Gift URL (optional)
+                    <input type="text" name="truemoney_gift_url" value="{_escape(payment_truemoney_gift_url)}" placeholder="https://gift.truemoney.com/campaign/?v=...">
+                  </label>
+                </div>
+                <small class="muted">PromptPay Number และ TrueMoney Gift Receiver Phone แยกกันคนละช่อง ไม่ fallback ข้ามกัน</small>
+              </div>
+
+              <div class="ownerbot-sub-box" data-ownerbot-payment-block="bank" data-collapsible="1">
+                <strong>Bank Transfer</strong>
+                <div class="field-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; margin-top:8px;">
+                  <label>Topup Verify Mode
+                    <select name="bank_topup_verification_mode">
+                      <option value="webhook_auto" {"selected" if payment_bank_topup_verification_mode == "webhook_auto" else ""}>Webhook Auto (ไม่ต้องส่งสลิป)</option>
+                      <option value="manual_slip" {"selected" if payment_bank_topup_verification_mode == "manual_slip" else ""}>Manual (ส่งเลขอ้างอิง/สลิป)</option>
+                    </select>
+                  </label>
+                  <label>Donate Verify Mode
+                    <select name="bank_donate_verification_mode">
+                      <option value="webhook_auto" {"selected" if payment_bank_donate_verification_mode == "webhook_auto" else ""}>Webhook Auto (ไม่ต้องส่งสลิป)</option>
+                      <option value="manual_slip" {"selected" if payment_bank_donate_verification_mode == "manual_slip" else ""}>Manual (ส่งเลขอ้างอิง/สลิป)</option>
+                    </select>
+                  </label>
+                  <label>Bank Name
+                    <input type="text" name="bank_name" value="{_escape(payment_bank_name)}" placeholder="KTB / BBL / BAY">
+                  </label>
+                  <label>Account Name
+                    <input type="text" name="bank_account_name" value="{_escape(payment_bank_account_name)}" placeholder="ชื่อบัญชี">
+                  </label>
+                  <label>Account Number
+                    <input type="text" name="bank_account_number" value="{_escape(payment_bank_account_number)}" placeholder="xxx-x-xxxxx-x">
+                  </label>
+                </div>
+                <small class="muted">
+                  โหมด <code>Webhook Auto</code> จะไม่ต้องให้ผู้ใช้ส่งสลิป และรอ provider callback เพื่อยืนยันอัตโนมัติ
+                </small>
+              </div>
+
+              <div class="ownerbot-sub-box" data-ownerbot-payment-block="gateway" data-collapsible="1">
+                <strong>Gateway / Webhook Adapter</strong>
+                <div class="field-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; margin-top:8px;">
+                  <label>Gateway Name
+                    <input type="text" name="gateway_name" value="{_escape(payment_gateway_name)}" placeholder="Omise / Stripe / 2C2P">
+                  </label>
+                  <label>Webhook Secret (PromptPay/Bank)
+                    <input type="text" name="webhook_secret" value="{_escape(payment_webhook_secret)}" placeholder="x-payment-secret">
+                  </label>
+                  <label>Gateway Webhook Secret
+                    <input type="text" name="gateway_webhook_secret" value="{_escape(payment_gateway_webhook_secret)}" placeholder="HMAC secret">
+                  </label>
+                  <label>Gateway Signature Header
+                    <input type="text" name="gateway_signature_header" value="{_escape(payment_gateway_signature_header)}" placeholder="x-gateway-signature">
+                  </label>
+                  <label>Gateway Signature Prefix
+                    <input type="text" name="gateway_signature_prefix" value="{_escape(payment_gateway_signature_prefix)}" placeholder="sha256=">
+                  </label>
+                  <label>Gateway Signature Algorithm
+                    <select name="gateway_signature_algorithm">
+                      <option value="sha256" {"selected" if payment_gateway_signature_algorithm == "sha256" else ""}>sha256</option>
+                      <option value="sha1" {"selected" if payment_gateway_signature_algorithm == "sha1" else ""}>sha1</option>
+                      <option value="md5" {"selected" if payment_gateway_signature_algorithm == "md5" else ""}>md5</option>
+                    </select>
+                  </label>
+                  <label class="span-all">Gateway Metadata Session Field
+                    <input type="text" name="gateway_metadata_session_key_field" value="{_escape(payment_gateway_session_field)}" placeholder="metadata.session_key">
+                  </label>
+                </div>
+                <small class="muted">
+                  Webhook endpoint: <code>/dashboard/payments/webhook/confirm</code> รองรับ provider = <code>promptpay</code>, <code>bank</code>, <code>gateway</code>, <code>stripe</code>, <code>truemoney</code>
+                </small>
+              </div>
+
+              <div class="ownerbot-sub-box" data-ownerbot-payment-block="stripe" data-collapsible="1">
+                <strong>Stripe Checkout</strong>
+                <div class="field-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; margin-top:8px;">
+                  <label>Stripe Secret Key
+                    <input type="password" name="stripe_secret_key" value="{_escape(payment_stripe_secret_key)}" placeholder="sk_live_xxx / sk_test_xxx">
+                  </label>
+                  <label>Stripe Publishable Key
+                    <input type="text" name="stripe_publishable_key" value="{_escape(payment_stripe_publishable_key)}" placeholder="pk_live_xxx / pk_test_xxx">
+                  </label>
+                  <label>Stripe Webhook Secret
+                    <input type="password" name="stripe_webhook_secret" value="{_escape(payment_stripe_webhook_secret)}" placeholder="whsec_xxx">
+                  </label>
+                  <label>Stripe Signature Header
+                    <input type="text" name="stripe_signature_header" value="{_escape(payment_stripe_signature_header)}" placeholder="stripe-signature">
+                  </label>
+                  <label>Signature Tolerance (seconds)
+                    <input type="number" name="stripe_signature_tolerance_seconds" min="30" max="3600" step="1" value="{_escape(payment_stripe_signature_tolerance_seconds)}" placeholder="300">
+                  </label>
+                  <label>Stripe API Base URL
+                    <input type="text" name="stripe_api_base_url" value="{_escape(payment_stripe_api_base_url)}" placeholder="https://api.stripe.com">
+                  </label>
+                  <label>Checkout Session URL
+                    <input type="text" name="stripe_checkout_session_url" value="{_escape(payment_stripe_checkout_session_url)}" placeholder="https://api.stripe.com/v1/checkout/sessions">
+                  </label>
+                  <label>Inquiry URL
+                    <input type="text" name="stripe_inquiry_url" value="{_escape(payment_stripe_inquiry_url)}" placeholder="https://api.stripe.com/v1/checkout/sessions">
+                  </label>
+                  <label>Success URL
+                    <input type="text" name="stripe_success_url" value="{_escape(payment_stripe_success_url)}" placeholder="https://your-domain.com/dashboard/wallet?notice=success">
+                  </label>
+                  <label>Cancel URL
+                    <input type="text" name="stripe_cancel_url" value="{_escape(payment_stripe_cancel_url)}" placeholder="https://your-domain.com/dashboard/wallet?notice=cancelled">
+                  </label>
+                  <label class="ux-toggle">
+                    <span class="ux-toggle-label">Stripe Auto Verify (Inquiry API)</span>
+                    <input type="checkbox" name="stripe_auto_verify" {"checked" if payment_stripe_auto_verify else ""}>
+                    <span class="ux-switch"></span>
+                  </label>
+                </div>
+                <small class="muted">
+                  ตั้ง Stripe webhook ให้ชี้มาที่ <code>/dashboard/payments/webhook/confirm?provider=stripe</code> และใช้ <code>whsec_...</code> สำหรับตรวจสอบลายเซ็น
+                </small>
+              </div>
+
+              <div class="ownerbot-sub-box" data-ownerbot-payment-block="truemoney" data-collapsible="1">
+                <strong>TrueMoney API (QR + Callback + Inquiry)</strong>
+                <div class="field-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; margin-top:8px;">
+                  <label>Create Payment URL
+                    <input type="text" name="truemoney_create_payment_url" value="{_escape(payment_truemoney_create_payment_url)}" placeholder="https://your-truemoney-partner/api/payment/create">
+                  </label>
+                  <label>Inquiry URL
+                    <input type="text" name="truemoney_inquiry_url" value="{_escape(payment_truemoney_inquiry_url)}" placeholder="https://your-truemoney-partner/api/payment/inquiry">
+                  </label>
+                  <label>API Key
+                    <input type="text" name="truemoney_api_key" value="{_escape(payment_truemoney_api_key)}" placeholder="merchant_api_key">
+                  </label>
+                  <label>API Secret
+                    <input type="password" name="truemoney_api_secret" value="{_escape(payment_truemoney_api_secret)}" placeholder="merchant_api_secret">
+                  </label>
+                  <label>Bearer Token
+                    <input type="password" name="truemoney_bearer_token" value="{_escape(payment_truemoney_bearer_token)}" placeholder="token (optional)">
+                  </label>
+                  <label>Callback URL
+                    <input type="text" name="truemoney_callback_url" value="{_escape(payment_truemoney_callback_url)}" placeholder="https://your-domain.com/dashboard/payments/webhook/confirm?provider=truemoney">
+                  </label>
+                  <label>Webhook Secret
+                    <input type="text" name="truemoney_webhook_secret" value="{_escape(payment_truemoney_webhook_secret)}" placeholder="truemoney_webhook_secret">
+                  </label>
+                  <label>Signature Header
+                    <input type="text" name="truemoney_signature_header" value="{_escape(payment_truemoney_signature_header)}" placeholder="x-truemoney-signature">
+                  </label>
+                  <label>Signature Prefix
+                    <input type="text" name="truemoney_signature_prefix" value="{_escape(payment_truemoney_signature_prefix)}" placeholder="sha256=">
+                  </label>
+                  <label>Signature Algorithm
+                    <select name="truemoney_signature_algorithm">
+                      <option value="sha256" {"selected" if payment_truemoney_signature_algorithm == "sha256" else ""}>sha256</option>
+                      <option value="sha1" {"selected" if payment_truemoney_signature_algorithm == "sha1" else ""}>sha1</option>
+                      <option value="md5" {"selected" if payment_truemoney_signature_algorithm == "md5" else ""}>md5</option>
+                    </select>
+                  </label>
+                  <label>Amount Field
+                    <input type="text" name="truemoney_amount_field" value="{_escape(payment_truemoney_amount_field)}" placeholder="amount">
+                  </label>
+                  <label>Currency Field
+                    <input type="text" name="truemoney_currency_field" value="{_escape(payment_truemoney_currency_field)}" placeholder="currency">
+                  </label>
+                  <label>Reference Field
+                    <input type="text" name="truemoney_reference_field" value="{_escape(payment_truemoney_reference_field)}" placeholder="reference">
+                  </label>
+                  <label>Callback Field
+                    <input type="text" name="truemoney_callback_field" value="{_escape(payment_truemoney_callback_field)}" placeholder="callbackUrl">
+                  </label>
+                  <label>QR Image Field
+                    <input type="text" name="truemoney_qr_image_field" value="{_escape(payment_truemoney_qr_image_field)}" placeholder="data.qrImageUrl">
+                  </label>
+                  <label>QR Code Field
+                    <input type="text" name="truemoney_qr_code_field" value="{_escape(payment_truemoney_qr_code_field)}" placeholder="data.qrRawData">
+                  </label>
+                  <label>Payment URL Field
+                    <input type="text" name="truemoney_payment_url_field" value="{_escape(payment_truemoney_payment_url_field)}" placeholder="data.paymentUrl">
+                  </label>
+                  <label>Reference (Response) Field
+                    <input type="text" name="truemoney_reference_resp_field" value="{_escape(payment_truemoney_reference_resp_field)}" placeholder="data.orderId">
+                  </label>
+                  <label>Transaction ID Field
+                    <input type="text" name="truemoney_transaction_id_field" value="{_escape(payment_truemoney_transaction_id_field)}" placeholder="data.transactionId">
+                  </label>
+                  <label>Inquiry Status Field
+                    <input type="text" name="truemoney_inquiry_status_field" value="{_escape(payment_truemoney_inquiry_status_field)}" placeholder="data.status">
+                  </label>
+                  <label>Paid Status Values
+                    <input type="text" name="truemoney_paid_status_values" value="{_escape(payment_truemoney_paid_status_values)}" placeholder="paid,success,completed,settled">
+                  </label>
+                  <label class="ux-toggle">
+                    <span class="ux-toggle-label">TrueMoney Auto Verify (Inquiry API)</span>
+                    <input type="checkbox" name="truemoney_auto_verify" {"checked" if payment_truemoney_auto_verify else ""}>
+                    <span class="ux-switch"></span>
+                  </label>
+                </div>
+                <small class="muted">
+                  ตั้ง callback ให้ชี้ไปที่ <code>/dashboard/payments/webhook/confirm?provider=truemoney</code> และใช้ secret/signature เดียวกับที่ provider ส่งจริง
+                </small>
+              </div>
+
+              <div class="ownerbot-sub-box" data-ownerbot-payment-block="slipcheck" data-collapsible="1">
+                <strong>SlipVerify (OCR + Match)</strong>
+                <small class="muted">
+                  เลือก Verification Engine แล้วกรอกเฉพาะข้อมูลที่ต้องใช้ ระบบจะตัดสินจาก % ที่ตั้งไว้ (50-100%) และส่งเคสคะแนนต่ำตามเส้นทางที่เลือก
+                </small>
+
+                <div class="field-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; margin-top:8px;">
+                  <label>Verification Engine
+                    <select name="slipcheck_verify_engine" id="ownerbotSlipVerifyEngine">
+                      <option value="skylinebotslip" {"selected" if payment_slipcheck_verify_engine == "skylinebotslip" else ""}>SkylineBotSlip (Internal OCR + Rule Match)</option>
+                      <option value="slipok" {"selected" if payment_slipcheck_verify_engine == "slipok" else ""}>SlipOK (API Verify + Rule Match)</option>
+                    </select>
+                  </label>
+                  <label>Auto Approve Confidence (%)
+                    <input type="number" name="slipcheck_auto_approve_confidence" min="50" max="100" step="0.01" value="{_escape(payment_slipcheck_auto_approve_confidence)}" placeholder="85" id="ownerbotSlipAutoApproveConfidence">
+                  </label>
+                  <label>Low Confidence Action
+                    <select name="slipcheck_low_confidence_route" id="ownerbotSlipLowConfidenceRoute">
+                      <option value="both" {"selected" if payment_slipcheck_low_confidence_route == "both" else ""}>ส่งทั้ง DM User + Embed ห้อง</option>
+                      <option value="channel" {"selected" if payment_slipcheck_low_confidence_route == "channel" else ""}>ส่ง Embed ห้องอย่างเดียว</option>
+                      <option value="dm" {"selected" if payment_slipcheck_low_confidence_route == "dm" else ""}>ส่ง DM User อย่างเดียว</option>
+                    </select>
+                  </label>
+                  <label>Max Slip Age (minutes)
+                    <input type="number" name="slipcheck_max_age_minutes" min="0" max="43200" step="1" value="{_escape(payment_slipcheck_max_age_minutes)}" placeholder="1440">
+                  </label>
+                  <label>Duplicate Check Window (hours)
+                    <input type="number" name="slipcheck_duplicate_window_hours" min="1" max="2160" step="1" value="{_escape(payment_slipcheck_duplicate_window_hours)}" placeholder="72">
+                  </label>
+                </div>
+                <input type="hidden" name="slipcheck_manual_review_confidence" value="0">
+
+                <div class="field-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; margin-top:10px;" data-ownerbot-slip-engine-group="slipok">
+                  <label>SlipOK API URL
+                    <input type="text" name="slipok_api_url" value="{_escape(payment_slipok_api_url)}" placeholder="https://api.slipok.com/api/line/apikey/...">
+                  </label>
+                  <label>SlipOK API Key
+                    <input type="password" name="slipok_key" value="{_escape(payment_slipok_key)}" placeholder="slipok_api_key">
+                  </label>
+                </div>
+
+                <div class="field-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; margin-top:10px;" data-ownerbot-slip-engine-group="skylinebotslip">
+                  <label>ชื่อบัญชีผู้รับ (Full Name)
+                    <input type="text" name="slipcheck_expected_receiver_name" value="{_escape(payment_slipcheck_expected_receiver_name)}" placeholder="ชื่อบัญชีผู้รับ">
+                  </label>
+                  <label>Receiver First Name (TH)
+                    <input type="text" name="slipcheck_expected_receiver_first_name_th" value="{_escape(payment_slipcheck_expected_receiver_first_name_th)}" placeholder="ชื่อจริงภาษาไทย">
+                  </label>
+                  <label>Receiver Last Name (TH)
+                    <input type="text" name="slipcheck_expected_receiver_last_name_th" value="{_escape(payment_slipcheck_expected_receiver_last_name_th)}" placeholder="นามสกุลภาษาไทย">
+                  </label>
+                  <label>Receiver First Name (EN)
+                    <input type="text" name="slipcheck_expected_receiver_first_name_en" value="{_escape(payment_slipcheck_expected_receiver_first_name_en)}" placeholder="First name">
+                  </label>
+                  <label>Receiver Last Name (EN)
+                    <input type="text" name="slipcheck_expected_receiver_last_name_en" value="{_escape(payment_slipcheck_expected_receiver_last_name_en)}" placeholder="Last name">
+                  </label>
+                  <label>Expected Receiver Account
+                    <input type="text" name="slipcheck_expected_receiver_account" value="{_escape(payment_slipcheck_expected_receiver_account)}" placeholder="เลขบัญชีผู้รับ">
+                  </label>
+                </div>
+                <small class="muted" data-ownerbot-slip-engine-group="skylinebotslip">
+                  SkylineBotSlip จะใช้ข้อมูลชื่อ/นามสกุล (ไทย+อังกฤษ) และเลขบัญชีตรวจเทียบอัตโนมัติ ส่วนรายละเอียดอื่นระบบจัดการเอง
+                </small>
+
+                <div class="field-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; margin-top:10px;">
+                  <label data-ownerbot-slip-route-group="channel">Review Channel ID (low confidence + Smart Donate fallback)
+                    <input type="text" name="slipcheck_review_channel_id" value="{_escape(payment_slipcheck_review_channel_id)}" placeholder="123456789012345678">
+                  </label>
+                  <label class="span-all" data-ownerbot-slip-route-group="dm">Review DM User IDs (comma)
+                    <input type="text" name="slipcheck_review_dm_user_ids" value="{_escape(payment_slipcheck_review_dm_user_ids)}" placeholder="123,456,789">
+                  </label>
+                </div>
+
+                <input type="hidden" name="slipcheck_expected_receiver_bank" value="">
+                <input type="hidden" name="slipcheck_expected_sender_name" value="">
+                <input type="hidden" name="slipcheck_expected_sender_first_name_th" value="">
+                <input type="hidden" name="slipcheck_expected_sender_last_name_th" value="">
+                <input type="hidden" name="slipcheck_expected_sender_first_name_en" value="">
+                <input type="hidden" name="slipcheck_expected_sender_last_name_en" value="">
+                <input type="hidden" name="slipcheck_expected_sender_bank" value="">
+                <input type="hidden" name="slipcheck_expected_sender_account" value="">
+                <input type="hidden" name="slipcheck_expected_reference" value="">
+                <input type="hidden" name="slipcheck_expected_qr_reference" value="">
+              </div>
+
+              <div class="ownerbot-sub-box" data-ownerbot-payment-block="pricing" data-collapsible="1">
+                <strong>Plan Pricing + Promotion</strong>
+                <small class="muted">ตั้งราคาปกติและโปรโมชั่นเป็นเปอร์เซ็นต์ พร้อมระยะเวลาเป็นวัน/เดือน ระบบจะเริ่มโปรทันทีหลังบันทึก และหมดโปรอัตโนมัติ</small>
+                <div class="ownerbot-pricing-grid" style="display:grid; gap:12px; margin-top:10px;">
+                  {plan_pricing_rows_markup}
+                </div>
+                <div class="auth-actions" style="justify-content:flex-start; margin-top:10px;">
+                  <button class="primary-btn" type="submit" formaction="/dashboard/admin/ownerbot/plan-pricing" formmethod="post">บันทึก Plan Pricing + Promotion</button>
+                  <button class="ghost-btn" type="submit" name="plan_pricing_action" value="reset" formaction="/dashboard/admin/ownerbot/plan-pricing" formmethod="post" formnovalidate onclick="return confirm('ยืนยันรีเซ็ต Plan Pricing + Promotion?');">รีเซ็ต Plan Pricing + Promotion</button>
+                  <button class="ghost-btn" type="submit">บันทึก Payment Provider</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </details>
+      </section>
+      </div>
+
+      <div class="ownerbot-section-group {"is-active" if settings_active_section == "runtime" else ""}" data-ownerbot-section="runtime">
+      <section class="panel" id="ownerbotUploadPanel">
+        <details class="command-category" open>
+          <summary>
+            <span>VPS File Storage Channels</span>
+            <span class="public-command-meta">ตั้งค่าห้องเก็บรูปแยกตามระบบ + สร้างห้องอัตโนมัติ</span>
+          </summary>
+          <div class="command-category-body">
+            <div class="ownerbot-upload-summary">
+              <span>ตั้งค่าแล้ว: <strong>{configured_upload_targets}/{len(OWNERBOT_UPLOAD_TARGETS)}</strong></span>
+              <span>Storage Guild: <strong>{_escape(selected_storage_guild_name or "-")}</strong></span>
+            </div>
+            <form method="post" action="/dashboard/admin/ownerbot/upload-channels" class="ownerbot-runtime-grid">
+              <label>Storage Guild
+                <select name="storage_guild_id" required>
+                  <option value="">-- เลือกเซิร์ฟเวอร์ --</option>
+                  {upload_guild_options_markup}
+                </select>
+              </label>
+              <div class="ownerbot-upload-grid">
+                {upload_target_rows_markup}
+              </div>
+              <div class="auth-actions">
+                <button class="primary-btn" type="submit" name="action" value="save">บันทึก Upload Mapping</button>
+                <button class="ghost-btn" type="submit" name="action" value="clear_all" onclick="return confirm('ล้าง mapping ทั้งหมด?');">ล้าง Mapping ทั้งหมด</button>
+              </div>
+            </form>
+            <form method="post" action="/dashboard/admin/ownerbot/upload-channels/create" class="ownerbot-runtime-grid ownerbot-upload-create">
+              <input type="hidden" name="storage_guild_id" value="{_escape(storage_guild_id)}">
+              <label class="ux-toggle">
+                <span class="ux-toggle-label">สร้างเฉพาะรายการที่ยังไม่ได้ตั้งค่า</span>
+                <input type="checkbox" name="only_missing" checked>
+                <span class="ux-switch"></span>
+              </label>
+              <div class="auth-actions">
+                <button class="ghost-btn" type="submit">สร้างห้องเก็บไฟล์อัตโนมัติ</button>
+              </div>
+            </form>
+          </div>
+        </details>
+      </section>
+      </div>
+
+      <div class="ownerbot-section-group {"is-active" if settings_active_section == "mongo" else ""}" data-ownerbot-section="mongo">
+      <section class="panel" id="ownerbotMongoPanel">
+        <details class="command-category" open>
+          <summary>
+            <span>MongoDB Multi-Cluster Control</span>
+            <span class="public-command-meta">ดูข้อมูลเก็บอะไรบ้าง / เพิ่มหลาย MongoDB / cleanup ตอนใกล้เต็ม</span>
+          </summary>
+          <div class="command-category-body ownerbot-runtime-grid">
+            <div class="ownerbot-sub-box">
+              <strong>MongoDB Summary</strong>
+              <div class="ownerbot-mongo-summary-row">
+                <span class="ownerbot-mongo-chip">Configured: {_escape(mongo_total_clusters)}</span>
+                <span class="ownerbot-mongo-chip ownerbot-mongo-status-ok">Healthy: {_escape(mongo_online_clusters)}</span>
+                <span class="ownerbot-mongo-chip ownerbot-mongo-status-warn">Quota Warn: {_escape(mongo_quota_hits)}</span>
+                <span class="ownerbot-mongo-chip">Database: <code>{_escape(mongo_database_name)}</code></span>
+                <span class="ownerbot-mongo-chip">Read Mode: <code>{_escape(mongo_read_mode)}</code></span>
+                <span class="ownerbot-mongo-chip">Write Mode: <code>{_escape(mongo_write_mode)}</code></span>
+                <span class="ownerbot-mongo-chip">History Retention: <code>{_escape(mongo_migration_history_retention_label)}</code></span>
+                <span class="ownerbot-mongo-chip">Read Success: {_escape(mongo_health_read_rate_text)} ({_escape(mongo_health_read_ok)}/{_escape(mongo_health_read_total)})</span>
+                <span class="ownerbot-mongo-chip">Write Success: {_escape(mongo_health_write_rate_text)} ({_escape(mongo_health_write_ok)}/{_escape(mongo_health_write_total)})</span>
+              </div>
+              <small class="muted">ระบบจะแสดงทุก MongoDB ที่กำหนดใน Primary + Backup URI</small>
+            </div>
+
+            <div class="ownerbot-sub-box">
+              <strong>Mongo Graph / Charts</strong>
+              <small class="muted">ดูขนาดฐานข้อมูลต่อ cluster, อัตรา read/write success และผล migration ย้อนหลัง</small>
+              <div class="ownerbot-mongo-chart-grid">
+                <article class="ownerbot-mongo-chart-card">
+                  <h4>Cluster Size (MB)</h4>
+                  <div class="ownerbot-mongo-chart-canvas-wrap">
+                    <canvas id="ownerbotMongoSizeChart" height="180"></canvas>
+                  </div>
+                </article>
+                <article class="ownerbot-mongo-chart-card">
+                  <h4>Read/Write Success Rate (%)</h4>
+                  <div class="ownerbot-mongo-chart-canvas-wrap">
+                    <canvas id="ownerbotMongoIoChart" height="180"></canvas>
+                  </div>
+                </article>
+                <article class="ownerbot-mongo-chart-card ownerbot-mongo-chart-card-wide">
+                  <h4>Migration History (Recent Runs)</h4>
+                  <div class="ownerbot-mongo-chart-canvas-wrap">
+                    <canvas id="ownerbotMongoMigrationChart" height="180"></canvas>
+                  </div>
+                </article>
+              </div>
+            </div>
+
+            <div class="ownerbot-sub-box">
+              <strong>MongoDB URI Settings</strong>
+              <small class="muted">เพิ่ม Backup URI ได้หลายบรรทัด เพื่อสำรองหลาย MongoDB</small>
+              <form method="post" action="/dashboard/admin/ownerbot/mongo/settings" class="ownerbot-runtime-grid">
+                <label>Primary Mongo URI
+                  <input type="text" name="mongo_primary_uri" value="{_escape(mongo_primary_uri)}" placeholder="mongodb+srv://user:pass@cluster0.example.mongodb.net/?appName=Cluster0" required>
+                </label>
+                <label>Backup Mongo URI List (1 URI per line)
+                  <textarea name="mongo_backup_uri_text" rows="6" placeholder="mongodb+srv://...\nmongodb+srv://...">{_escape(mongo_backup_uri_textarea)}</textarea>
+                </label>
+                <label>Read Mode
+                  <select name="mongo_read_mode">
+                    {mongo_read_mode_options_markup}
+                  </select>
+                </label>
+                <label>Write Mode
+                  <select name="mongo_write_mode">
+                    {mongo_write_mode_options_markup}
+                  </select>
+                </label>
+                <label>Migration History Retention (days, 0 = OFF)
+                  <input type="number" name="mongo_migration_history_retention_days" min="0" max="3650" step="1" value="{_escape(mongo_migration_history_retention_days)}">
+                </label>
+                <label class="ux-toggle">
+                  <span class="ux-toggle-label">บันทึกลงไฟล์ .env ด้วย</span>
+                  <input type="checkbox" name="persist_env" checked>
+                  <span class="ux-switch"></span>
+                </label>
+                <div class="auth-actions">
+                  <button class="primary-btn" type="submit">Save Mongo URI Settings</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="ownerbot-sub-box">
+              <strong>Storage Cleanup</strong>
+              <small class="muted">ใช้ตอน MongoDB ใกล้เต็ม: trim logs หรือ trim collection ตามจำนวนล่าสุดที่ต้องเก็บ</small>
+              <form method="post" action="/dashboard/admin/ownerbot/mongo/cleanup" class="ownerbot-runtime-grid">
+                <label>Target MongoDB
+                  <select name="mongo_target_index">
+                    {mongo_target_options_markup}
+                  </select>
+                </label>
+                <label>Cleanup Action
+                  <select name="cleanup_action">
+                    <option value="prune_defaults">Prune Default Heavy Logs</option>
+                    <option value="trim_collection">Trim Selected Collection</option>
+                    <option value="clear_collection">Clear Selected Collection (Danger)</option>
+                  </select>
+                </label>
+                <label>Collection Name (used by trim/clear)
+                  <input type="text" name="collection_name" list="ownerbotMongoCollections" placeholder="e.g. donatebot_verify_logs">
+                  <datalist id="ownerbotMongoCollections">
+                    {mongo_collection_options_markup}
+                  </datalist>
+                </label>
+                <label>Keep Latest N Docs (used by trim)
+                  <input type="number" name="keep_latest" min="0" max="400000" step="1" value="5000">
+                </label>
+                <label>Confirm Text for Clear
+                  <input type="text" name="confirm_text" placeholder="Type DELETE to confirm">
+                </label>
+                <div class="auth-actions">
+                  <button class="ghost-btn" type="submit">Run Cleanup</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="ownerbot-sub-box">
+              <strong>Migration (Safe Multi-Mongo Copy)</strong>
+              <small class="muted">รัน dry-run ก่อน แล้วค่อย execute เพื่อคัดลอกข้อมูลเก่าจาก source ไปยัง target clusters แบบปลอดภัย (upsert โดย id/_id)</small>
+              <form method="post" action="/dashboard/admin/ownerbot/mongo/migrate" class="ownerbot-runtime-grid">
+                <label>Source Cluster
+                  <select name="migration_source_index">
+                    {mongo_single_target_options_markup}
+                  </select>
+                </label>
+                <label>Target Clusters
+                  <select name="migration_target_index">
+                    <option value="all">All except source</option>
+                    {mongo_single_target_options_markup}
+                  </select>
+                </label>
+                <label>Collections (optional, comma or newline)
+                  <textarea name="migration_collections_text" rows="4" placeholder="guilds, users, redeem_codes"></textarea>
+                </label>
+                <label>Chunk Size
+                  <input type="number" name="migration_chunk_size" min="50" max="5000" step="50" value="500">
+                </label>
+                <label>Max Docs per Collection (0 = all)
+                  <input type="number" name="migration_max_docs_per_collection" min="0" max="5000000" step="1000" value="0">
+                </label>
+                <label class="ux-toggle">
+                  <span class="ux-toggle-label">Only insert when missing (safe)</span>
+                  <input type="checkbox" name="migration_only_if_missing" checked>
+                  <span class="ux-switch"></span>
+                </label>
+                <label class="ux-toggle">
+                  <span class="ux-toggle-label">Execute write (OFF = Dry Run)</span>
+                  <input type="checkbox" name="migration_execute">
+                  <span class="ux-switch"></span>
+                </label>
+                <div class="auth-actions">
+                  <button class="ghost-btn" type="submit">Run Migration Script</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="ownerbot-sub-box">
+              <strong>Migration History Log (Audit)</strong>
+              <small class="muted">เก็บผลการรัน migration แต่ละครั้งไว้ใน MongoDB เพื่อตรวจสอบย้อนหลัง</small>
+              <form method="post" action="/dashboard/admin/ownerbot/mongo/history/manage" id="ownerbotMongoHistoryManageForm" class="ownerbot-mongo-history-toolbar">
+                <label>Search
+                  <input type="search" id="ownerbotMongoHistorySearch" placeholder="run id / user / cluster / mode">
+                </label>
+                <label>Status
+                  <select id="ownerbotMongoHistoryStatus">
+                    <option value="all">All</option>
+                    <option value="ok">OK</option>
+                    <option value="failed">FAILED</option>
+                  </select>
+                </label>
+                <label>Mode
+                  <select id="ownerbotMongoHistoryMode">
+                    <option value="all">All</option>
+                    <option value="execute">EXECUTE</option>
+                    <option value="dry_run">DRY-RUN</option>
+                  </select>
+                </label>
+                <label>Purge Older Than (days)
+                  <input type="number" id="ownerbotMongoHistoryPurgeDays" name="mongo_history_purge_days" min="1" max="36500" step="1" value="{_escape(mongo_migration_history_retention_days if mongo_migration_history_retention_days > 0 else 90)}">
+                </label>
+                <input type="hidden" name="mongo_history_selected_ids" id="ownerbotMongoHistorySelectedIds" value="">
+                <div class="auth-actions">
+                  <button class="ghost-btn" type="button" id="ownerbotMongoHistoryClear">Clear Filter</button>
+                  <button class="ghost-btn" type="button" id="ownerbotMongoHistoryExport">Export CSV</button>
+                  <button class="ghost-btn" type="submit" name="history_action" value="delete_selected" id="ownerbotMongoHistoryDelete">Delete Selected</button>
+                  <button class="primary-btn" type="submit" name="history_action" value="purge_older" id="ownerbotMongoHistoryPurge">Purge Older</button>
+                </div>
+              </form>
+              <p class="muted">Visible: <strong id="ownerbotMongoHistoryVisible">{_escape(mongo_migration_history_total)}</strong> / {_escape(mongo_migration_history_total)} rows | Selected: <strong id="ownerbotMongoHistorySelected">0</strong></p>
+              <div class="ownerbot-table-wrap">
+                <table id="ownerbotMongoHistoryTable">
+                  <thead>
+                    <tr>
+                      <th><input type="checkbox" id="ownerbotMongoHistorySelectAll" title="Select all visible rows"></th>
+                      <th>Time</th>
+                      <th>Run ID</th>
+                      <th>Mode</th>
+                      <th>Route</th>
+                      <th>Collections</th>
+                      <th>Scanned</th>
+                      <th>Upserted</th>
+                      <th>Errors</th>
+                      <th>Status</th>
+                      <th>By</th>
+                    </tr>
+                  </thead>
+                  <tbody id="ownerbotMongoHistoryBody">
+                    {mongo_migration_history_rows_markup}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="ownerbot-sub-box">
+              <strong>Mongo Collection Overview</strong>
+              <small class="muted">แต่ละ MongoDB เก็บ collection อะไรบ้าง และจำนวนเอกสารโดยประมาณ</small>
+              <div class="ownerbot-mongo-clusters-wrap">
+                {mongo_cluster_cards_markup if mongo_cluster_cards_markup else '<div class="notice">ยังไม่พบ MongoDB URI หรือเชื่อมต่อไม่ได้</div>'}
+              </div>
+            </div>
+          </div>
+        </details>
+      </section>
+      </div>
+
+      <div class="ownerbot-section-group {"is-active" if settings_active_section == "redeem" else ""}" data-ownerbot-section="redeem">
+      <section class="panel" id="ownerbotPackagePanel">
+        <details class="command-category" open>
+          <summary>
+            <span>BOT Redeem Manager</span>
+            <span class="public-command-meta">สร้าง / แก้ไข / รีเซ็ตสถานะ / ลบ</span>
+          </summary>
+          <div class="command-category-body ownerbot-scroll ownerbot-redeem-manager-body">
+            <div class="ownerbot-sub-box" data-collapsible="1">
+              <strong>สร้างโค้ด Redeem</strong>
+              <form method="post" action="/dashboard/admin/ownerbot/redeem/generate" class="ownerbot-simple-form">
+                <label>จำนวนโค้ดที่ต้องการสร้าง
+                  <input type="number" name="code_count" min="1" max="300" value="1">
+                </label>
+                <label>ตั้งโค้ดเอง (ไม่บังคับ, A-Z 0-9 - _)
+                  <input type="text" name="custom_code" maxlength="64" placeholder="เช่น VIP-2026-MAY">
+                </label>
+                <label>ประเภทสิทธิ์
+                  <select name="code_value" required>{code_options}</select>
+                </label>
+                <label>จำนวนวันสิทธิ์ (0 = ถาวร)
+                  <input type="number" id="ownerbotRedeemValidDays" name="valid_for_days" min="0" max="3650" value="30">
+                </label>
+                <label>จำนวนครั้งที่ใช้ได้ (0 = ไม่จำกัด)
+                  <input type="number" name="max_claims" min="0" max="100000" value="1">
+                </label>
+                <label>โหมดล็อกการใช้โค้ด
+                  <select name="lock_mode">
+                    <option value="user_server" selected>ล็อก 1 user + 1 server</option>
+                    <option value="user">ล็อก 1 user ต่อโค้ด</option>
+                    <option value="server">ล็อก 1 server ต่อโค้ด</option>
+                    <option value="none">ไม่ล็อก user/server</option>
+                  </select>
+                </label>
+                <label>กำหนดวันสิทธิ์หมดอายุ (เลือกแทนจำนวนวัน)
+                  <input type="datetime-local" id="ownerbotRedeemValidUntil" name="valid_until_at">
+                </label>
+                <p class="muted" id="ownerbotRedeemDurationHint">กรอกจำนวนวันหรือเลือกวัน ระบบจะคำนวณให้อัตโนมัติ</p>
+                <label>วันหมดอายุโค้ด (ปล่อยว่าง = ใช้ได้ไม่จำกัดเวลา)
+                  <input type="datetime-local" name="expires_at">
+                </label>
+                <div class="auth-actions">
+                  <button class="primary-btn" type="submit">สร้างโค้ด</button>
+                </div>
+              </form>
+            </div>
+            <details class="command-category" open>
+              <summary><span>โค้ดยังไม่ใช้</span><span class="public-command-meta">{total_unclaimed} รายการ</span></summary>
+              <div class="command-category-body" id="ownerbotRedeemUnclaimed">
+                {''.join(redeem_cards_unclaimed) if redeem_cards_unclaimed else '<div class="notice">ยังไม่มีรายการ</div>'}
+              </div>
+            </details>
+            <details class="command-category">
+              <summary><span>โค้ดที่ใช้แล้ว</span><span class="public-command-meta">{total_claimed} รายการ</span></summary>
+              <div class="command-category-body" id="ownerbotRedeemClaimed">
+                {''.join(redeem_cards_claimed) if redeem_cards_claimed else '<div class="notice">ยังไม่มีรายการ</div>'}
+              </div>
+            </details>
+          </div>
+        </details>
+      </section>
+      </div>
+
+      <div class="ownerbot-section-group {"is-active" if settings_active_section == "wallet" else ""}" data-ownerbot-section="wallet">
+      <section class="panel" id="ownerbotWalletPanel">
+        <details class="command-category" open>
+          <summary>
+            <span>BOT Wallet Manager</span>
+            <span class="public-command-meta">Add / Set / Clear money per user</span>
+          </summary>
+          <div class="command-category-body ownerbot-scroll">
+            <div class="ownerbot-sub-box">
+              <strong>Quick Wallet Update</strong>
+              <small class="muted">Use this form to update wallet for any user ID, even if not shown in the list below.</small>
+              <form method="post" action="/dashboard/admin/ownerbot/user-wallet" class="ownerbot-runtime-grid">
+                <div class="ownerbot-wallet-form-grid">
+                  <label style="display:grid; gap:6px;">Discord User ID
+                    <input type="text" name="user_id" inputmode="numeric" pattern="[0-9]{{15,22}}" placeholder="e.g. 123456789012345678" required>
+                  </label>
+                  <label style="display:grid; gap:6px;">Action
+                    <select name="action">
+                      <option value="add">Add (+)</option>
+                      <option value="set">Set exact amount</option>
+                      <option value="clear">Clear to 0.00</option>
+                    </select>
+                  </label>
+                  <label style="display:grid; gap:6px;">Amount (THB)
+                    <input type="number" name="amount" min="0" step="0.01" value="0.00">
+                  </label>
+                  <label style="display:grid; gap:6px;" class="span-all">Note
+                    <input type="text" name="note" maxlength="220" placeholder="Optional note for audit log">
+                  </label>
+                </div>
+                <div class="auth-actions">
+                  <button class="primary-btn" type="submit">Apply Wallet Update</button>
+                </div>
+              </form>
+            </div>
+
+            <div id="ownerbotWalletHint" class="ownerbot-empty">Search by user, user ID, or TX# to find wallet history and edit cards below.</div>
+            <div id="ownerbotWalletCards">
+              {''.join(wallet_cards) if wallet_cards else '<div class="notice">No wallet users found yet</div>'}
+            </div>
+          </div>
+        </details>
+      </section>
+      </div>
+
+      <div class="ownerbot-section-group {"is-active" if settings_active_section == "guild" else ""}" data-ownerbot-section="guild">
+      <section class="panel" id="ownerbotGuildPanel">
+        <details class="command-category" open>
+          <summary>
+            <span>BOT Guild Plan Manager</span>
+            <span class="public-command-meta">ค้นหา + แก้รายกิลด์</span>
+          </summary>
+          <div class="command-category-body ownerbot-scroll">
+            <div id="ownerbotGuildHint" class="ownerbot-empty">พิมพ์ค้นหาหรือเลือกเซิร์ฟเวอร์จากตัวกรองด้านซ้าย เพื่อเริ่มแก้ไขแพ็กเกจได้ทันที</div>
+            <div id="ownerbotGuildCards">
+              {''.join(guild_cards) if guild_cards else '<div class="notice">ยังไม่มีเซิร์ฟเวอร์ที่จัดการได้</div>'}
+            </div>
+          </div>
+        </details>
+      </section>
+      </div>
+
+      <div class="ownerbot-section-group {"is-active" if settings_active_section == "promote" else ""}" data-ownerbot-section="promote">
+      <section class="panel" id="ownerbotPromotePanel">
+        <details class="command-category" open>
+          <summary>
+            <span>Promote Policy (OwnerBOT Global)</span>
+            <span class="public-command-meta">ค่าความปลอดภัยชุดเดียวใช้กับทุกกิลด์</span>
+          </summary>
+          <div class="command-category-body ownerbot-scroll">
+            <div class="ownerbot-sub-box">
+              <strong>Global Policy Summary</strong>
+              <small class="muted">รายการด้านล่างคือค่า allow/block ที่ระบบ Promote ใช้งานจริงทั้งเว็บและดิสคอร์ด</small>
+              <div class="field-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px;">
+                <div><strong>Allowed Domains:</strong> {_escape(promote_policy_allowed_domains_display)}</div>
+                <div><strong>Allowed URL Prefixes:</strong> {_escape(promote_policy_allowed_urls_display)}</div>
+                <div><strong>Blocked Words:</strong> {_escape(promote_policy_blocked_words_display)}</div>
+                <div><strong>Blocked Domains:</strong> {_escape(promote_policy_blocked_domains_display)}</div>
+                <div style="grid-column:1/-1;"><strong>Blocked URL Prefixes:</strong> {_escape(promote_policy_blocked_urls_display)}</div>
+              </div>
+            </div>
+
+            <div class="ownerbot-sub-box">
+              <strong>แก้ไข Global Promote Policy</strong>
+              <small class="muted">ใช้ comma/new line คั่นค่า ระบบจะ normalize ให้ตอนบันทึก</small>
+              <form method="post" action="/dashboard/admin/ownerbot/promote/policy" class="ownerbot-runtime-grid">
+                <label>Allowed Domains (owner allowlist)
+                  <textarea name="allowed_domains" rows="3" placeholder="example.com, news.example.com">{_escape(promote_policy_allowed_domains_text)}</textarea>
+                </label>
+                <label>Allowed URL Prefixes (optional)
+                  <textarea name="allowed_urls" rows="3" placeholder="https://example.com/path, https://docs.example.com/promo">{_escape(promote_policy_allowed_urls_text)}</textarea>
+                </label>
+                <label>Blocked Words (owner blocklist)
+                  <textarea name="blocked_words" rows="4" placeholder="badword, gambling, porn, illegal...">{_escape(promote_policy_blocked_words_text)}</textarea>
+                </label>
+                <label>Blocked Domains
+                  <textarea name="blocked_domains" rows="3" placeholder="badsite.com, scam.example">{_escape(promote_policy_blocked_domains_text)}</textarea>
+                </label>
+                <label>Blocked URL Prefixes (optional)
+                  <textarea name="blocked_urls" rows="3" placeholder="https://example.com/illegal, https://foo.bar/adult">{_escape(promote_policy_blocked_urls_text)}</textarea>
+                </label>
+                <small class="muted">Always allowed by default: skylinebot.xyz (unless explicitly blocked in this policy).</small>
+                <div class="auth-actions">
+                  <button class="primary-btn" type="submit">บันทึก Promote Policy (Global)</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="ownerbot-sub-box">
+              <strong>ระงับการใช้งาน Promote รายกิลด์</strong>
+              <small class="muted">กิลด์ที่ถูกระงับจะใช้งาน Promote ในเว็บและในดิสคอร์ดไม่ได้จนกว่าจะปลดระงับ</small>
+              <form method="post" action="/dashboard/admin/ownerbot/promote/suspension" class="ownerbot-runtime-grid">
+                <input type="hidden" name="action" value="suspend">
+                <div class="field-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+                  <label>Guild ID
+                    <input type="text" name="guild_id" inputmode="numeric" pattern="[0-9]{{15,22}}" maxlength="22" placeholder="e.g. 123456789012345678" required>
+                  </label>
+                  <label>Reason / Note
+                    <input type="text" name="note" maxlength="600" placeholder="เหตุผลที่ระงับ (แสดงให้ทีมเห็นใน OwnerBot)">
+                  </label>
+                </div>
+                <div class="auth-actions">
+                  <button class="danger-btn" type="submit">Suspend Promote For Guild</button>
+                </div>
+              </form>
+            </div>
+
+            <details class="command-category" open>
+              <summary>
+                <span>All Guilds (Promote)</span>
+                <span class="public-command-meta">{promote_all_guild_total} guild(s)</span>
+              </summary>
+              <div class="command-category-body">
+                <p class="muted">ใช้ช่องค้นหาด้านซ้าย (ค้นหารายชื่อกิลด์ทั้งหมด Promote) เพื่อกรองรายการทั้งหมดได้ทันที</p>
+                <div id="ownerbotPromoteGuildHint" class="ownerbot-empty">กำลังแสดงรายการเริ่มต้น พิมพ์ค้นหาเพื่อเจาะกิลด์ที่ต้องการ</div>
+                <div id="ownerbotPromoteAllGuildCards">
+                  {promote_all_guild_cards_markup}
+                </div>
+              </div>
+            </details>
+
+            <details class="command-category" open>
+              <summary>
+                <span>Suspended Guilds</span>
+                <span class="public-command-meta">{promote_suspension_total} guild(s)</span>
+              </summary>
+              <div class="command-category-body">
+                <p class="muted">ใช้ช่องค้นหาด้านซ้าย (ค้นหากิลด์ที่โดนระงับ Promote) เพื่อกรองรายการได้ทันที</p>
+                <div id="ownerbotPromoteSuspensionCards">
+                  {promote_suspension_cards_markup}
+                </div>
+              </div>
+            </details>
+          </div>
+        </details>
+      </section>
+      </div>
+
+    </div>
+  </div>
+</section>
+{ownerbot_settings_script_markup}

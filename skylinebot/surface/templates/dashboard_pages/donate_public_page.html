@@ -1,0 +1,67 @@
+<link rel="stylesheet" href="{donate_css_url}">
+<div class="donate-public-wrap">
+  <section class="donate-public-hero">
+    <div class="donate-public-copy">
+      <div class="donate-public-head">
+        <img src="{guild_icon}" alt="{guild_name}">
+        <div>
+          <h1 class="donate-public-title">สนับสนุนเซิร์ฟเวอร์ {guild_name}</h1>
+          <p class="donate-public-subtitle">หน้ารับโดเนตอย่างเป็นทางการของเซิร์ฟเวอร์</p>
+        </div>
+      </div>
+      <div class="donate-plan-row">
+        <span class="donate-status-pill"><span style="width:9px;height:9px;border-radius:99px;background:{donation_status_color};"></span>{donation_status}</span>
+        <span class="donate-plan-pill">แผนปัจจุบัน: {plan_display_name}</span>
+        {ads_policy_badge_html}
+      </div>
+      <p class="donate-public-description muted">{desc_web}</p>
+      <div class="auth-actions donate-public-actions">
+        {donate_channel_button}
+        <a class="ghost-btn" href="/dashboard">กลับหน้าแดชบอร์ด</a>
+      </div>
+    </div>
+    <figure class="donate-public-cover">
+      <img src="{image_url or bot_avatar}" alt="{guild_name}" onerror="this.onerror=null;this.src='{bot_avatar}';">
+    </figure>
+  </section>
+
+  {goal_block}
+  {ads_section_html}
+
+  <section class="panel donate-section">
+    <div class="donate-section-head">
+      <h2>ช่องทางโดเนตที่เปิดใช้งาน</h2>
+      <p class="muted">เลือกช่องทางเพื่อแสดงข้อมูลเฉพาะช่องทางนั้น และทำขั้นตอนชำระเงินได้ง่ายขึ้น</p>
+    </div>
+    {method_selector_html}
+    <input type="hidden" id="donateMethodSelectedValue" value="{default_selected_method}">
+    <div class="donate-method-grid">
+      {method_cards_html}
+    </div>
+  </section>
+
+  {slip_upload_block}
+
+  <section class="panel donate-section">
+    <div class="donate-section-head">
+      <h2>ประวัติการตรวจสลิปล่าสุด</h2>
+      <p class="muted">แสดงข้อมูลล่าสุดจากระบบตรวจสอบสลิป</p>
+    </div>
+    <div class="donate-history-table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>วันที่</th>
+            <th>ผู้โอน</th>
+            <th>จำนวนเงิน</th>
+            <th>สถานะ</th>
+          </tr>
+        </thead>
+        <tbody>
+          {public_slip_table_html}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+<script>{_render_dashboard_f_template("scripts/donate_2.js", __ctx)}</script>

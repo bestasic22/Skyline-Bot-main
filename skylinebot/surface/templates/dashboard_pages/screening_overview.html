@@ -1,0 +1,63 @@
+<div class="section-stack dashboard-detail-shell page-screening-shell">
+  <section class="panel">
+    <div class="panel-header detail-page-hero detail-page-hero-screening">
+      <div class="panel-title detail-page-hero-copy">
+        <h1 data-icon-key="screening">การคัดกรอง</h1>
+        <p>ศูนย์ข้อมูลรวมการคัดกรองสมาชิก หมวดคัดกรอง ระบบอัตโนมัติ และ Anti-Raid ในหน้าเดียว</p>
+      </div>
+      <span class="plugin-premium-pill">Plan: {_escape(plan_name)}</span>
+    </div>
+
+    <div class="screening-overview-grid">
+      <article class="panel-sub detail-page-section screening-module-card">
+        <div class="screening-module-head">
+          <h2 data-icon-key="screening">คัดกรองสมาชิก</h2>
+          <span class="screening-state {screening_status_class}">{_escape(screening_status)}</span>
+        </div>
+        <p class="muted">สถานะภาพรวมระบบคัดกรองก่อนอนุมัติสมาชิกเข้าใช้งาน</p>
+        <ul class="screening-facts">
+          <li><span>หมวดที่เปิดใช้งาน</span><strong>{category_enabled_count}</strong></li>
+          <li><span>หมวดทั้งหมด</span><strong>{len(SCREENING_CATEGORY_ITEMS)}</strong></li>
+          <li><span>หมวดที่ล็อกตามแพลน</span><strong>{category_locked_count}</strong></li>
+        </ul>
+      </article>
+
+      <article class="panel-sub detail-page-section screening-module-card">
+        <div class="screening-module-head">
+          <h2 data-icon-key="screening_categories">หมวดคัดกรอง</h2>
+          <span class="screening-state on">ข้อมูลจริง</span>
+        </div>
+        <p class="muted">สรุปสถานะแต่ละหมวดจากการตั้งค่าปัจจุบัน</p>
+        <ul class="screening-category-list">
+          {"".join(category_rows)}
+        </ul>
+      </article>
+
+      <article class="panel-sub detail-page-section screening-module-card">
+        <div class="screening-module-head">
+          <h2 data-icon-key="automation">การจัดการอัตโนมัติ</h2>
+          <span class="screening-state {automod_status_class}">{_escape(automod_status)}</span>
+        </div>
+        <p class="muted">AutoMod สำหรับคัดกรองสแปม ลิงก์ และคำไม่เหมาะสม</p>
+        <ul class="screening-facts">
+          <li><span>โหมด</span><strong>{_escape(str(automod.get("mode") or "normal").title())}</strong></li>
+          <li><span>ฟีเจอร์ที่เปิด</span><strong>{automod_enabled_count}/3</strong></li>
+          <li><span>Anti-Link / Anti-Spam / Anti-Badwords</span><strong>{" / ".join("ON" if flag else "OFF" for flag in automod_enabled_flags)}</strong></li>
+        </ul>
+      </article>
+
+      <article class="panel-sub detail-page-section screening-module-card">
+        <div class="screening-module-head">
+          <h2 data-icon-key="anti_raid">Anti-Raid พรีเมียม</h2>
+          <span class="screening-state {antiraid_status_class}">{_escape(antiraid_status)}</span>
+        </div>
+        <p class="muted">ระบบป้องกันการบุกแบบเรียลไทม์และการกระทำเสี่ยงจากแอดมิน/บอท</p>
+        <ul class="screening-facts">
+          <li><span>โหมดป้องกัน</span><strong>{_escape(antiraid_mode_label)}</strong></li>
+          <li><span>กฎป้องกันที่เปิด</span><strong>{antiraid_enabled_count}/5</strong></li>
+          <li><span>สถานะระบบหลัก</span><strong>{"ON" if bool(antinuke.get("enabled")) else "OFF"}</strong></li>
+        </ul>
+      </article>
+    </div>
+  </section>
+</div>

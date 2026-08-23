@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guild Leaderboard - {{APP_NAME}}</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" type="image/png" href="/favicon.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="/dashboard/static/dashboard/public-pages.css">
+  <style>
+    .hero-board::after {
+      inset: auto -28% -84% auto;
+      width: 420px;
+      background: radial-gradient(circle, rgba(124, 197, 255, 0.38), transparent 70%);
+    }
+
+    .hero-actions {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 10px;
+    }
+
+    .hero-link {
+      min-height: 44px;
+      border-radius: 12px;
+      border: 1px solid rgba(120, 173, 255, 0.5);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 800;
+      text-decoration: none;
+      transition: transform .15s ease, filter .15s ease;
+    }
+
+    .hero-link:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+      text-decoration: none;
+    }
+
+    .hero-link.primary {
+      color: #061427;
+      background: linear-gradient(140deg, #4ca8ff, #35d0e8);
+    }
+
+    .hero-link.ghost {
+      color: #d8edff;
+      background: rgba(12, 24, 45, 0.82);
+      border-color: rgba(120, 173, 255, 0.36);
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      border: 1px solid var(--public-line);
+      padding: 6px 10px;
+      color: #c3d8f7;
+      background: rgba(11, 18, 34, 0.5);
+      font-size: .86rem;
+      font-weight: 650;
+    }
+
+    .toolbar-grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .count-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 7px 10px;
+      border: 1px solid rgba(123, 173, 255, 0.4);
+      background: rgba(11, 19, 35, 0.62);
+      color: #cde1ff;
+      font-size: .88rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .quick-toggle-row {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .own-only-btn {
+      min-height: 40px;
+      border-radius: 12px;
+      border: 1px solid rgba(124, 176, 255, 0.45);
+      background: rgba(11, 20, 37, 0.8);
+      color: #d7eaff;
+      font-weight: 800;
+      padding: 8px 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform .15s ease, filter .15s ease, border-color .15s ease;
+    }
+
+    .own-only-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.06);
+    }
+
+    .own-only-btn.is-active {
+      border-color: rgba(75, 213, 164, 0.72);
+      background: rgba(16, 55, 48, 0.62);
+      color: #dfffee;
+    }
+
+    .own-only-btn:disabled {
+      opacity: .58;
+      cursor: not-allowed;
+      transform: none;
+      filter: none;
+    }
+
+    .own-only-hint {
+      color: #aec6e7;
+      font-size: .88rem;
+    }
+
+    .board-filter-row {
+      margin-bottom: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .board-filter-btn {
+      min-height: 40px;
+      border-radius: 12px;
+      border: 1px solid rgba(124, 176, 255, 0.45);
+      background: rgba(11, 20, 37, 0.78);
+      color: #d7eaff;
+      font-weight: 800;
+      padding: 8px 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform .15s ease, filter .15s ease, border-color .15s ease, background .15s ease;
+    }
+
+    .board-filter-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.06);
+    }
+
+    .board-filter-btn.is-active {
+      border-color: rgba(75, 213, 164, 0.75);
+      background: rgba(15, 56, 47, 0.66);
+      color: #e5fff2;
+    }
+
+    .leaderboards-grid {
+      display: block;
+    }
+
+    .board-card {
+      border: 1px solid var(--public-line);
+      border-radius: 14px;
+      padding: 12px;
+      background: rgba(11, 18, 34, 0.56);
+      min-height: 0;
+    }
+
+    .board-panel {
+      display: none;
+    }
+
+    .board-panel.is-active {
+      display: block;
+    }
+
+    .board-panel.is-active .table-wrap {
+      max-height: none;
+    }
+
+    .board-card h3 {
+      margin: 0;
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 1.02rem;
+    }
+
+    .board-sub {
+      margin-top: 6px;
+      color: #b6c9ea;
+      font-size: .91rem;
+    }
+
+    .self-rank-pill {
+      margin-top: 8px;
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      border-radius: 999px;
+      border: 1px solid rgba(118, 175, 255, 0.45);
+      background: rgba(14, 26, 49, 0.75);
+      color: #d5e8ff;
+      padding: 6px 10px;
+      font-size: .84rem;
+      font-weight: 700;
+    }
+
+    .table-wrap {
+      margin-top: 10px;
+      border: 1px solid var(--public-line);
+      border-radius: 12px;
+      overflow: hidden;
+      background: rgba(10, 17, 32, 0.66);
+      max-height: 430px;
+      overflow-y: auto;
+    }
+
+    .board-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .board-table th,
+    .board-table td {
+      border-bottom: 1px solid rgba(121, 160, 228, 0.2);
+      padding: 9px;
+      vertical-align: middle;
+      text-align: left;
+      font-size: .9rem;
+      color: #c7dcfb;
+    }
+
+    .board-table th {
+      color: #d7e9ff;
+      background: rgba(15, 27, 50, 0.76);
+      font-size: .84rem;
+      font-weight: 700;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    .board-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .board-table tr.is-self td {
+      background: rgba(65, 148, 255, 0.18);
+      color: #eaf4ff;
+    }
+
+    .rank-pill {
+      min-width: 44px;
+      border-radius: 999px;
+      border: 1px solid rgba(117, 174, 255, 0.55);
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      padding: 3px 8px;
+      font-weight: 800;
+      background: rgba(17, 33, 61, 0.64);
+      color: #d6e8ff;
+    }
+
+    .user-cell {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .user-cell img {
+      width: 28px;
+      height: 28px;
+      max-width: 28px;
+      max-height: 28px;
+      border-radius: 50%;
+      border: 1px solid rgba(143, 186, 255, 0.5);
+      object-fit: cover;
+      display: block;
+      flex: 0 0 auto;
+    }
+
+    .user-meta {
+      min-width: 0;
+      display: grid;
+      gap: 2px;
+    }
+
+    .user-name {
+      color: #e7f2ff;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-id {
+      color: #9eb5d8;
+      font-size: .78rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .empty-state {
+      margin-top: 10px;
+      padding: 11px;
+      border: 1px dashed var(--public-line);
+      border-radius: 12px;
+      color: #b8caea;
+      background: rgba(12, 21, 39, 0.6);
+    }
+
+    .invite-link {
+      color: #9dd3ff;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .invite-link:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 760px) {
+      .toolbar-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .board-filter-btn {
+        flex: 1 1 calc(50% - 8px);
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body class="public-doc">
+  <main class="public-shell">
+    <section class="public-card hero-card hero-board">
+      <h1 class="title-row"><span class="title-icon"><i class="bi bi-trophy"></i></span>Guild Leaderboard</h1>
+      <p class="hero-sub">รวมอันดับ Level (Chat/VC), Money และ Invite Server แบบ Top 100 พร้อมไฮไลต์อันดับของคุณ</p>
+      <div class="hero-actions">
+        <a class="hero-link primary" href="{{DASHBOARD_URL}}"><i class="bi bi-grid-1x2"></i>Open Dashboard</a>
+        <a class="hero-link ghost" href="{{INVITE_PAGE_URL}}"><i class="bi bi-discord"></i>Invite Bot</a>
+        <a class="hero-link ghost" href="/docs"><i class="bi bi-journal-code"></i>Command Docs</a>
+      </div>
+      <div class="chip-row">
+        <span class="chip"><i class="bi bi-bar-chart"></i>Top 100 ทุกหมวด</span>
+        <span class="chip"><i class="bi bi-person-check"></i>ไฮไลต์แถวของคุณอัตโนมัติ</span>
+      </div>
+    </section>
+
+    <section class="public-card">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-buildings"></i></span>Select Guild</h2>
+      <div class="toolbar-grid">
+        <select id="guildSelect" class="public-input" aria-label="Select guild"></select>
+        <span class="count-pill" id="guildCountPill"><i class="bi bi-collection"></i>0 guilds</span>
+      </div>
+      <div class="quick-toggle-row">
+        <button type="button" id="ownOnlyToggleBtn" class="own-only-btn" aria-pressed="false">
+          <i class="bi bi-funnel"></i><span id="ownOnlyToggleLabel">ดูเฉพาะอันดับตัวเอง: ปิด</span>
+        </button>
+        <span id="ownOnlyHint" class="own-only-hint">แสดงทุกอันดับในแต่ละบอร์ด</span>
+      </div>
+      <p id="guildMetaText" style="margin-top:8px;"></p>
+    </section>
+
+    <section class="public-card">
+      <div class="board-filter-row" id="boardFilterRow">
+        <button type="button" class="board-filter-btn" data-board-type="level_chat" aria-pressed="false"><i class="bi bi-chat-left-dots"></i>Level Chat</button>
+        <button type="button" class="board-filter-btn" data-board-type="level_voice" aria-pressed="false"><i class="bi bi-mic"></i>Level VC</button>
+        <button type="button" class="board-filter-btn" data-board-type="money" aria-pressed="false"><i class="bi bi-cash-stack"></i>Money</button>
+        <button type="button" class="board-filter-btn" data-board-type="invite" aria-pressed="false"><i class="bi bi-person-plus"></i>Invite</button>
+        <button type="button" class="board-filter-btn" data-board-type="invite_activity" aria-pressed="false"><i class="bi bi-clock-history"></i>Invite Activity</button>
+      </div>
+      <div class="leaderboards-grid">
+        <article class="board-card board-panel" id="boardPanelLevelChat" data-board-type="level_chat">
+          <h3><i class="bi bi-chat-left-dots"></i>Level Leaderboard (Chat)</h3>
+          <p class="board-sub" id="levelChatMeta">Top chat XP in selected guild</p>
+          <div class="self-rank-pill" id="levelChatSelf"><i class="bi bi-person-circle"></i>Your rank: -</div>
+          <div class="table-wrap">
+            <table class="board-table">
+              <thead>
+                <tr>
+                  <th style="width:66px;">Rank</th>
+                  <th>User</th>
+                  <th style="width:95px;">Level</th>
+                  <th style="width:116px;">Chat XP</th>
+                </tr>
+              </thead>
+              <tbody id="levelChatTableBody"></tbody>
+            </table>
+          </div>
+          <div class="empty-state" id="levelChatEmpty" style="display:none;">ยังไม่มีข้อมูล Level Chat</div>
+        </article>
+
+        <article class="board-card board-panel" id="boardPanelLevelVoice" data-board-type="level_voice">
+          <h3><i class="bi bi-mic"></i>Level Leaderboard (VC)</h3>
+          <p class="board-sub" id="levelVoiceMeta">Top voice XP in selected guild</p>
+          <div class="self-rank-pill" id="levelVoiceSelf"><i class="bi bi-person-circle"></i>Your rank: -</div>
+          <div class="table-wrap">
+            <table class="board-table">
+              <thead>
+                <tr>
+                  <th style="width:66px;">Rank</th>
+                  <th>User</th>
+                  <th style="width:95px;">Level</th>
+                  <th style="width:116px;">Voice XP</th>
+                </tr>
+              </thead>
+              <tbody id="levelVoiceTableBody"></tbody>
+            </table>
+          </div>
+          <div class="empty-state" id="levelVoiceEmpty" style="display:none;">ยังไม่มีข้อมูล Level VC</div>
+        </article>
+
+        <article class="board-card board-panel" id="boardPanelMoney" data-board-type="money">
+          <h3><i class="bi bi-cash-stack"></i>Money Leaderboard</h3>
+          <p class="board-sub" id="moneyMeta">Top balances in selected guild</p>
+          <div class="self-rank-pill" id="moneySelf"><i class="bi bi-person-circle"></i>Your rank: -</div>
+          <div class="table-wrap">
+            <table class="board-table">
+              <thead>
+                <tr>
+                  <th style="width:66px;">Rank</th>
+                  <th>User</th>
+                  <th style="width:96px;">Cash</th>
+                  <th style="width:96px;">Bank</th>
+                  <th style="width:106px;">Total</th>
+                </tr>
+              </thead>
+              <tbody id="moneyTableBody"></tbody>
+            </table>
+          </div>
+          <div class="empty-state" id="moneyEmpty" style="display:none;">ยังไม่มีข้อมูล Money</div>
+        </article>
+
+        <article class="board-card board-panel" id="boardPanelInvite" data-board-type="invite">
+          <h3><i class="bi bi-person-plus"></i>Invite Server Leaderboard</h3>
+          <p class="board-sub" id="inviteMeta">Who invited how many members</p>
+          <div class="self-rank-pill" id="inviteSelf"><i class="bi bi-person-circle"></i>Your rank: -</div>
+          <div class="table-wrap">
+            <table class="board-table">
+              <thead>
+                <tr>
+                  <th style="width:66px;">Rank</th>
+                  <th>User</th>
+                  <th style="width:92px;">Invites</th>
+                  <th style="width:126px;">Last Link</th>
+                </tr>
+              </thead>
+              <tbody id="inviteTableBody"></tbody>
+            </table>
+          </div>
+          <div class="empty-state" id="inviteEmpty" style="display:none;">ยังไม่มีข้อมูล Invite</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="public-card board-panel" id="boardPanelInviteActivity" data-board-type="invite_activity">
+      <h2 class="title-row"><span class="title-icon"><i class="bi bi-clock-history"></i></span>Recent Invite Activity</h2>
+      <p class="board-sub" id="inviteJoinMeta">Top 100 recent joins and their inviters</p>
+      <div class="table-wrap">
+        <table class="board-table">
+          <thead>
+            <tr>
+              <th style="width:230px;">Invited User</th>
+              <th style="width:230px;">Inviter</th>
+              <th style="width:140px;">Invite Link</th>
+              <th style="width:170px;">Joined</th>
+            </tr>
+          </thead>
+          <tbody id="inviteJoinTableBody"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="inviteJoinEmpty" style="display:none;">ยังไม่มีประวัติการเชิญล่าสุด</div>
+    </section>
+
+    <section class="public-footer">© {{CURRENT_YEAR}} {{APP_NAME}} • Leaderboard</section>
+  </main>
+
+  <script id="leaderboardPayload" type="text/plain">{{LEADERBOARD_PAYLOAD_B64}}</script>
+  <script>
+    function escapeHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function decodePayload(base64Text) {
+      const fallback = {
+        viewer_user_id: "",
+        guilds: [],
+        selected_guild_id: "",
+        selected_guild_name: "",
+        selected_guild_members: 0,
+        level_chat_rows: [],
+        level_voice_rows: [],
+        money_rows: [],
+        invite_rows: [],
+        invite_join_rows: [],
+        viewer_rows: { level_chat: null, level_voice: null, money: null, invite: null },
+        totals: {
+          guild_count: 0,
+          level_chat_entries: 0,
+          level_voice_entries: 0,
+          money_entries: 0,
+          invite_entries: 0,
+          invite_join_entries: 0
+        }
+      };
+      const raw = String(base64Text || "").trim();
+      if (!raw) return fallback;
+      try {
+        const bytes = Uint8Array.from(atob(raw), (ch) => ch.charCodeAt(0));
+        const jsonText = new TextDecoder().decode(bytes);
+        const payload = JSON.parse(jsonText);
+        if (!payload || typeof payload !== "object") return fallback;
+        payload.guilds = Array.isArray(payload.guilds) ? payload.guilds : [];
+        payload.level_chat_rows = Array.isArray(payload.level_chat_rows) ? payload.level_chat_rows : [];
+        payload.level_voice_rows = Array.isArray(payload.level_voice_rows) ? payload.level_voice_rows : [];
+        payload.money_rows = Array.isArray(payload.money_rows) ? payload.money_rows : [];
+        payload.invite_rows = Array.isArray(payload.invite_rows) ? payload.invite_rows : [];
+        payload.invite_join_rows = Array.isArray(payload.invite_join_rows) ? payload.invite_join_rows : [];
+        payload.viewer_rows = payload.viewer_rows && typeof payload.viewer_rows === "object" ? payload.viewer_rows : fallback.viewer_rows;
+        payload.totals = payload.totals && typeof payload.totals === "object" ? payload.totals : fallback.totals;
+        return payload;
+      } catch (_) {
+        return fallback;
+      }
+    }
+
+    function numberText(value) {
+      const numeric = Number(value || 0);
+      return new Intl.NumberFormat("en-US").format(Number.isFinite(numeric) ? numeric : 0);
+    }
+
+    function userCellHtml(row) {
+      return (
+        '<div class="user-cell">' +
+          '<img src="' + escapeHtml(row.avatar || "") + '" alt="avatar">' +
+          '<div class="user-meta">' +
+            '<div class="user-name">' + escapeHtml(row.name || "-") + '</div>' +
+            '<div class="user-id">ID: ' + escapeHtml(row.user_id || "-") + '</div>' +
+          '</div>' +
+        '</div>'
+      );
+    }
+
+    function renderSelfText(element, row, mode) {
+      if (!element) return;
+      if (!row) {
+        element.innerHTML = '<i class="bi bi-person-circle"></i>Your rank: -';
+        return;
+      }
+      let detail = "";
+      if (mode === "level_chat") detail = " • Chat XP " + numberText(row.text_xp || 0);
+      if (mode === "level_voice") detail = " • Voice XP " + numberText(row.voice_xp || 0);
+      if (mode === "money") detail = " • Total " + numberText(row.total || 0);
+      if (mode === "invite") detail = " • Invites " + numberText(row.invite_count || 0);
+      element.innerHTML = '<i class="bi bi-person-circle"></i>Your rank: #' + numberText(row.rank || 0) + detail;
+    }
+
+    function applySelfClass(tr, row, viewerId) {
+      const rowUserId = String(row && row.user_id ? row.user_id : "");
+      if (viewerId && rowUserId && viewerId === rowUserId) {
+        tr.classList.add("is-self");
+      }
+    }
+
+    function inviteLinkHtml(url, code) {
+      const cleanUrl = String(url || "").trim();
+      if (!cleanUrl) return escapeHtml(code || "-");
+      const label = String(code || cleanUrl.replace(/^https?:\/\/discord\.gg\//i, "") || "open link");
+      return '<a class="invite-link" href="' + escapeHtml(cleanUrl) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(label) + '</a>';
+    }
+
+    function formatJoinedAt(ts) {
+      const raw = Number(ts || 0);
+      if (!Number.isFinite(raw) || raw <= 0) return "-";
+      try {
+        return new Date(raw * 1000).toLocaleString("en-GB", { hour12: false });
+      } catch (_) {
+        return "-";
+      }
+    }
+
+    const payloadNode = document.getElementById("leaderboardPayload");
+    const payload = decodePayload(payloadNode ? payloadNode.textContent : "");
+    const viewerId = String(payload.viewer_user_id || "").trim();
+    const guildSelect = document.getElementById("guildSelect");
+    const guildCountPill = document.getElementById("guildCountPill");
+    const guildMetaText = document.getElementById("guildMetaText");
+    const ownOnlyToggleBtn = document.getElementById("ownOnlyToggleBtn");
+    const ownOnlyToggleLabel = document.getElementById("ownOnlyToggleLabel");
+    const ownOnlyHint = document.getElementById("ownOnlyHint");
+    let ownOnlyMode = false;
+    const boardTypeKeys = ["level_chat", "level_voice", "money", "invite", "invite_activity"];
+    const boardRowsByType = {
+      level_chat: payload.level_chat_rows || [],
+      level_voice: payload.level_voice_rows || [],
+      money: payload.money_rows || [],
+      invite: payload.invite_rows || [],
+      invite_activity: payload.invite_join_rows || []
+    };
+    const boardFilterButtons = Array.from(document.querySelectorAll(".board-filter-btn[data-board-type]"));
+    const boardPanels = Array.from(document.querySelectorAll(".board-panel[data-board-type]"));
+    let activeBoardType = "level_chat";
+
+    function normalizeBoardType(value) {
+      const raw = String(value || "").trim().toLowerCase();
+      return boardTypeKeys.includes(raw) ? raw : "";
+    }
+
+    function detectInitialBoardType() {
+      const fromQuery = normalizeBoardType(new URL(window.location.href).searchParams.get("board"));
+      if (fromQuery) return fromQuery;
+      for (const key of boardTypeKeys) {
+        if ((boardRowsByType[key] || []).length > 0) {
+          return key;
+        }
+      }
+      return boardTypeKeys[0];
+    }
+
+    function setActiveBoardType(boardType, syncUrl) {
+      const resolved = normalizeBoardType(boardType) || boardTypeKeys[0];
+      activeBoardType = resolved;
+      for (const button of boardFilterButtons) {
+        const buttonType = normalizeBoardType(button.getAttribute("data-board-type"));
+        const isActive = buttonType === resolved;
+        button.classList.toggle("is-active", isActive);
+        button.setAttribute("aria-pressed", isActive ? "true" : "false");
+      }
+      for (const panel of boardPanels) {
+        const panelType = normalizeBoardType(panel.getAttribute("data-board-type"));
+        panel.classList.toggle("is-active", panelType === resolved);
+      }
+      if (syncUrl) {
+        const nextUrl = new URL(window.location.href);
+        nextUrl.searchParams.set("board", resolved);
+        window.history.replaceState({}, "", nextUrl.toString());
+      }
+    }
+
+    function setOwnOnlyUi() {
+      const enabled = !!viewerId;
+      if (ownOnlyToggleBtn) {
+        ownOnlyToggleBtn.disabled = !enabled;
+        ownOnlyToggleBtn.classList.toggle("is-active", enabled && ownOnlyMode);
+        ownOnlyToggleBtn.setAttribute("aria-pressed", enabled && ownOnlyMode ? "true" : "false");
+      }
+      if (ownOnlyToggleLabel) {
+        if (!enabled) {
+          ownOnlyToggleLabel.textContent = "ดูเฉพาะอันดับตัวเอง: ใช้ไม่ได้";
+        } else {
+          ownOnlyToggleLabel.textContent = ownOnlyMode
+            ? "ดูเฉพาะอันดับตัวเอง: เปิด"
+            : "ดูเฉพาะอันดับตัวเอง: ปิด";
+        }
+      }
+      if (ownOnlyHint) {
+        if (!enabled) {
+          ownOnlyHint.textContent = "ไม่พบบัญชีผู้ใช้ในเซสชัน";
+        } else {
+          ownOnlyHint.textContent = ownOnlyMode
+            ? "กำลังแสดงเฉพาะข้อมูลที่เกี่ยวข้องกับคุณ"
+            : "แสดงทุกอันดับในแต่ละบอร์ด";
+        }
+      }
+    }
+
+    function selfFilteredRows(rows, userKey) {
+      const list = Array.isArray(rows) ? rows : [];
+      if (!ownOnlyMode || !viewerId) return list;
+      const key = String(userKey || "user_id");
+      return list.filter((row) => String((row || {})[key] || "") === viewerId);
+    }
+
+    function rerenderAllBoards() {
+      renderLevelChat();
+      renderLevelVoice();
+      renderMoney();
+      renderInvite();
+      renderInviteJoins();
+    }
+
+    function renderGuildSelect() {
+      const guilds = payload.guilds || [];
+      guildSelect.innerHTML = "";
+      if (!guilds.length) {
+        guildSelect.innerHTML = '<option value="">No shared guild found</option>';
+        guildSelect.disabled = true;
+      } else {
+        guildSelect.disabled = false;
+        for (const guild of guilds) {
+          const option = document.createElement("option");
+          option.value = String(guild.id || "");
+          option.textContent = String(guild.name || "Guild");
+          if (String(guild.id || "") === String(payload.selected_guild_id || "")) {
+            option.selected = true;
+          }
+          guildSelect.appendChild(option);
+        }
+      }
+      guildCountPill.innerHTML = '<i class="bi bi-collection"></i>' + numberText((payload.totals || {}).guild_count || guilds.length) + " guilds";
+      const guildName = String(payload.selected_guild_name || "").trim();
+      if (!guildName) {
+        guildMetaText.textContent = "ยังไม่พบกิลด์ที่บอทอยู่ร่วมกับบัญชีนี้";
+      } else {
+        guildMetaText.textContent = guildName + " • members " + numberText(payload.selected_guild_members || 0);
+      }
+    }
+
+    function renderLevelChat() {
+      const sourceRows = payload.level_chat_rows || [];
+      const rows = selfFilteredRows(sourceRows, "user_id");
+      const body = document.getElementById("levelChatTableBody");
+      const empty = document.getElementById("levelChatEmpty");
+      const meta = document.getElementById("levelChatMeta");
+      const self = document.getElementById("levelChatSelf");
+      body.innerHTML = "";
+      if (!rows.length) {
+        empty.style.display = "block";
+      } else {
+        empty.style.display = "none";
+        for (const row of rows) {
+          const tr = document.createElement("tr");
+          applySelfClass(tr, row, viewerId);
+          tr.innerHTML =
+            '<td><span class="rank-pill">#' + numberText(row.rank || 0) + '</span></td>' +
+            '<td>' + userCellHtml(row) + '</td>' +
+            '<td>' + numberText(row.level || 0) + '</td>' +
+            '<td>' + numberText(row.text_xp || 0) + '</td>';
+          body.appendChild(tr);
+        }
+      }
+      const totalRows = Number((payload.totals || {}).level_chat_entries || sourceRows.length || 0);
+      meta.textContent = "Showing " + numberText(rows.length) + " / " + numberText(totalRows) + " entries";
+      renderSelfText(self, (payload.viewer_rows || {}).level_chat, "level_chat");
+    }
+
+    function renderLevelVoice() {
+      const sourceRows = payload.level_voice_rows || [];
+      const rows = selfFilteredRows(sourceRows, "user_id");
+      const body = document.getElementById("levelVoiceTableBody");
+      const empty = document.getElementById("levelVoiceEmpty");
+      const meta = document.getElementById("levelVoiceMeta");
+      const self = document.getElementById("levelVoiceSelf");
+      body.innerHTML = "";
+      if (!rows.length) {
+        empty.style.display = "block";
+      } else {
+        empty.style.display = "none";
+        for (const row of rows) {
+          const tr = document.createElement("tr");
+          applySelfClass(tr, row, viewerId);
+          tr.innerHTML =
+            '<td><span class="rank-pill">#' + numberText(row.rank || 0) + '</span></td>' +
+            '<td>' + userCellHtml(row) + '</td>' +
+            '<td>' + numberText(row.level || 0) + '</td>' +
+            '<td>' + numberText(row.voice_xp || 0) + '</td>';
+          body.appendChild(tr);
+        }
+      }
+      const totalRows = Number((payload.totals || {}).level_voice_entries || sourceRows.length || 0);
+      meta.textContent = "Showing " + numberText(rows.length) + " / " + numberText(totalRows) + " entries";
+      renderSelfText(self, (payload.viewer_rows || {}).level_voice, "level_voice");
+    }
+
+    function renderMoney() {
+      const sourceRows = payload.money_rows || [];
+      const rows = selfFilteredRows(sourceRows, "user_id");
+      const body = document.getElementById("moneyTableBody");
+      const empty = document.getElementById("moneyEmpty");
+      const meta = document.getElementById("moneyMeta");
+      const self = document.getElementById("moneySelf");
+      body.innerHTML = "";
+      if (!rows.length) {
+        empty.style.display = "block";
+      } else {
+        empty.style.display = "none";
+        for (const row of rows) {
+          const tr = document.createElement("tr");
+          applySelfClass(tr, row, viewerId);
+          tr.innerHTML =
+            '<td><span class="rank-pill">#' + numberText(row.rank || 0) + '</span></td>' +
+            '<td>' + userCellHtml(row) + '</td>' +
+            '<td>' + numberText(row.cash || 0) + '</td>' +
+            '<td>' + numberText(row.bank || 0) + '</td>' +
+            '<td>' + numberText(row.total || 0) + '</td>';
+          body.appendChild(tr);
+        }
+      }
+      const totalRows = Number((payload.totals || {}).money_entries || sourceRows.length || 0);
+      meta.textContent = "Showing " + numberText(rows.length) + " / " + numberText(totalRows) + " entries";
+      renderSelfText(self, (payload.viewer_rows || {}).money, "money");
+    }
+
+    function renderInvite() {
+      const sourceRows = payload.invite_rows || [];
+      const rows = selfFilteredRows(sourceRows, "user_id");
+      const body = document.getElementById("inviteTableBody");
+      const empty = document.getElementById("inviteEmpty");
+      const meta = document.getElementById("inviteMeta");
+      const self = document.getElementById("inviteSelf");
+      body.innerHTML = "";
+      if (!rows.length) {
+        empty.style.display = "block";
+      } else {
+        empty.style.display = "none";
+        for (const row of rows) {
+          const tr = document.createElement("tr");
+          applySelfClass(tr, row, viewerId);
+          tr.innerHTML =
+            '<td><span class="rank-pill">#' + numberText(row.rank || 0) + '</span></td>' +
+            '<td>' + userCellHtml(row) + '</td>' +
+            '<td>' + numberText(row.invite_count || 0) + '</td>' +
+            '<td>' + inviteLinkHtml(row.last_invite_url, row.last_invite_code) + '</td>';
+          body.appendChild(tr);
+        }
+      }
+      const totalRows = Number((payload.totals || {}).invite_entries || sourceRows.length || 0);
+      meta.textContent = "Showing " + numberText(rows.length) + " / " + numberText(totalRows) + " entries";
+      renderSelfText(self, (payload.viewer_rows || {}).invite, "invite");
+    }
+
+    function renderInviteJoins() {
+      const sourceRows = payload.invite_join_rows || [];
+      const rows = (!ownOnlyMode || !viewerId)
+        ? sourceRows
+        : sourceRows.filter((row) => {
+            const invitedId = String((row || {}).invited_user_id || "");
+            const inviterId = String((row || {}).inviter_user_id || "");
+            return invitedId === viewerId || inviterId === viewerId;
+          });
+      const body = document.getElementById("inviteJoinTableBody");
+      const empty = document.getElementById("inviteJoinEmpty");
+      const meta = document.getElementById("inviteJoinMeta");
+      body.innerHTML = "";
+      if (!rows.length) {
+        empty.style.display = "block";
+      } else {
+        empty.style.display = "none";
+        for (const row of rows) {
+          const invitedRow = {
+            user_id: row.invited_user_id,
+            name: row.invited_name,
+            avatar: row.invited_avatar
+          };
+          const inviterRow = {
+            user_id: row.inviter_user_id,
+            name: row.inviter_name,
+            avatar: row.inviter_avatar
+          };
+          const tr = document.createElement("tr");
+          if (viewerId && String(row.invited_user_id || "") === viewerId) {
+            tr.classList.add("is-self");
+          }
+          tr.innerHTML =
+            '<td>' + userCellHtml(invitedRow) + '</td>' +
+            '<td>' + userCellHtml(inviterRow) + '</td>' +
+            '<td>' + inviteLinkHtml(row.invite_url, row.invite_code) + '</td>' +
+            '<td>' + escapeHtml(formatJoinedAt(row.joined_at_ts)) + '</td>';
+          body.appendChild(tr);
+        }
+      }
+      const totalRows = Number((payload.totals || {}).invite_join_entries || sourceRows.length || 0);
+      meta.textContent = "Showing " + numberText(rows.length) + " / " + numberText(totalRows) + " entries";
+    }
+
+    guildSelect.addEventListener("change", function () {
+      const guildId = String(guildSelect.value || "").trim();
+      const nextUrl = new URL(window.location.href);
+      if (guildId) {
+        nextUrl.searchParams.set("guild_id", guildId);
+      } else {
+        nextUrl.searchParams.delete("guild_id");
+      }
+      window.location.href = nextUrl.toString();
+    });
+
+    ownOnlyToggleBtn?.addEventListener("click", function () {
+      if (!viewerId) return;
+      ownOnlyMode = !ownOnlyMode;
+      setOwnOnlyUi();
+      rerenderAllBoards();
+    });
+    boardFilterButtons.forEach((button) => {
+      button.addEventListener("click", function () {
+        const targetBoardType = normalizeBoardType(button.getAttribute("data-board-type"));
+        if (!targetBoardType || targetBoardType === activeBoardType) return;
+        setActiveBoardType(targetBoardType, true);
+      });
+    });
+
+    activeBoardType = detectInitialBoardType();
+    setActiveBoardType(activeBoardType, true);
+    setOwnOnlyUi();
+    renderGuildSelect();
+    rerenderAllBoards();
+  </script>
+</body>
+</html>

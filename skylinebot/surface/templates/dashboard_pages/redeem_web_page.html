@@ -1,0 +1,348 @@
+    <style>
+      .page-redeem-shell {{
+        max-width: 1080px;
+        margin: 0 auto;
+        display: grid;
+        gap: 14px;
+      }}
+      .page-redeem-shell .redeem-main-panel {{
+        position: relative;
+        overflow: hidden;
+        padding: clamp(14px, 2vw, 24px);
+      }}
+      .page-redeem-shell .redeem-main-panel::after {{
+        content: "";
+        position: absolute;
+        inset: auto -140px -180px auto;
+        width: 360px;
+        height: 360px;
+        border-radius: 999px;
+        pointer-events: none;
+        background: radial-gradient(circle, color-mix(in srgb, var(--ux-brand-2) 34%, transparent), transparent 68%);
+      }}
+      .page-redeem-shell .redeem-hero {{
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(180px, 0.8fr);
+        gap: 14px;
+        align-items: center;
+        margin-bottom: 14px;
+      }}
+      .page-redeem-shell .redeem-kicker {{
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 9px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-weight: 800;
+        font-size: 0.78rem;
+        letter-spacing: 0.02em;
+        background: color-mix(in srgb, var(--ux-brand) 16%, var(--ux-surface));
+        border: 1px solid color-mix(in srgb, var(--ux-brand) 48%, var(--ux-line));
+      }}
+      .page-redeem-shell .redeem-hero h1 {{
+        margin: 0;
+        font-size: clamp(1.45rem, 2.35vw, 2rem);
+        line-height: 1.1;
+      }}
+      .page-redeem-shell .redeem-hero p {{
+        margin: 8px 0 0;
+        max-width: 62ch;
+      }}
+      .page-redeem-shell .redeem-tag-row {{
+        margin-top: 12px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }}
+      .page-redeem-shell .redeem-tag {{
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        border: 1px solid color-mix(in srgb, var(--ux-brand-2) 42%, var(--ux-line));
+        background: color-mix(in srgb, var(--ux-brand-2) 14%, var(--ux-surface));
+      }}
+      .page-redeem-shell .redeem-hero-side {{
+        justify-self: end;
+        width: min(220px, 100%);
+        aspect-ratio: 1 / 1;
+        border-radius: 22px;
+        position: relative;
+        overflow: hidden;
+        display: grid;
+        place-items: center;
+        border: 1px solid color-mix(in srgb, var(--ux-brand) 36%, var(--ux-line));
+        background:
+          radial-gradient(circle at 22% 20%, color-mix(in srgb, var(--ux-brand-2) 40%, transparent), transparent 48%),
+          radial-gradient(circle at 80% 80%, color-mix(in srgb, #f59e0b 30%, transparent), transparent 52%),
+          linear-gradient(145deg, color-mix(in srgb, var(--ux-brand) 15%, var(--ux-surface)), color-mix(in srgb, var(--ux-brand-3) 14%, var(--ux-surface)));
+      }}
+      .page-redeem-shell .redeem-hero-side::before {{
+        content: "";
+        position: absolute;
+        width: 72%;
+        height: 72%;
+        border-radius: 999px;
+        border: 1px dashed color-mix(in srgb, var(--ux-brand-2) 48%, transparent);
+        animation: redeem-spin 12s linear infinite;
+      }}
+      .page-redeem-shell .redeem-hero-side i {{
+        font-size: 2.15rem;
+        color: color-mix(in srgb, var(--ux-brand-2) 64%, white);
+        text-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+      }}
+      .page-redeem-shell .redeem-preview-card {{
+        border-radius: 16px;
+        border: 1px solid color-mix(in srgb, var(--ux-brand) 36%, var(--ux-line));
+        background: color-mix(in srgb, var(--ux-brand) 8%, var(--ux-surface));
+        padding: clamp(12px, 1.6vw, 16px);
+      }}
+      .page-redeem-shell .redeem-preview-table th {{
+        width: 220px;
+        font-weight: 700;
+      }}
+      .page-redeem-shell .redeem-preview-table td code {{
+        white-space: nowrap;
+      }}
+      .page-redeem-shell .redeem-content-grid {{
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+        gap: 12px;
+        align-items: stretch;
+      }}
+      .page-redeem-shell .redeem-form-card,
+      .page-redeem-shell .redeem-help-card {{
+        border-radius: 18px;
+        padding: clamp(13px, 1.6vw, 18px);
+      }}
+      .page-redeem-shell .redeem-card-head {{
+        display: grid;
+        gap: 4px;
+        margin-bottom: 12px;
+      }}
+      .page-redeem-shell .redeem-card-head h2 {{
+        margin: 0;
+        font-size: clamp(1.02rem, 1.45vw, 1.24rem);
+      }}
+      .page-redeem-shell .redeem-card-head p {{
+        margin: 0;
+      }}
+      .page-redeem-shell .redeem-form {{
+        display: grid;
+        gap: 11px;
+      }}
+      .page-redeem-shell .redeem-field {{
+        display: grid;
+        gap: 6px;
+      }}
+      .page-redeem-shell .redeem-field > span {{
+        font-size: 0.86rem;
+        font-weight: 700;
+        color: var(--ux-text);
+      }}
+      .page-redeem-shell .redeem-field > small {{
+        font-size: 0.75rem;
+        line-height: 1.35;
+      }}
+      .page-redeem-shell .redeem-actions {{
+        justify-content: flex-start;
+        margin-top: 4px;
+        gap: 10px;
+      }}
+      .page-redeem-shell .redeem-actions .primary-btn,
+      .page-redeem-shell .redeem-actions .ghost-btn {{
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+      }}
+      .page-redeem-shell .redeem-steps {{
+        display: grid;
+        gap: 8px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }}
+      .page-redeem-shell .redeem-steps li {{
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 9px;
+        align-items: start;
+        padding: 9px 10px;
+        border-radius: 12px;
+        border: 1px solid color-mix(in srgb, var(--ux-brand) 26%, var(--ux-line));
+        background: color-mix(in srgb, var(--ux-brand) 7%, var(--ux-surface));
+      }}
+      .page-redeem-shell .redeem-step-no {{
+        width: 24px;
+        height: 24px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 0.78rem;
+        color: white;
+        background: linear-gradient(135deg, var(--ux-brand), var(--ux-brand-2));
+        box-shadow: 0 8px 18px rgba(58, 103, 229, 0.28);
+      }}
+      .page-redeem-shell .redeem-steps strong {{
+        display: block;
+        margin: 0 0 2px;
+        font-size: 0.84rem;
+        line-height: 1.35;
+      }}
+      .page-redeem-shell .redeem-steps p {{
+        margin: 0;
+        font-size: 0.76rem;
+        line-height: 1.45;
+      }}
+      .page-redeem-shell .redeem-safety {{
+        margin-top: 10px;
+        border-radius: 14px;
+        padding: 10px 11px;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 9px;
+        align-items: center;
+        border: 1px solid color-mix(in srgb, #22c55e 34%, var(--ux-line));
+        background: color-mix(in srgb, #22c55e 14%, var(--ux-surface));
+      }}
+      .page-redeem-shell .redeem-safety i {{
+        font-size: 1rem;
+        color: #22c55e;
+      }}
+      .page-redeem-shell .redeem-safety p {{
+        margin: 0;
+        font-size: 0.8rem;
+        line-height: 1.45;
+      }}
+      @keyframes redeem-spin {{
+        0% {{
+          transform: rotate(0deg);
+        }}
+        100% {{
+          transform: rotate(360deg);
+        }}
+      }}
+      @media (max-width: 980px) {{
+        .page-redeem-shell .redeem-hero {{
+          grid-template-columns: minmax(0, 1fr);
+        }}
+        .page-redeem-shell .redeem-hero-side {{
+          justify-self: start;
+          width: min(180px, 48vw);
+        }}
+        .page-redeem-shell .redeem-content-grid {{
+          grid-template-columns: minmax(0, 1fr);
+        }}
+      }}
+      @media (max-width: 620px) {{
+        .page-redeem-shell .redeem-actions {{
+          width: 100%;
+          gap: 8px;
+        }}
+        .page-redeem-shell .redeem-actions .primary-btn,
+        .page-redeem-shell .redeem-actions .ghost-btn {{
+          width: 100%;
+          justify-content: center;
+        }}
+      }}
+    </style>
+
+    <section class="section-stack dashboard-detail-shell page-redeem-shell">
+      <section class="panel redeem-main-panel">
+        <div class="redeem-hero">
+          <div class="redeem-hero-copy">
+            <span class="redeem-kicker">
+              <i class="fa-solid fa-ticket" aria-hidden="true"></i>
+              Skyline Redeem Center
+            </span>
+            <h1 data-icon-key="gift">แลก Redeem ผ่านเว็บไซต์</h1>
+            <p class="muted">กรอกโค้ดเพื่อรับสิทธิ์แพ็กเกจสำหรับเซิร์ฟเวอร์ หรือสิทธิ์ผู้ใช้ตามประเภทโค้ด โดยระบบจะอัปเดตสิทธิ์ให้อัตโนมัติหลังแลกสำเร็จ</p>
+            <div class="redeem-tag-row">
+              <span class="redeem-tag"><i class="fa-solid fa-bolt" aria-hidden="true"></i> ใช้เวลาไม่ถึง 1 นาที</span>
+              <span class="redeem-tag"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> ผูกกับบัญชีที่ล็อกอินอยู่</span>
+              <span class="redeem-tag"><i class="fa-solid fa-layer-group" aria-hidden="true"></i> รองรับโค้ดทั้ง User และ Guild</span>
+            </div>
+          </div>
+          <div class="redeem-hero-side" aria-hidden="true">
+            <i class="fa-solid fa-gift"></i>
+          </div>
+        </div>
+
+        {notice_markup}
+        {preview_section_markup}
+
+        <div class="redeem-content-grid">
+          <form method="post" action="/redeem" class="panel-sub redeem-form-card redeem-form" autocomplete="off">
+            <input type="hidden" name="redeem_action" value="preview">
+            <div class="redeem-card-head">
+              <h2 data-icon-key="key">กรอกข้อมูล Redeem</h2>
+              <p class="muted">ตรวจสอบความถูกต้องของโค้ดและเซิร์ฟเวอร์ปลายทางก่อนกดแลก</p>
+            </div>
+            <label class="redeem-field">
+              <span>โค้ด Redeem</span>
+              <input type="text" name="redeem_code" value="{_escape(redeem_code_value)}" required maxlength="64" placeholder="เช่น ABCD-1234-EFGH" autocomplete="one-time-code" spellcheck="false">
+              <small class="muted">ตัวอย่างรูปแบบโค้ด: `ABCD-1234-EFGH`</small>
+            </label>
+            <label class="redeem-field">
+              <span>เซิร์ฟเวอร์เป้าหมาย (สำหรับโค้ดประเภท Guild)</span>
+              <select name="target_guild_id">
+                <option value="">เลือกเซิร์ฟเวอร์...</option>
+                {guild_options}
+              </select>
+              <small class="muted">ถ้าเป็นโค้ดประเภทผู้ใช้ สามารถเว้นช่องนี้ได้</small>
+            </label>
+            <div class="auth-actions redeem-actions">
+              <button class="primary-btn" type="submit">
+                <i class="fa-solid fa-check"></i>
+                ตรวจสอบข้อมูล
+              </button>
+              <a class="ghost-btn" href="/dashboard">
+                <i class="fa-solid fa-arrow-left"></i>
+                กลับแดชบอร์ด
+              </a>
+            </div>
+          </form>
+
+          <aside class="panel-sub redeem-help-card">
+            <div class="redeem-card-head">
+              <h2 data-icon-key="help">วิธีใช้งานแบบรวดเร็ว</h2>
+              <p class="muted">3 ขั้นตอนสั้นๆ เพื่อแลกโค้ดให้ผ่านทันที</p>
+            </div>
+            <ol class="redeem-steps">
+              <li>
+                <span class="redeem-step-no">1</span>
+                <div>
+                  <strong>คัดลอกโค้ดให้ครบทุกตัวอักษร</strong>
+                  <p class="muted">รวมเครื่องหมายขีดกลาง (`-`) และหลีกเลี่ยงช่องว่างหน้า/หลังโค้ด</p>
+                </div>
+              </li>
+              <li>
+                <span class="redeem-step-no">2</span>
+                <div>
+                  <strong>เลือกเซิร์ฟเวอร์ปลายทางเมื่อจำเป็น</strong>
+                  <p class="muted">เฉพาะโค้ดแบบ Guild เท่านั้นที่ต้องเลือกเซิร์ฟเวอร์</p>
+                </div>
+              </li>
+              <li>
+                <span class="redeem-step-no">3</span>
+                <div>
+                  <strong>กดแลกและรอข้อความยืนยัน</strong>
+                  <p class="muted">เมื่อสำเร็จ ระบบจะแจ้งผลและอัปเดตสิทธิ์ให้ทันที</p>
+                </div>
+              </li>
+            </ol>
+            <div class="redeem-safety">
+              <i class="fa-solid fa-shield-heart" aria-hidden="true"></i>
+              <p class="muted">ความปลอดภัย: อย่าแชร์โค้ดต่อสาธารณะ และตรวจสอบว่าคุณล็อกอินด้วยบัญชีที่ต้องการรับสิทธิ์แล้ว</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </section>
