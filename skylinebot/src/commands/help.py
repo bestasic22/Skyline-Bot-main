@@ -426,11 +426,12 @@ class HomeView(BaseHelpView):
         prefix = self.bot.cache.guilds.get(str(self.ctx.guild.id), {}).get(
             "prefix", self.bot.BotConfig.PREFIX
         )
+        bot_name = str(getattr(self.bot.user, "display_name", "") or getattr(self.bot.BotConfig, "NAME", "") or "ThunderGod")
         if self.get_language() == "th":
             desc = (
                 f"- คำนำหน้าของเซิร์ฟเวอร์คือ `{prefix}`\n"
                 f"- จำนวนคำสั่งทั้งหมด: `{self.get_all_commands_count()}`\n"
-                f"- [เชิญ SkylineBOT]({self.bot.urls.INVITE}) | "
+                f"- [เชิญ {bot_name}]({self.bot.urls.INVITE}) | "
                 f"[เซิร์ฟเวอร์ซัพพอร์ต]({self.bot.urls.SUPPORT_SERVER}) | "
                 f"[โหวตบอท]({self.bot.urls.VOTE})"
             )
@@ -438,9 +439,9 @@ class HomeView(BaseHelpView):
             desc = (
                 f"- Prefix for this server is `{prefix}`\n"
                 f"- Total commands: `{self.get_all_commands_count()}`\n"
-                f"- [Invite SkylineBOT]({self.bot.urls.INVITE}) | "
-                f"[ช่วยเหลือ server]({self.bot.urls.SUPPORT_SERVER}) | "
-                f"[โหวต me]({self.bot.urls.VOTE})"
+                f"- [Invite {bot_name}]({self.bot.urls.INVITE}) | "
+                f"[Support Server]({self.bot.urls.SUPPORT_SERVER}) | "
+                f"[Vote]({self.bot.urls.VOTE})"
             )
         container.add_item(ui.TextDisplay(desc))
         container.add_item(ui.Separator(spacing=discord.SeparatorSpacing.large))
