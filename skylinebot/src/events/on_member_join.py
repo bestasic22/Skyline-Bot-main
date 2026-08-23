@@ -1,4 +1,4 @@
-﻿import datetime,asyncio,discord,os
+import datetime,asyncio,discord,os
 from discord.ext import commands
 from typing import Any
 

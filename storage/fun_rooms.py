@@ -1,4 +1,4 @@
-﻿from storage.engine import CollectionStore
+from storage.engine import CollectionStore
 
 COLLECTION_NAME = "fun_rooms"
 CollectionName = COLLECTION_NAME

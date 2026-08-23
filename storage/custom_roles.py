@@ -1,4 +1,4 @@
-﻿from storage.engine import CollectionStore, NOW
+from storage.engine import CollectionStore, NOW
 
 COLLECTION_NAME = 'custom_roles'
 CollectionName = COLLECTION_NAME

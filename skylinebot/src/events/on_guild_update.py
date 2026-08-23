@@ -1,4 +1,4 @@
-﻿import datetime,asyncio,discord
+import datetime,asyncio,discord
 from discord.ext import commands
 
 from skylinebot.console.logging import logger

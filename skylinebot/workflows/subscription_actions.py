@@ -1,4 +1,4 @@
-﻿import discord
+import discord
 import asyncio
 import datetime
 import traceback

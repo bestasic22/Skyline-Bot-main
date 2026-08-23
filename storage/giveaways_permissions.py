@@ -1,4 +1,4 @@
-﻿from storage.engine import CollectionStore, NOW
+from storage.engine import CollectionStore, NOW
 
 COLLECTION_NAME = 'giveaways_permissions'
 CollectionName = COLLECTION_NAME

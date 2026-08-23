@@ -1,4 +1,4 @@
-﻿import datetime,asyncio,discord
+import datetime,asyncio,discord
 import json
 import time
 from discord.ext import commands

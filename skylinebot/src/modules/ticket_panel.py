@@ -1,4 +1,4 @@
-﻿import discord
+import discord
 from discord.ext import commands
 import storage.ticket_settings
 import storage.tickets

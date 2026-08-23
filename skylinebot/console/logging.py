@@ -53,15 +53,15 @@ class Logger:
 
     def banner(self):
         try:
-            art = pyfiglet.figlet_format("SkylineBOT", font="slant")
+            art = pyfiglet.figlet_format("ThunderGod", font="slant")
         except Exception:
-            art = "SkylineBOT"
+            art = "ThunderGod"
         print(f"{Fore.LIGHTWHITE_EX}{Style.BRIGHT}{art}{Style.RESET_ALL}")
         print(f"{Fore.CYAN}+{'-' * 78}+")
         print(
             f"{Fore.CYAN}| "
-            f"{Fore.WHITE}{Style.BRIGHT}Name: SkylineBOT"
-            f"{' ' * 14}"
+            f"{Fore.WHITE}{Style.BRIGHT}Name: ThunderGod BY Skyline"
+            f"{' ' * 3}"
             f"{Fore.LIGHTBLACK_EX}Credits"
             f"{Fore.WHITE}: Skyline Development"
             f"{' ' * 10}{Fore.CYAN}|"

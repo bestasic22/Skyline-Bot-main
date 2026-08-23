@@ -1,4 +1,4 @@
-﻿from storage.engine import CollectionStore, NOW
+from storage.engine import CollectionStore, NOW
 
 COLLECTION_NAME = "bot_wallet_ledger"
 CollectionName = COLLECTION_NAME

@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 from ... import dashboard_core as core
 from .context import GuildTabRenderContext

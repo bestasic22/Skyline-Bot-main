@@ -1,4 +1,4 @@
-﻿import asyncio
+import asyncio
 import importlib
 
 from skylinebot.bridge import lavalink

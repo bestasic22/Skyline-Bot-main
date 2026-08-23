@@ -1,4 +1,4 @@
-﻿import discord
+import discord
 from discord.ext import commands
 from discord.ui import LayoutView, Container, Section, TextDisplay, Separator, Thumbnail
 from skylinebot.src.checks import checks

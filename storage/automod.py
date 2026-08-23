@@ -1,4 +1,4 @@
-﻿from storage.engine import CollectionStore, NOW
+from storage.engine import CollectionStore, NOW
 from skylinebot.console.logging import logger
 
 COLLECTION_NAME = 'automod'

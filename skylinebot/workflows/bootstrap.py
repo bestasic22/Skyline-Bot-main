@@ -1,4 +1,4 @@
-﻿from skylinebot.workflows.cache import load_cache
+from skylinebot.workflows.cache import load_cache
 from skylinebot.workflows.storage_sync import load_storage
 
 
