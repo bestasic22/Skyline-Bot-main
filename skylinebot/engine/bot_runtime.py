@@ -786,12 +786,55 @@ class antinuke_log:
             logger.error(f"Error in Log.error: {e}")
 
 class EmojiManager:
-    def __init__(self, default_emoji="x"):
+    def __init__(self, default_emoji="✨"):
         self.default_emoji = default_emoji
+        self._fallback_map = {
+            "SHIELD": "🛡️",
+            "BOT": "🤖",
+            "WRENCH": "⚙️",
+            "MUSIC": "🎵",
+            "GLOBE": "🌐",
+            "USERS": "👥",
+            "ROCKET": "🚀",
+            "GIFT": "🎁",
+            "TICKET": "🎫",
+            "BELL": "🔔",
+            "STAR": "⭐",
+            "SETTINGS": "⚙️",
+            "PREMIUM": "💎",
+            "LOCK": "🔐",
+            "VOLUME": "🔊",
+            "LEVELING": "📈",
+            "COUNTING": "🔢",
+            "J2C": "🎙️",
+            "AI": "🧠",
+            "CUSTOMROLE": "🎭",
+            "VERIFICATION": "🛡️",
+            "ENCRYPTION": "🔐",
+            "MINECRAFT": "⛏️",
+            "BIRTHDAY": "🎂",
+            "AUTOREACT": "💬",
+            "AUTOMOD": "🤖",
+            "MODERATION": "🛡️",
+            "UTILITY": "🛠️",
+            "GAMES": "🎮",
+            "IGNORE": "🚫",
+            "SERVER": "🏰",
+            "VOICE": "🔊",
+            "WELCOMER": "👋",
+        }
 
     def __getattr__(self, item):
-        # Check if the emoji exists as a variable in the emoji module
-        return getattr(emoji, item, self.default_emoji)
+        val = getattr(emoji, item, None)
+        if val:
+            return val
+        clean_item = str(item or "").upper().replace("SL_", "").replace("SL", "").strip()
+        if clean_item in self._fallback_map:
+            return self._fallback_map[clean_item]
+        for k, v in self._fallback_map.items():
+            if k in clean_item:
+                return v
+        return self.default_emoji
 
 
 class SkylineCommandTree(discord.app_commands.CommandTree):
